@@ -915,7 +915,7 @@
 
             suggestionBox.style.display = "none";
             resultArea.innerHTML = "";
-            localStorage.setItem(recordingsSearchStorageKey, query);
+            sessionStorage.setItem(recordingsSearchStorageKey, query);
 
             if (query.trim() === "") {
                 resultArea.innerHTML =
@@ -1061,7 +1061,7 @@
         function addSingleWorkSections(workItem) {
             var workId = workItem.getAttribute("data-work-id");
             var scorePath = getScorePath(workId);
-            var savedScoreVisible = localStorage.getItem(scoreVisibleStorageKey);
+            var savedScoreVisible = sessionStorage.getItem(scoreVisibleStorageKey);
             var scoreVisible = savedScoreVisible === null || savedScoreVisible === "true";
 
             var descriptionType = workItem.getAttribute("data-description-type");
@@ -1148,17 +1148,17 @@
             if (!checkbox.checked) {
                 scoreBox.style.display = "block";
                 downloadScoreLink.style.display = "block";
-                localStorage.setItem(scoreVisibleStorageKey, "true");
+                sessionStorage.setItem(scoreVisibleStorageKey, "true");
                 loadScoreIframe();
             } else {
                 scoreBox.style.display = "none";
                 downloadScoreLink.style.display = "none";
-                localStorage.setItem(scoreVisibleStorageKey, "false");
+                sessionStorage.setItem(scoreVisibleStorageKey, "false");
             }
         }
 
         window.addEventListener("load", function() {
-            var savedSearchTerm = localStorage.getItem(recordingsSearchStorageKey);
+            var savedSearchTerm = sessionStorage.getItem(recordingsSearchStorageKey);
 
             if (savedSearchTerm) {
                 searchBox.value = savedSearchTerm;
