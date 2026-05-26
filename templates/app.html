@@ -239,7 +239,8 @@
         var appRoot = {{ app_root|tojson }};
         var defaultFramePath = {{ url_for('home')|tojson }};
         var mainFrameStorageKey = "mainFramePath:" + (appRoot || "root");
-        var savedMainFramePath = localStorage.getItem(mainFrameStorageKey);
+        var savedMainFramePath = sessionStorage.getItem(mainFrameStorageKey);
+        var userPagePath = {{ url_for('user')|tojson }};
 
         function normalizeFramePath(path) {
             if (!path) {
@@ -259,6 +260,17 @@
             }
 
             return path;
+        }
+
+        function isUserPagePath(path) {
+            if (!path) {
+                return false;
+            }
+
+            var normalizedPath = normalizeFramePath(path);
+            var userPath = normalizeFramePath(userPagePath);
+
+            return normalizedPath === userPath;
         }
 
         function isTypingTarget(target) {
@@ -377,13 +389,24 @@
                 var framePath = mainFrame.contentWindow.location.pathname;
                 var frameSearch = mainFrame.contentWindow.location.search;
                 var frameHash = mainFrame.contentWindow.location.hash;
+                var currentFramePath = framePath + frameSearch + frameHash;
 
-                localStorage.setItem(
-                    mainFrameStorageKey,
-                    framePath + frameSearch + frameHash
-                );
+                if (isUserPagePath(currentFramePath)) {
+                    sessionStorage.removeItem(mainFrameStorageKey);
+                } else {
+                    sessionStorage.setItem(
+                        mainFrameStorageKey,
+                        currentFramePath
+                    );
+                }
             } catch (error) {
-                localStorage.setItem(mainFrameStorageKey, mainFrame.getAttribute("src"));
+                var fallbackPath = mainFrame.getAttribute("src");
+
+                if (isUserPagePath(fallbackPath)) {
+                    sessionStorage.removeItem(mainFrameStorageKey);
+                } else {
+                    sessionStorage.setItem(mainFrameStorageKey, fallbackPath);
+                }
             }
         });
     </script>
