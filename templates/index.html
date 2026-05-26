@@ -21,25 +21,19 @@
             box-sizing: border-box;
             padding: 42px;
             display: flex;
-            flex-direction: column;
-        }
-
-        .name {
-            font-size: 28px;
-            font-weight: normal;
-            margin: 0;
+            align-items: center;
+            justify-content: center;
         }
 
         .main-links {
-            flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 42px;
-            align-items: center;
+            width: min(780px, 100%);
         }
 
         .main-button {
-            min-height: 260px;
+            height: 190px;
             border: 1px solid #111;
             display: flex;
             align-items: center;
@@ -63,7 +57,7 @@
             }
 
             .main-button {
-                min-height: 180px;
+                height: 150px;
                 font-size: 30px;
             }
         }
@@ -72,8 +66,6 @@
 
 <body>
     <main class="page">
-        <h1 class="name">Zongjie Zhang</h1>
-
         <div class="main-links">
             <a class="main-button" href="{{ url_for('projects') }}">Project</a>
             <a class="main-button" href="{{ url_for('games') }}">Game</a>
