@@ -504,6 +504,7 @@
                 data-genre="{{ recording.genre|e }}"
                 data-performer="{{ recording.performer_name|e }}"
                 data-link="{{ recording.link|e }}"
+                data-audio-url="{{ recording.audio_url|e }}"
                 data-year="{{ recording.composition_year }}"
                 data-place="{{ recording.place_name|e }}"
                 data-country="{{ recording.country|e }}"
@@ -934,12 +935,13 @@
                 var recordingId = matches[i].getAttribute("data-recording-id");
                 var favorited = matches[i].getAttribute("data-favorited") === "true";
                 var link = matches[i].getAttribute("data-link");
+                var audioUrl = matches[i].getAttribute("data-audio-url");
                 var year = matches[i].getAttribute("data-year");
                 var place = matches[i].getAttribute("data-place");
                 var country = matches[i].getAttribute("data-country");
                 var coverPath = matches[i].getAttribute("data-cover");
 
-                var audioPath = staticBaseUrl + link;
+                var audioPath = audioUrl || (staticBaseUrl + link);
 
                 var block = document.createElement("div");
                 block.className = "recording-block";

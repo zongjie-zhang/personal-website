@@ -27,6 +27,15 @@ def normalize_url_prefix(prefix):
     return prefix.rstrip("/")
 
 
+def normalize_external_base_url(url):
+    url = (url or "").strip()
+
+    if url == "":
+        return ""
+
+    return url.rstrip("/")
+
+
 APP_URL_PREFIX = normalize_url_prefix(os.environ.get("APP_URL_PREFIX", ""))
 SUPPORTED_PATH_PREFIXES = ["/project/chopin"]
 
@@ -52,6 +61,17 @@ def get_env_value(*names, default=None):
             return value
 
     return default
+
+
+ASSET_BASE_URL = normalize_external_base_url(
+    get_env_value("ASSET_BASE_URL", "R2_PUBLIC_BASE_URL", default="")
+)
+SCORE_BASE_URL = normalize_external_base_url(
+    get_env_value("SCORE_BASE_URL", default=ASSET_BASE_URL)
+)
+AUDIO_BASE_URL = normalize_external_base_url(
+    get_env_value("AUDIO_BASE_URL", default=ASSET_BASE_URL)
+)
 
 
 app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -105,6 +125,7 @@ def inject_path_helpers():
     return {
         "app_root": request.script_root or "",
         "static_base_url": url_for("static", filename=""),
+        "audio_base_url": AUDIO_BASE_URL,
         "chopin_site_root": chopin_site_root
     }
 
@@ -118,6 +139,40 @@ def get_db_connection():
         port=int(get_env_value("DB_PORT", "MYSQLPORT", default="3306")),
         charset="utf8mb4",
         collation="utf8mb4_unicode_ci"
+    )
+
+
+def build_asset_url(folder_name, file_name):
+    if not file_name:
+        return ""
+
+    base_url = ""
+
+    if folder_name == "audio":
+        base_url = AUDIO_BASE_URL
+    elif folder_name == "score":
+        base_url = SCORE_BASE_URL
+
+    if base_url:
+        return f"{base_url}/{file_name}"
+
+    return url_for("static", filename=f"{folder_name}/{file_name}")
+
+
+def build_audio_url(link):
+    if not link:
+        return ""
+
+    return build_asset_url("audio", os.path.basename(link))
+
+
+def build_score_url(work_id):
+    if work_id is None:
+        return ""
+
+    return build_asset_url(
+        "score",
+        "score_" + str(work_id).zfill(3) + ".pdf"
     )
 
 
@@ -496,6 +551,9 @@ def get_favorites_playlist(user_id):
 
     favorites_tracks = cursor.fetchall()
 
+    for track in favorites_tracks:
+        track["audio_url"] = build_audio_url(track.get("link"))
+
     conn.commit()
     cursor.close()
     conn.close()
@@ -534,6 +592,10 @@ def get_all_recordings():
     """)
 
     recordings = cursor.fetchall()
+
+    for recording in recordings:
+        recording["audio_url"] = build_audio_url(recording.get("link"))
+        recording["score_path"] = build_score_url(recording.get("work_id"))
 
     cursor.close()
     conn.close()
@@ -997,6 +1059,9 @@ def playlist():
 
     recordings = cursor.fetchall()
 
+    for recording in recordings:
+        recording["audio_url"] = build_audio_url(recording.get("link"))
+
     recordings.sort(
         key=lambda recording: catalog_title_sort_key(recording["work_title"])
     )
@@ -1034,6 +1099,9 @@ def playlist():
         """, (playlist_item["playlist_id"],))
 
         playlist_item["tracks"] = cursor.fetchall()
+
+        for track in playlist_item["tracks"]:
+            track["audio_url"] = build_audio_url(track.get("link"))
 
     cursor.close()
     conn.close()
@@ -1625,13 +1693,11 @@ def search():
 
         for work in all_works:
             if work["work_id"] is not None:
-                work["score_path"] = url_for(
-                    "static",
-                    filename="score/score_" + str(work["work_id"]).zfill(3) + ".pdf"
-                )
+                work["score_path"] = build_score_url(work["work_id"])
             else:
                 work["score_path"] = ""
 
+            work["audio_url"] = build_audio_url(work.get("recording_link"))
             work["cover_path"] = get_recording_cover(work)
 
         catalog_query = get_catalog_query(search_term)
@@ -1900,6 +1966,7 @@ def recording_detail(recording_id):
         )
 
     recording = rows[0]
+    recording["audio_url"] = build_audio_url(recording.get("link"))
 
     descriptions = []
 
@@ -1911,10 +1978,7 @@ def recording_detail(recording_id):
                 "source": row["description_source"]
             })
 
-    score_path = url_for(
-        "static",
-        filename="score/score_" + str(recording["work_id"]).zfill(3) + ".pdf"
-    )
+    score_path = build_score_url(recording["work_id"])
     cover_path = get_recording_cover(recording)
     current_user = get_current_user()
     favorite_recording_ids = []

@@ -657,7 +657,7 @@
             }
 
             function getRecordingAudioPath(recording) {
-                return staticBaseUrl + recording.link;
+                return recording.audio_url || (staticBaseUrl + recording.link);
             }
 
             function getRecordingDisplayTitle(recording) {

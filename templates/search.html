@@ -411,14 +411,14 @@
                                             View Recording Detail
                                         </a>
 
-                                        <a href="{{ url_for('static', filename=work.recording_link) }}" target="_blank">
+                                        <a href="{{ work.audio_url }}" target="_blank">
                                             Open Audio
                                         </a>
 
                                         <button
                                             class="queue-button"
                                             data-title="{{ work.title }}"
-                                            data-audio="{{ url_for('static', filename=work.recording_link) }}"
+                                            data-audio="{{ work.audio_url }}"
                                             onclick="addButtonTrackToPlayer(this)">
                                             Add to Queue
                                         </button>
