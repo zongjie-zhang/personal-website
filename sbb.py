@@ -2016,7 +2016,19 @@ def score_file(work_id):
         return "Score not found.", 404
 
     try:
-        with urllib.request.urlopen(score_source_url) as response:
+        request_headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/136.0.0.0 Safari/537.36"
+            )
+        }
+        score_request = urllib.request.Request(
+            score_source_url,
+            headers=request_headers
+        )
+
+        with urllib.request.urlopen(score_request) as response:
             pdf_bytes = response.read()
 
         return Response(
