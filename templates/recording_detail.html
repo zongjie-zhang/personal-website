@@ -263,6 +263,11 @@
             display: block;
         }
 
+        html.score-hidden-on-load #scoreBox,
+        html.score-hidden-on-load #downloadScoreLink {
+            display: none;
+        }
+
         #downloadScoreLink {
             font-size: 16px;
             margin-top: 10px;
@@ -319,6 +324,12 @@
             }
         }
     </style>
+
+    <script>
+        if (sessionStorage.getItem("recordingsScoreVisible") === "false") {
+            document.documentElement.classList.add("score-hidden-on-load");
+        }
+    </script>
 </head>
 
 <body>
@@ -550,10 +561,12 @@
                 scoreBox.style.display = "none";
                 downloadScoreLink.style.display = "none";
                 sessionStorage.setItem(scoreVisibleStorageKey, "false");
+                document.documentElement.classList.add("score-hidden-on-load");
             } else {
                 scoreBox.style.display = "block";
                 downloadScoreLink.style.display = "block";
                 sessionStorage.setItem(scoreVisibleStorageKey, "true");
+                document.documentElement.classList.remove("score-hidden-on-load");
             }
         }
 
@@ -571,6 +584,7 @@
             checkbox.checked = !scoreVisible;
             scoreBox.style.display = scoreVisible ? "block" : "none";
             downloadScoreLink.style.display = scoreVisible ? "block" : "none";
+            document.documentElement.classList.toggle("score-hidden-on-load", !scoreVisible);
         }
 
         function getPerformerSlug(name) {
