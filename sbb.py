@@ -84,6 +84,19 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = is_production()
 
 
+@app.before_request
+def redirect_legacy_score_static_paths():
+    if not SCORE_BASE_URL:
+        return None
+
+    match = re.fullmatch(r"/static/score/score_(\d+)\.pdf", request.path)
+
+    if not match:
+        return None
+
+    return redirect(build_score_url(int(match.group(1))))
+
+
 class PathPrefixMiddleware:
     def __init__(self, wsgi_app, prefix=""):
         self.wsgi_app = wsgi_app
@@ -2021,6 +2034,9 @@ def recording_detail(recording_id):
 
 @app.route("/score/<int:work_id>")
 def score_file(work_id):
+    if SCORE_BASE_URL:
+        return redirect(build_score_url(work_id))
+
     score_source_url = build_score_source_url(work_id)
 
     if score_source_url == "":
@@ -2053,6 +2069,16 @@ def score_file(work_id):
         return f"Score not found. ({err.code})", 404
     except urllib.error.URLError:
         return "Unable to load score.", 502
+
+
+@app.route("/static/score/score_<int:work_id>.pdf")
+def legacy_static_score_file(work_id):
+    if SCORE_BASE_URL:
+        return redirect(build_score_url(work_id))
+
+    return app.send_static_file(
+        "score/score_" + str(work_id).zfill(3) + ".pdf"
+    )
 
 
 @app.route("/friends")

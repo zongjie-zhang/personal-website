@@ -249,6 +249,20 @@
         var mainFrameStorageKey = "mainFramePath:" + window.name;
         var savedMainFramePath = sessionStorage.getItem(mainFrameStorageKey);
         var userPagePath = {{ url_for('user')|tojson }};
+        var navigationEntries = performance.getEntriesByType("navigation");
+        var navigationType = navigationEntries.length ? navigationEntries[0].type : "navigate";
+
+        localStorage.removeItem("mainFramePath:/project/chopin");
+        localStorage.removeItem("mainFramePath:root");
+        localStorage.removeItem("recordingsSearchTerm");
+        localStorage.removeItem("recordingsScoreVisible");
+
+        if (navigationType === "navigate") {
+            sessionStorage.removeItem(mainFrameStorageKey);
+            sessionStorage.removeItem("recordingsSearchTerm");
+            sessionStorage.removeItem("recordingsScoreVisible");
+            savedMainFramePath = null;
+        }
 
         function normalizeFramePath(path) {
             if (!path) {
