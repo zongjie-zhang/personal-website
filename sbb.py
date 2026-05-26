@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, Response
 import mysql.connector
 import re
 import os
 import base64
 import difflib
 import unicodedata
+import urllib.request
+import urllib.error
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -167,6 +169,13 @@ def build_audio_url(link):
 
 
 def build_score_url(work_id):
+    if work_id is None:
+        return ""
+
+    return url_for("score_file", work_id=work_id)
+
+
+def build_score_source_url(work_id):
     if work_id is None:
         return ""
 
@@ -1997,6 +2006,30 @@ def recording_detail(recording_id):
         favorite_recording_ids=favorite_recording_ids,
         return_to_search_url=return_to_search_url
     )
+
+
+@app.route("/score/<int:work_id>")
+def score_file(work_id):
+    score_source_url = build_score_source_url(work_id)
+
+    if score_source_url == "":
+        return "Score not found.", 404
+
+    try:
+        with urllib.request.urlopen(score_source_url) as response:
+            pdf_bytes = response.read()
+
+        return Response(
+            pdf_bytes,
+            mimetype="application/pdf",
+            headers={
+                "Content-Disposition": "inline; filename=score_" + str(work_id).zfill(3) + ".pdf"
+            }
+        )
+    except urllib.error.HTTPError as err:
+        return f"Score not found. ({err.code})", 404
+    except urllib.error.URLError:
+        return "Unable to load score.", 502
 
 
 @app.route("/friends")
