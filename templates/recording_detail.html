@@ -473,6 +473,8 @@
     <script>
         var performersUrl = {{ url_for('performers')|tojson }};
         var toggleFavoriteUrl = {{ url_for('toggle_favorite')|tojson }};
+        var scoreVisibleStorageKey = "recordingsScoreVisible";
+
         function addTrackToPlayer(title, audioPath) {
             if (window.parent && window.parent.addToQueue) {
                 window.parent.addToQueue(title, audioPath);
@@ -547,10 +549,28 @@
             if (checkbox.checked) {
                 scoreBox.style.display = "none";
                 downloadScoreLink.style.display = "none";
+                sessionStorage.setItem(scoreVisibleStorageKey, "false");
             } else {
                 scoreBox.style.display = "block";
                 downloadScoreLink.style.display = "block";
+                sessionStorage.setItem(scoreVisibleStorageKey, "true");
             }
+        }
+
+        function restoreScoreVisibility() {
+            var checkbox = document.getElementById("hideScoreCheckbox");
+            var scoreBox = document.getElementById("scoreBox");
+            var downloadScoreLink = document.getElementById("downloadScoreLink");
+            var savedScoreVisible = sessionStorage.getItem(scoreVisibleStorageKey);
+            var scoreVisible = savedScoreVisible === null || savedScoreVisible === "true";
+
+            if (!checkbox || !scoreBox || !downloadScoreLink) {
+                return;
+            }
+
+            checkbox.checked = !scoreVisible;
+            scoreBox.style.display = scoreVisible ? "block" : "none";
+            downloadScoreLink.style.display = scoreVisible ? "block" : "none";
         }
 
         function getPerformerSlug(name) {
@@ -695,6 +715,7 @@
 
         window.addEventListener("load", function() {
             linkPerformerName();
+            restoreScoreVisibility();
             setupRememberedAudios();
 
             var buttons = document.querySelectorAll(".favorite-button");
