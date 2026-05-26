@@ -657,7 +657,35 @@
             }
 
             function getRecordingAudioPath(recording) {
-                return recording.audio_url || (staticBaseUrl + recording.link);
+                return getTrackAudioPath(recording);
+            }
+
+            function getTrackAudioPath(track) {
+                if (!track) {
+                    return "";
+                }
+
+                if (track.audioPath) {
+                    return track.audioPath;
+                }
+
+                if (track.audio_url) {
+                    return track.audio_url;
+                }
+
+                if (!track.link) {
+                    return "";
+                }
+
+                if (/^https?:\/\//i.test(track.link) || track.link.charAt(0) === "/") {
+                    return track.link;
+                }
+
+                if (track.link.indexOf("audio/") === 0) {
+                    return staticBaseUrl + track.link;
+                }
+
+                return staticBaseUrl + "audio/" + track.link;
             }
 
             function getRecordingDisplayTitle(recording) {
@@ -908,7 +936,7 @@
                 var playerTracks = tracks.map(function(track) {
                     return {
                         title: track.title || track.work_title,
-                        audioPath: track.audioPath || (staticBaseUrl + track.link)
+                        audioPath: getTrackAudioPath(track)
                     };
                 });
 
@@ -1031,7 +1059,8 @@
                         title: track.work_title,
                         performer_name: track.performer_name,
                         link: track.link,
-                        audioPath: staticBaseUrl + track.link
+                        audio_url: track.audio_url,
+                        audioPath: getTrackAudioPath(track)
                     });
                 }
 
@@ -1096,7 +1125,9 @@
                 var tracks = playlist.tracks.map(function(track) {
                     return {
                         title: track.work_title,
-                        link: track.link
+                        link: track.link,
+                        audio_url: track.audio_url,
+                        audioPath: getTrackAudioPath(track)
                     };
                 });
 
@@ -1120,7 +1151,9 @@
                 var tracks = playlist.tracks.map(function(track) {
                     return {
                         title: track.work_title,
-                        link: track.link
+                        link: track.link,
+                        audio_url: track.audio_url,
+                        audioPath: getTrackAudioPath(track)
                     };
                 });
 

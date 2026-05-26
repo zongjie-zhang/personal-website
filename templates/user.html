@@ -558,20 +558,50 @@
         var favoriteTracks = {{ favorites_playlist.tracks|tojson if favorites_playlist else [] }};
         var staticBaseUrl = {{ static_base_url|tojson }};
 
+        function getFavoriteAudioPath(track) {
+            if (!track) {
+                return "";
+            }
+
+            if (track.audio_url) {
+                return track.audio_url;
+            }
+
+            if (!track.link) {
+                return "";
+            }
+
+            if (/^https?:\/\//i.test(track.link) || track.link.charAt(0) === "/") {
+                return track.link;
+            }
+
+            if (track.link.indexOf("audio/") === 0) {
+                return staticBaseUrl + track.link;
+            }
+
+            return staticBaseUrl + "audio/" + track.link;
+        }
+
+        function buildFavoritePlayerTracks() {
+            var tracks = [];
+
+            for (var i = 0; i < favoriteTracks.length; i++) {
+                tracks.push({
+                    title: favoriteTracks[i].work_title,
+                    audioPath: getFavoriteAudioPath(favoriteTracks[i])
+                });
+            }
+
+            return tracks;
+        }
+
         function playFavorites() {
             if (!favoriteTracks || favoriteTracks.length === 0) {
                 alert("Favorites is empty.");
                 return;
             }
 
-            var tracks = [];
-
-            for (var i = 0; i < favoriteTracks.length; i++) {
-                tracks.push({
-                    title: favoriteTracks[i].work_title,
-                    audioPath: staticBaseUrl + favoriteTracks[i].link
-                });
-            }
+            var tracks = buildFavoritePlayerTracks();
 
             if (window.parent && window.parent.playPlaylistTracks) {
                 window.parent.playPlaylistTracks(tracks);
@@ -586,14 +616,7 @@
                 return;
             }
 
-            var tracks = [];
-
-            for (var i = 0; i < favoriteTracks.length; i++) {
-                tracks.push({
-                    title: favoriteTracks[i].work_title,
-                    audioPath: staticBaseUrl + favoriteTracks[i].link
-                });
-            }
+            var tracks = buildFavoritePlayerTracks();
 
             if (window.parent && window.parent.playPlaylistTracksFromIndex) {
                 window.parent.playPlaylistTracksFromIndex(tracks, startIndex);
