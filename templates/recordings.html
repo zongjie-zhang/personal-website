@@ -400,6 +400,13 @@
             display: block;
         }
 
+        .score-box object {
+            width: 100%;
+            height: 117vh;
+            border: none;
+            display: block;
+        }
+
         #downloadScoreLink {
             font-size: 16px;
             margin-top: 10px;
@@ -1131,13 +1138,21 @@
         function loadScoreIframe() {
             var scoreBox = document.getElementById("scoreBox");
 
-            if (!scoreBox || scoreBox.querySelector("iframe")) {
+            if (!scoreBox || scoreBox.querySelector("object")) {
                 return;
             }
 
-            var iframe = document.createElement("iframe");
-            iframe.src = scoreBox.getAttribute("data-score-path");
-            scoreBox.appendChild(iframe);
+            var object = document.createElement("object");
+            object.data = scoreBox.getAttribute("data-score-path");
+            object.type = "application/pdf";
+
+            var fallback = document.createElement("p");
+            fallback.innerHTML =
+                "Preview unavailable. " +
+                "<a href='" + scoreBox.getAttribute("data-score-path") + "' target='_blank'>Open score in new tab</a>";
+
+            object.appendChild(fallback);
+            scoreBox.appendChild(object);
         }
 
         function toggleScoreBox() {

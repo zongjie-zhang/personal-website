@@ -256,6 +256,13 @@
             display: block;
         }
 
+        .score-box object {
+            width: 100%;
+            height: 92vh;
+            border: none;
+            display: block;
+        }
+
         #downloadScoreLink {
             font-size: 16px;
             margin-top: 10px;
@@ -445,7 +452,12 @@
                 </div>
 
                 <div id="scoreBox" class="score-box">
-                    <iframe src="{{ score_path }}"></iframe>
+                    <object data="{{ score_path }}" type="application/pdf">
+                        <p>
+                            Preview unavailable.
+                            <a href="{{ score_path }}" target="_blank">Open score in new tab</a>
+                        </p>
+                    </object>
                 </div>
 
                 <p id="downloadScoreLink">
