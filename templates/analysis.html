@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chopin</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #222;
+        }
+
+        .page {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 60px 28px;
+        }
+
+        h1 {
+            font-family: Arial, sans-serif;
+            font-size: 48px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-family: Arial, sans-serif;
+            font-size: 28px;
+            font-weight: normal;
+            margin-top: 34px;
+            margin-bottom: 14px;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            width: 750px;
+            max-width: 95vw;
+            background-color: white;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 9px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eeeeee;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .summary-box {
+            width: 750px;
+            max-width: 95vw;
+            margin-bottom: 30px;
+            background-color: transparent;
+            box-sizing: border-box;
+        }
+
+        .summary-box p {
+            margin-top: 6px;
+            margin-bottom: 6px;
+            line-height: 1.45;
+        }
+
+        .database-link {
+            margin-top: 8px;
+            margin-bottom: 36px;
+        }
+
+        .database-link a {
+            color: #5b356d;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+        <h1>Database Analysis</h1>
+
+        <p>
+            This page shows simple summaries based on the Chopin database.
+        </p>
+
+        <p class="database-link">
+            <a href="{{ url_for('works') }}">View full works database table</a>
+        </p>
+
+        {% if summary %}
+            <div class="summary-box">
+                <p>
+                    Total number of works:
+                    <strong>{{ genre_counts | sum(attribute='count') }}</strong>
+                </p>
+
+                <p>
+                    Earliest composition year:
+                    <strong>{{ summary.earliest_year }}</strong>
+                </p>
+
+                <p>
+                    Latest composition year:
+                    <strong>{{ summary.latest_year }}</strong>
+                </p>
+            </div>
+        {% endif %}
+
+        {% if genre_counts %}
+            <h2>Works by Genre</h2>
+
+            <table>
+                <tr>
+                    <th>Genre</th>
+                    <th>Number of Works</th>
+                </tr>
+
+                {% for row in genre_counts %}
+                    <tr>
+                        <td>{{ row.genre }}</td>
+                        <td>{{ row.count }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+        {% if place_counts %}
+            <h2>Works by Place</h2>
+
+            <table>
+                <tr>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Number of Works</th>
+                </tr>
+
+                {% for row in place_counts %}
+                    <tr>
+                        <td>{{ row.city }}</td>
+                        <td>{{ row.country }}</td>
+                        <td>{{ row.count }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </main>
+
+</body>
+</html>

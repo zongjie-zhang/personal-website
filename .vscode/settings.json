@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.html": "html"
+    },
+    "html.validate.scripts": false,
+    "html.validate.styles": false,
+    "editor.renderWhitespace": "selection"
+}

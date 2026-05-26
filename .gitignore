@@ -1,0 +1,7 @@
+env/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+static/audio/
+static/score/

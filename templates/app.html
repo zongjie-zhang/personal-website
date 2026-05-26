@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chopin</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f6f6f6;
+        }
+
+        .app-header {
+            height: 72px;
+            background-color: #111;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 28px;
+            box-sizing: border-box;
+            gap: 22px;
+        }
+
+        .app-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-right: 6px;
+            white-space: nowrap;
+        }
+
+        .app-nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex: 1;
+        }
+
+        .app-nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .app-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .right-tools {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-left: auto;
+        }
+
+        .top-search-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .top-search-input {
+            width: 310px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid #888;
+            padding: 0 22px;
+            font-size: 14px;
+            outline: none;
+            background-color: white;
+            color: #222;
+            box-sizing: border-box;
+        }
+
+        .top-search-input::placeholder {
+            color: #777;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .top-search-input:focus {
+            border-color: white;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+        }
+
+        .user-avatar-link {
+            display: block;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #d9d9d9;
+            background-color: #f3f4f6;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #f3f4f6;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .default-avatar-head {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #9ca3af;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .default-avatar-body {
+            position: absolute;
+            width: 34px;
+            height: 23px;
+            border-radius: 50% 50% 0 0;
+            background-color: #9ca3af;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .main-frame {
+            width: 100vw;
+            height: calc(100vh - 72px);
+            border: none;
+            background-color: white;
+        }
+
+        @media (max-width: 1280px) {
+            .app-header {
+                height: auto;
+                min-height: 72px;
+                flex-wrap: wrap;
+                padding-top: 14px;
+                padding-bottom: 14px;
+            }
+
+            .app-nav {
+                order: 3;
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .right-tools {
+                margin-left: auto;
+            }
+
+            .main-frame {
+                height: calc(100vh - 130px);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .right-tools {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .top-search-form {
+                flex: 1;
+            }
+
+            .top-search-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-header">
+        <div class="app-title">
+            Chopin
+        </div>
+
+        <div class="app-nav">
+            <a href="{{ url_for('home') }}" target="mainFrame">HOME</a>
+            <a href="{{ url_for('about') }}" target="mainFrame">ABOUT CHOPIN</a>
+            <a href="{{ url_for('recordings') }}" target="mainFrame">RECORDINGS</a>
+            <a href="{{ url_for('playlist') }}" target="mainFrame">PLAYLIST</a>
+            <a href="{{ url_for('friends') }}" target="mainFrame">FRIENDS</a>
+            <a href="{{ url_for('performers') }}" target="mainFrame">PERFORMERS</a>
+            <a href="{{ url_for('analysis') }}" target="mainFrame">ANALYSIS</a>
+            {% if current_user and current_user.user_id == 1 %}
+                <a href="{{ url_for('admin') }}" target="mainFrame">ADMIN</a>
+            {% endif %}
+        </div>
+
+        <div class="right-tools">
+            <form class="top-search-form" action="{{ url_for('search') }}" method="get" target="mainFrame">
+                <input
+                    class="top-search-input"
+                    type="text"
+                    name="q"
+                    placeholder="Search"
+                >
+            </form>
+
+            <a class="user-avatar-link" href="{{ url_for('user') }}" target="mainFrame" title="User Profile">
+                <div class="user-avatar">
+                    {% if current_user and current_user.avatar_data %}
+                        <img src="{{ current_user.avatar_data }}" alt="User avatar">
+                    {% else %}
+                        <div class="default-avatar-head"></div>
+                        <div class="default-avatar-body"></div>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <iframe
+        id="mainFrame"
+        name="mainFrame"
+        class="main-frame"
+        src="{{ url_for('home') }}">
+    </iframe>
+
+    {% include "player.html" %}
+
+    <script>
+        var mainFrame = document.getElementById("mainFrame");
+        var appRoot = {{ app_root|tojson }};
+        var defaultFramePath = {{ url_for('home')|tojson }};
+        var mainFrameStorageKey = "mainFramePath:" + (appRoot || "root");
+        var savedMainFramePath = localStorage.getItem(mainFrameStorageKey);
+
+        function normalizeFramePath(path) {
+            if (!path) {
+                return defaultFramePath;
+            }
+
+            if (/^https?:\/\//i.test(path)) {
+                return path;
+            }
+
+            if (appRoot && path === "/") {
+                return appRoot + "/";
+            }
+
+            if (appRoot && path.startsWith("/") && !path.startsWith(appRoot + "/") && path !== appRoot) {
+                return appRoot + path;
+            }
+
+            return path;
+        }
+
+        function isTypingTarget(target) {
+            if (!target) {
+                return false;
+            }
+
+            var tagName = (target.tagName || "").toLowerCase();
+
+            if (
+                tagName === "input" ||
+                tagName === "textarea" ||
+                tagName === "select"
+            ) {
+                return true;
+            }
+
+            return !!target.closest("[contenteditable='true']");
+        }
+
+        function isPlayerVisible() {
+            var panel = document.getElementById("playerPanel");
+
+            return !!panel && panel.style.display !== "none" && panel.style.display !== "";
+        }
+
+        function getPageAudio() {
+            try {
+                var frameDocument = mainFrame.contentWindow.document;
+                var audios = frameDocument.querySelectorAll("audio");
+                var playableAudios = [];
+
+                for (var i = 0; i < audios.length; i++) {
+                    if (!audios[i].src && !audios[i].currentSrc) {
+                        continue;
+                    }
+
+                    if (!audios[i].paused && !audios[i].ended) {
+                        playableAudios.push(audios[i]);
+                        continue;
+                    }
+
+                    playableAudios.push(audios[i]);
+                }
+
+                if (playableAudios.length === 1) {
+                    return playableAudios[0];
+                }
+
+                return null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function togglePageAudio(audio) {
+            if (!audio) {
+                return false;
+            }
+
+            if (audio.paused) {
+                audio.play().catch(function() {});
+            } else {
+                audio.pause();
+            }
+
+            return true;
+        }
+
+        function handleSpacebarPlayback(event) {
+            if (
+                event.key !== " " &&
+                event.code !== "Space" &&
+                event.key !== "Spacebar"
+            ) {
+                return;
+            }
+
+            if (isTypingTarget(event.target)) {
+                return;
+            }
+
+            event.preventDefault();
+
+            if (isPlayerVisible()) {
+                toggleGlobalPlayback();
+                return;
+            }
+
+            if (togglePageAudio(getPageAudio())) {
+                return;
+            }
+
+            toggleGlobalPlayback();
+        }
+
+        function attachFrameSpacebarHandler() {
+            try {
+                var frameDocument = mainFrame.contentWindow.document;
+                frameDocument.removeEventListener("keydown", handleSpacebarPlayback);
+                frameDocument.addEventListener("keydown", handleSpacebarPlayback);
+            } catch (error) {
+            }
+        }
+
+        if (savedMainFramePath) {
+            mainFrame.src = normalizeFramePath(savedMainFramePath);
+        }
+
+        document.addEventListener("keydown", handleSpacebarPlayback);
+
+        mainFrame.addEventListener("load", function() {
+            attachFrameSpacebarHandler();
+
+            try {
+                var framePath = mainFrame.contentWindow.location.pathname;
+                var frameSearch = mainFrame.contentWindow.location.search;
+                var frameHash = mainFrame.contentWindow.location.hash;
+
+                localStorage.setItem(
+                    mainFrameStorageKey,
+                    framePath + frameSearch + frameHash
+                );
+            } catch (error) {
+                localStorage.setItem(mainFrameStorageKey, mainFrame.getAttribute("src"));
+            }
+        });
+    </script>
+
+</body>
+</html>

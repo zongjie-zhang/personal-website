@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #222;
+        }
+
+        .search-header {
+            background-color: #5b356d;
+            color: white;
+            text-align: center;
+            padding: 70px 20px 72px 20px;
+        }
+
+        .search-header h1 {
+            font-size: 68px;
+            line-height: 1;
+            letter-spacing: 3px;
+            margin: 0 0 24px 0;
+            text-transform: uppercase;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #e3d4ea;
+        }
+
+        .breadcrumb a {
+            color: #e3d4ea;
+            text-decoration: none;
+        }
+
+        .breadcrumb span {
+            margin: 0 10px;
+        }
+
+        .search-page {
+            max-width: 900px;
+            margin: 70px auto;
+            padding: 0 28px;
+        }
+
+        .search-page-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .search-page-input {
+            flex: 1;
+            padding: 18px 24px;
+            border: 2px solid #6b3f8f;
+            border-radius: 999px;
+            font-size: 20px;
+            font-family: Georgia, serif;
+            outline: none;
+        }
+
+        .search-page-button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 999px;
+            background-color: #6b3f8f;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .search-page-button:hover {
+            background-color: #4d2c6e;
+        }
+
+        .return-button {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #6b3f8f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .result-count {
+            margin-bottom: 36px;
+            font-size: 16px;
+        }
+
+        .result-card {
+            margin-bottom: 36px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 28px;
+        }
+
+        .result-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 150px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .result-cover-area {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            justify-self: end;
+        }
+
+        .result-cover-link {
+            display: block;
+            width: 150px;
+            height: 150px;
+        }
+
+        .result-cover {
+            display: block;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .result-content {
+            min-width: 0;
+        }
+
+        .result-card h2 {
+            margin: 0;
+        }
+
+        .result-card h2 a {
+            color: #5b356d;
+            font-family: Georgia, serif;
+            font-size: 30px;
+            text-decoration: underline;
+        }
+
+        .result-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .result-card p {
+            font-size: 17px;
+            line-height: 1.6;
+            margin: 7px 0;
+        }
+
+        .meta {
+            color: #555;
+        }
+
+        .result-actions {
+            margin-top: 14px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .result-actions a,
+        .queue-button {
+            display: inline-block;
+            padding: 9px 15px;
+            border-radius: 999px;
+            border: 1px solid #6b3f8f;
+            color: #6b3f8f;
+            background-color: white;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .result-actions a:hover,
+        .queue-button:hover {
+            background-color: #f3edf7;
+        }
+
+        .favorite-button {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid #999;
+            background-color: white;
+            color: #777;
+            cursor: pointer;
+            padding: 0;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cover-favorite-button {
+            position: absolute;
+            right: -11px;
+            top: -11px;
+            background-color: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+        }
+
+        .favorite-button:hover {
+            border-color: #b71c1c;
+            color: #b71c1c;
+            background-color: #fff1f1;
+        }
+
+        .favorite-button.favorited {
+            border-color: #b71c1c;
+            color: #b71c1c;
+        }
+
+        .favorite-button svg {
+            width: 25px;
+            height: 25px;
+            display: block;
+            overflow: visible;
+            shape-rendering: geometricPrecision;
+        }
+
+        .favorite-button .favorite-heart {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.85;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .favorite-button.favorited .favorite-heart {
+            fill: currentColor;
+            stroke-width: 1.65;
+        }
+
+        .not-found {
+            margin-top: 40px;
+            color: #555;
+        }
+
+        .not-found h2 {
+            color: #222;
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .empty-search {
+            margin-top: 30px;
+            padding: 30px;
+            background-color: #fafafa;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 650px) {
+            .search-header h1 {
+                font-size: 48px;
+            }
+
+            .result-layout {
+                grid-template-columns: minmax(0, 1fr) 104px;
+                gap: 16px;
+            }
+
+            .result-cover-area,
+            .result-cover-link,
+            .result-cover {
+                width: 104px;
+                height: 104px;
+            }
+
+            .cover-favorite-button {
+                right: -8px;
+                top: -8px;
+            }
+
+            .result-card h2 a {
+                font-size: 24px;
+            }
+
+            .search-page-form {
+                flex-direction: column;
+            }
+
+            .search-page-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="search-header">
+        <h1>Search</h1>
+
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>|</span>
+            <span>Search</span>
+        </div>
+    </header>
+
+    <main class="search-page">
+
+        <form action="{{ url_for('search') }}" method="get" class="search-page-form">
+            <input
+                type="text"
+                name="q"
+                value="{{ search_term }}"
+                class="search-page-input"
+                placeholder="Search Chopin works, recordings, places..."
+            >
+
+            <button type="submit" class="search-page-button">
+                Search
+            </button>
+        </form>
+
+        <a href="{{ url_for('home') }}" class="return-button">← Return to Home</a>
+
+        {% if search_term %}
+            <p class="result-count">
+                Search results for
+                <strong>"{{ search_term }}"</strong>
+
+                {% if search_type %}
+                    | Search type:
+                    <strong>{{ search_type }}</strong>
+                {% endif %}
+
+                {% if results %}
+                    | {{ results|length }} result(s)
+                {% endif %}
+            </p>
+        {% endif %}
+
+        {% if results %}
+            <div class="results-list">
+                {% for work in results %}
+                    <div class="result-card">
+                        <div class="result-layout">
+                            <div class="result-content">
+                                <div class="result-title-row">
+                                    <h2>
+                                        {% if work.recording_id %}
+                                            <a href="{{ url_for('recording_detail', recording_id=work.recording_id, return_q=search_term) }}">
+                                                {{ work.title }}
+                                            </a>
+                                        {% else %}
+                                            {{ work.title }}
+                                        {% endif %}
+                                    </h2>
+                                </div>
+
+                                <p class="meta">
+                                    {% if work.genre %}
+                                        {{ work.genre }}
+                                    {% endif %}
+
+                                    {% if work.musical_key %}
+                                        in {{ work.musical_key }}
+                                    {% endif %}
+
+                                    {% if work.composition_year %}
+                                        | Composed: {{ work.composition_year }}
+                                    {% endif %}
+                                </p>
+
+                                {% if work.city or work.country %}
+                                    <p>
+                                        Place:
+                                        {% if work.city %}
+                                            {{ work.city }}
+                                        {% endif %}
+
+                                        {% if work.city and work.country %}
+                                            ,
+                                        {% endif %}
+
+                                        {% if work.country %}
+                                            {{ work.country }}
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
+
+                                {% if work.performer_name %}
+                                    <p>
+                                        Recording performer:
+                                        <strong>{{ work.performer_name }}</strong>
+                                    </p>
+                                {% endif %}
+
+                                {% if work.description_content %}
+                                    <p>{{ work.description_content }}</p>
+                                {% endif %}
+
+                                <div class="result-actions">
+                                    {% if work.recording_link %}
+                                        <a href="{{ url_for('recording_detail', recording_id=work.recording_id, return_q=search_term) }}">
+                                            View Recording Detail
+                                        </a>
+
+                                        <a href="{{ url_for('static', filename=work.recording_link) }}" target="_blank">
+                                            Open Audio
+                                        </a>
+
+                                        <button
+                                            class="queue-button"
+                                            data-title="{{ work.title }}"
+                                            data-audio="{{ url_for('static', filename=work.recording_link) }}"
+                                            onclick="addButtonTrackToPlayer(this)">
+                                            Add to Queue
+                                        </button>
+                                    {% endif %}
+
+                                    {% if work.score_path %}
+                                        <a href="{{ work.score_path }}" target="_blank">
+                                            Open Score
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {% if work.cover_path %}
+                                <div class="result-cover-area">
+                                    {% if work.recording_id %}
+                                        <a class="result-cover-link" href="{{ url_for('recording_detail', recording_id=work.recording_id, return_q=search_term) }}">
+                                            <img
+                                                class="result-cover"
+                                                src="{{ work.cover_path }}"
+                                                alt="Album cover for {{ work.title }}">
+                                        </a>
+                                    {% else %}
+                                        <img
+                                            class="result-cover"
+                                            src="{{ work.cover_path }}"
+                                            alt="Album cover for {{ work.title }}">
+                                    {% endif %}
+
+                                    {% if work.recording_id %}
+                                        <button
+                                            type="button"
+                                            class="favorite-button cover-favorite-button {% if work.recording_id in favorite_recording_ids %}favorited{% endif %}"
+                                            data-recording-id="{{ work.recording_id }}"
+                                            onclick="toggleFavorite(this)"
+                                            title="Favorite">
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% elif search_term %}
+            <div class="not-found">
+                <h2>Not found</h2>
+
+                <p>
+                    Try a title, genre, performer, place, year, or opus number.
+                </p>
+            </div>
+        {% else %}
+            <div class="empty-search">
+                <p>
+                    Type a search term above. Examples:
+                    <strong>Ballade</strong>,
+                    <strong>Nocturne</strong>,
+                    <strong>Paris</strong>,
+                    <strong>Op. 28</strong>,
+                    <strong>op10 no1</strong>,
+                    <strong>Rubinstien</strong>,
+                    or <strong>1830-1840</strong>.
+                </p>
+            </div>
+        {% endif %}
+
+    </main>
+
+    <script>
+        var toggleFavoriteUrl = {{ url_for('toggle_favorite')|tojson }};
+        var searchInput = document.querySelector(".search-page-input");
+
+        if (searchInput) {
+            searchInput.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    searchInput.form.submit();
+                }
+            });
+        }
+
+        function addTrackToPlayer(title, audioPath) {
+            if (window.parent && window.parent.addToQueue) {
+                window.parent.addToQueue(title, audioPath);
+            } else {
+                alert("Player is not loaded. Please open this page through /app.");
+            }
+        }
+
+        function addButtonTrackToPlayer(button) {
+            var title = button.getAttribute("data-title");
+            var audioPath = button.getAttribute("data-audio");
+
+            addTrackToPlayer(title, audioPath);
+        }
+
+        function updateFavoriteButton(button, favorited) {
+            if (favorited) {
+                button.classList.add("favorited");
+            } else {
+                button.classList.remove("favorited");
+            }
+
+            button.innerHTML =
+                "<svg viewBox='0 0 32 32' aria-hidden='true'>" +
+                    "<path class='favorite-heart' d='M16 25.8C9.4 20.7 5 16.9 5 12C5 8.7 7.7 6.4 11 6.4C13 6.4 14.9 7.3 16 8.8C17.1 7.3 19 6.4 21 6.4C24.3 6.4 27 8.7 27 12C27 16.9 22.6 20.7 16 25.8Z'></path>" +
+                "</svg>";
+        }
+
+        function updateFavoriteButtons(recordingId, favorited) {
+            var buttons = document.querySelectorAll(
+                ".favorite-button[data-recording-id='" + recordingId + "']"
+            );
+
+            for (var i = 0; i < buttons.length; i++) {
+                updateFavoriteButton(buttons[i], favorited);
+            }
+        }
+
+        function toggleFavorite(button) {
+            var recordingId = button.getAttribute("data-recording-id");
+
+            fetch(toggleFavoriteUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    recording_id: recordingId
+                })
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (!data.success) {
+                        alert(data.message);
+                        return;
+                    }
+
+                    updateFavoriteButtons(recordingId, data.favorited);
+                })
+                .catch(function() {
+                    alert("Favorite could not be updated. Please check the server.");
+                });
+        }
+
+        window.addEventListener("load", function() {
+            var buttons = document.querySelectorAll(".favorite-button");
+
+            for (var i = 0; i < buttons.length; i++) {
+                updateFavoriteButton(buttons[i], buttons[i].classList.contains("favorited"));
+            }
+        });
+    </script>
+
+</body>
+</html>

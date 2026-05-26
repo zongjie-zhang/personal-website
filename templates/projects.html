@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Projects</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f7f3ed;
+            color: #171717;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 42px 28px 70px 28px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 26px;
+            font-size: 14px;
+            color: #60584f;
+        }
+
+        h1 {
+            margin: 0 0 14px 0;
+            font-family: Georgia, serif;
+            font-size: 48px;
+            font-weight: normal;
+        }
+
+        .intro {
+            max-width: 700px;
+            font-size: 17px;
+            line-height: 1.8;
+            color: #4b443d;
+            margin: 0 0 34px 0;
+        }
+
+        .project-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .project-item {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: end;
+            padding: 24px 22px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.68);
+        }
+
+        .project-label {
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #7e7468;
+            margin-bottom: 12px;
+        }
+
+        .project-item h2 {
+            margin: 0 0 10px 0;
+            font-family: Georgia, serif;
+            font-size: 31px;
+            font-weight: normal;
+        }
+
+        .project-item p {
+            margin: 0;
+            max-width: 720px;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #4b443d;
+        }
+
+        .project-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+            height: 42px;
+            padding: 0 18px;
+            border-radius: 999px;
+            border: 1px solid #171717;
+            font-size: 14px;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 760px) {
+            .project-item {
+                grid-template-columns: 1fr;
+                align-items: start;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <a class="back-link" href="{{ url_for('index') }}">← Back to Home</a>
+
+        <h1>Projects</h1>
+
+        <p class="intro">
+            This area collects longer builds and structured work. Right now the Chopin database
+            is the first featured project, and more can be added here later.
+        </p>
+
+        <section class="project-list">
+            <div class="project-item">
+                <div>
+                    <div class="project-label">Featured Project</div>
+                    <h2>Chopin Database</h2>
+                    <p>
+                        A digital music project that connects works, recordings, performers, scores,
+                        places, playlists, and user interaction in one interface.
+                    </p>
+                </div>
+
+                <a class="project-action" href="{{ chopin_site_root }}">Open</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

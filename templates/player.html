@@ -1,0 +1,990 @@
+<div id="floatingPlayer" class="floating-player">
+    <button id="playerToggleButton" class="player-toggle-button">
+        🎵
+    </button>
+
+    <div id="playerPanel" class="player-panel">
+        <div id="playerHeader" class="player-header">
+            <strong>Player</strong>
+            <button onclick="toggleFloatingPlayer()">−</button>
+        </div>
+
+        <div id="nowPlayingText" class="now-playing-row">
+            <span class="now-playing-label">Now playing:</span>
+            <div class="now-playing-marquee">
+                <span id="nowPlayingTitle" class="now-playing-title static-title">No track selected.</span>
+            </div>
+        </div>
+
+        <audio id="globalAudioPlayer" controls></audio>
+
+        <div class="player-controls arrow-controls">
+            <button class="icon-button" onclick="playPreviousTrack()" title="Previous">
+                ◀◀
+            </button>
+
+            <button class="icon-button" onclick="playNextTrack()" title="Next">
+                ▶▶
+            </button>
+        </div>
+
+        <p id="loopModeText">Mode: Single Play</p>
+
+        <div class="player-controls mode-controls">
+            <button onclick="setLoopMode('none')">Single Play</button>
+            <button onclick="setLoopMode('queue')">Playlist Loop</button>
+            <button onclick="setLoopMode('single')">Single Loop</button>
+        </div>
+
+        <h4>Playlist</h4>
+        <ol id="queueList"></ol>
+
+        <button onclick="clearQueue()">Clear Playlist</button>
+    </div>
+</div>
+
+<style>
+    .floating-player {
+        position: fixed;
+        right: 0px;
+        top: 180px;
+        z-index: 9999;
+        font-family: Arial, sans-serif;
+    }
+
+    .player-toggle-button {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px 0 0 16px;
+        border: 1px solid #aaa;
+        background-color: white;
+        font-size: 24px;
+        cursor: move;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .player-panel {
+        width: 320px;
+        background-color: white;
+        border: 1px solid #aaa;
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 2px 18px rgba(0, 0, 0, 0.25);
+        display: none;
+    }
+
+    .player-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: -12px -12px 0 -12px;
+        padding: 12px 14px;
+        cursor: move;
+        user-select: none;
+        background-color: #b71c1c;
+        color: white;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .player-header button {
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: white;
+        font-size: 22px;
+        line-height: 1;
+        padding: 0;
+    }
+
+    .now-playing-row {
+        margin-top: 18px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.35;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .now-playing-label {
+        color: #333;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-weight: bold;
+    }
+
+    .now-playing-marquee {
+        flex: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+        min-width: 0;
+    }
+
+    .now-playing-title {
+        display: inline-block;
+        padding-left: 100%;
+        animation: marqueeScroll 12s linear infinite;
+        font-weight: bold;
+    }
+
+    .static-title {
+        padding-left: 0;
+        animation: none;
+    }
+
+    @keyframes marqueeScroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+
+    #globalAudioPlayer {
+        width: 100%;
+        margin-top: 4px;
+        margin-bottom: 2px;
+    }
+
+    .player-controls {
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+
+    .player-controls button {
+        cursor: pointer;
+    }
+
+    .arrow-controls {
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+        margin-top: 2px;
+        margin-bottom: 2px;
+    }
+
+    .icon-button {
+        border: none;
+        background: none;
+        color: #2b2b2b;
+        font-size: 26px;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0 4px;
+        display: inline-block;
+        transform: scaleX(1.15) scaleY(0.82);
+        transform-origin: center;
+    }
+
+    .icon-button:hover {
+        color: #555;
+    }
+
+    #loopModeText {
+        margin-top: 18px;
+        margin-bottom: 4px;
+        font-size: 14px;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .mode-controls {
+        margin-top: 6px;
+    }
+
+    .mode-controls button {
+        border: 1px solid #bbb;
+        background-color: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+    }
+
+    .mode-controls button:hover {
+        background-color: #f5f5f5;
+    }
+
+    .player-panel h4 {
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+
+    #queueList {
+        max-height: 190px;
+        overflow-y: auto;
+        padding-left: 0;
+        margin-top: 0;
+        margin-bottom: 12px;
+        margin-left: 0;
+        list-style: none;
+    }
+
+    #queueList li {
+        margin-bottom: 4px;
+        padding-left: 0;
+    }
+
+    .queue-item {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .queue-number {
+        width: 22px;
+        min-width: 22px;
+        text-align: right;
+        color: #8a8a8a;
+        font-size: 14px;
+        padding-top: 3px;
+        flex-shrink: 0;
+    }
+
+    .queue-number.current-number {
+        color: #2b2b2b;
+        font-weight: bold;
+    }
+
+    .queue-content {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        border-left: 2px solid #d8d8d8;
+        padding: 3px 0 3px 10px;
+        min-width: 0;
+    }
+
+    .queue-content.current-content {
+        border-left-color: #2b2b2b;
+    }
+
+    .queue-title-box {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .queue-title {
+        display: inline-block;
+        white-space: nowrap;
+        line-height: 1.25;
+        font-weight: normal;
+    }
+
+    .queue-title-box:hover .queue-title {
+        text-decoration: underline;
+    }
+
+    .queue-title.hover-scrolling {
+        animation: queueTitleScroll 10s linear infinite;
+    }
+
+    .queue-title.hover-scrolling::after {
+        content: attr(data-title);
+        padding-left: 24px;
+    }
+
+    @keyframes queueTitleScroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .remove-track-button {
+        display: none;
+        border: none;
+        background: none;
+        color: #777;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        padding: 0;
+        flex-shrink: 0;
+    }
+
+    .queue-item:hover .remove-track-button {
+        display: inline;
+    }
+
+    .remove-track-button:hover {
+        color: black;
+    }
+</style>
+
+<script>
+    var playerQueue = JSON.parse(localStorage.getItem("playerQueue")) || [];
+    var currentTrackIndex = parseInt(localStorage.getItem("currentTrackIndex")) || 0;
+    var loopMode = localStorage.getItem("loopMode") || "none";
+    var playerMinimized = localStorage.getItem("playerMinimized") || "true";
+    var globalAudioProgressKey = "globalAudioProgress";
+
+    var playerPanelLeft = localStorage.getItem("playerPanelLeft");
+    var playerPanelTop = localStorage.getItem("playerPanelTop");
+    var playerButtonTop = localStorage.getItem("playerButtonTop") || "180px";
+
+    var isDragging = false;
+    var didDrag = false;
+    var dragMode = "";
+    var offsetX = 0;
+    var offsetY = 0;
+    var pageIsUnloading = false;
+    var unloadWasPlaying = false;
+    var resumePending = false;
+
+    function savePlayerState() {
+        localStorage.setItem("playerQueue", JSON.stringify(playerQueue));
+        localStorage.setItem("currentTrackIndex", currentTrackIndex);
+        localStorage.setItem("loopMode", loopMode);
+        localStorage.setItem("playerMinimized", playerMinimized);
+    }
+
+    function getGlobalAudioProgress() {
+        try {
+            return JSON.parse(localStorage.getItem(globalAudioProgressKey)) || {};
+        } catch (error) {
+            return {};
+        }
+    }
+
+    function saveGlobalAudioProgress(wasPlayingOverride) {
+        var audio = document.getElementById("globalAudioPlayer");
+
+        if (
+            !audio ||
+            playerQueue.length === 0 ||
+            !playerQueue[currentTrackIndex] ||
+            isNaN(audio.currentTime)
+        ) {
+            return;
+        }
+
+        localStorage.setItem(
+            globalAudioProgressKey,
+            JSON.stringify({
+                audioPath: playerQueue[currentTrackIndex].audioPath,
+                currentTrackIndex: currentTrackIndex,
+                currentTime: audio.currentTime,
+                wasPlaying: typeof wasPlayingOverride === "boolean"
+                    ? wasPlayingOverride
+                    : (!audio.paused && !audio.ended)
+            })
+        );
+    }
+
+    function clearGlobalAudioProgress() {
+        localStorage.removeItem(globalAudioProgressKey);
+    }
+
+    function attemptResumePlayback() {
+        var audio = document.getElementById("globalAudioPlayer");
+
+        if (!resumePending || !audio) {
+            return;
+        }
+
+        audio.play()
+            .then(function() {
+                resumePending = false;
+            })
+            .catch(function() {});
+    }
+
+    function isTypingTarget(target) {
+        if (!target) {
+            return false;
+        }
+
+        var tagName = (target.tagName || "").toLowerCase();
+
+        if (
+            tagName === "input" ||
+            tagName === "textarea" ||
+            tagName === "select"
+        ) {
+            return true;
+        }
+
+        return !!target.closest("[contenteditable='true']");
+    }
+
+    function toggleGlobalPlayback() {
+        var audio = document.getElementById("globalAudioPlayer");
+
+        if (!audio || !audio.getAttribute("src")) {
+            return;
+        }
+
+        if (audio.paused) {
+            resumePending = true;
+            attemptResumePlayback();
+        } else {
+            resumePending = false;
+            audio.pause();
+        }
+    }
+
+    function getModeLabel(mode) {
+        if (mode === "queue") {
+            return "Playlist Loop";
+        }
+
+        if (mode === "single") {
+            return "Single Loop";
+        }
+
+        return "Single Play";
+    }
+
+    function toggleFloatingPlayer() {
+        var floatingPlayer = document.getElementById("floatingPlayer");
+        var panel = document.getElementById("playerPanel");
+        var button = document.getElementById("playerToggleButton");
+
+        if (panel.style.display === "none" || panel.style.display === "") {
+            panel.style.display = "block";
+            button.style.display = "none";
+            playerMinimized = "false";
+
+            if (playerPanelLeft && playerPanelTop) {
+                floatingPlayer.style.left = playerPanelLeft;
+                floatingPlayer.style.top = playerPanelTop;
+                floatingPlayer.style.right = "auto";
+            } else {
+                floatingPlayer.style.left = "auto";
+                floatingPlayer.style.right = "20px";
+                floatingPlayer.style.top = playerButtonTop;
+            }
+        } else {
+            panel.style.display = "none";
+            button.style.display = "block";
+            playerMinimized = "true";
+
+            floatingPlayer.style.left = "auto";
+            floatingPlayer.style.right = "0px";
+            floatingPlayer.style.top = playerButtonTop;
+        }
+
+        savePlayerState();
+    }
+
+    function restorePlayerDisplay() {
+        var floatingPlayer = document.getElementById("floatingPlayer");
+        var panel = document.getElementById("playerPanel");
+        var button = document.getElementById("playerToggleButton");
+
+        if (playerMinimized === "false") {
+            panel.style.display = "block";
+            button.style.display = "none";
+
+            if (playerPanelLeft && playerPanelTop) {
+                floatingPlayer.style.left = playerPanelLeft;
+                floatingPlayer.style.top = playerPanelTop;
+                floatingPlayer.style.right = "auto";
+            } else {
+                floatingPlayer.style.left = "auto";
+                floatingPlayer.style.right = "20px";
+                floatingPlayer.style.top = playerButtonTop;
+            }
+        } else {
+            panel.style.display = "none";
+            button.style.display = "block";
+
+            floatingPlayer.style.left = "auto";
+            floatingPlayer.style.right = "0px";
+            floatingPlayer.style.top = playerButtonTop;
+        }
+    }
+
+    function startDrag(event, mode) {
+        var floatingPlayer = document.getElementById("floatingPlayer");
+
+        isDragging = true;
+        didDrag = false;
+        dragMode = mode;
+
+        var rect = floatingPlayer.getBoundingClientRect();
+
+        offsetX = event.clientX - rect.left;
+        offsetY = event.clientY - rect.top;
+
+        document.addEventListener("mousemove", dragPlayer);
+        document.addEventListener("mouseup", stopDrag);
+    }
+
+    function dragPlayer(event) {
+        if (!isDragging) {
+            return;
+        }
+
+        didDrag = true;
+
+        var floatingPlayer = document.getElementById("floatingPlayer");
+
+        if (dragMode === "panel") {
+            var newLeft = event.clientX - offsetX;
+            var newTop = event.clientY - offsetY;
+
+            var maxLeft = window.innerWidth - floatingPlayer.offsetWidth;
+            var maxTop = window.innerHeight - floatingPlayer.offsetHeight;
+
+            if (newLeft < 0) {
+                newLeft = 0;
+            }
+
+            if (newTop < 0) {
+                newTop = 0;
+            }
+
+            if (newLeft > maxLeft) {
+                newLeft = maxLeft;
+            }
+
+            if (newTop > maxTop) {
+                newTop = maxTop;
+            }
+
+            floatingPlayer.style.left = newLeft + "px";
+            floatingPlayer.style.top = newTop + "px";
+            floatingPlayer.style.right = "auto";
+
+            playerPanelLeft = floatingPlayer.style.left;
+            playerPanelTop = floatingPlayer.style.top;
+
+            localStorage.setItem("playerPanelLeft", playerPanelLeft);
+            localStorage.setItem("playerPanelTop", playerPanelTop);
+        }
+
+        if (dragMode === "button") {
+            var newButtonTop = event.clientY - offsetY;
+            var maxButtonTop = window.innerHeight - floatingPlayer.offsetHeight;
+
+            if (newButtonTop < 0) {
+                newButtonTop = 0;
+            }
+
+            if (newButtonTop > maxButtonTop) {
+                newButtonTop = maxButtonTop;
+            }
+
+            floatingPlayer.style.left = "auto";
+            floatingPlayer.style.right = "0px";
+            floatingPlayer.style.top = newButtonTop + "px";
+
+            playerButtonTop = floatingPlayer.style.top;
+
+            localStorage.setItem("playerButtonTop", playerButtonTop);
+        }
+    }
+
+    function stopDrag() {
+        isDragging = false;
+        dragMode = "";
+
+        document.removeEventListener("mousemove", dragPlayer);
+        document.removeEventListener("mouseup", stopDrag);
+
+        setTimeout(function() {
+            didDrag = false;
+        }, 100);
+    }
+
+    function addToQueue(title, audioPath) {
+        playerQueue.push({
+            title: title,
+            audioPath: audioPath
+        });
+
+        if (playerQueue.length === 1) {
+            currentTrackIndex = 0;
+            loadCurrentTrack(false);
+        }
+
+        savePlayerState();
+        renderQueue();
+    }
+
+    function playPlaylistTracks(tracks) {
+        playPlaylistTracksFromIndex(tracks, 0);
+    }
+
+    function playPlaylistTracksFromIndex(tracks, startIndex) {
+        if (!tracks || tracks.length === 0) {
+            alert("This playlist is empty.");
+            return;
+        }
+
+        playerQueue = [];
+
+        for (var i = 0; i < tracks.length; i++) {
+            playerQueue.push({
+                title: tracks[i].title,
+                audioPath: tracks[i].audioPath
+            });
+        }
+
+        currentTrackIndex = startIndex || 0;
+
+        if (currentTrackIndex < 0 || currentTrackIndex >= playerQueue.length) {
+            currentTrackIndex = 0;
+        }
+
+        playerMinimized = "false";
+
+        savePlayerState();
+        renderQueue();
+        loadCurrentTrack(true);
+
+        var floatingPlayer = document.getElementById("floatingPlayer");
+        var panel = document.getElementById("playerPanel");
+        var button = document.getElementById("playerToggleButton");
+
+        if (panel && button && floatingPlayer) {
+            panel.style.display = "block";
+            button.style.display = "none";
+
+            if (playerPanelLeft && playerPanelTop) {
+                floatingPlayer.style.left = playerPanelLeft;
+                floatingPlayer.style.top = playerPanelTop;
+                floatingPlayer.style.right = "auto";
+            } else {
+                floatingPlayer.style.left = "auto";
+                floatingPlayer.style.right = "20px";
+                floatingPlayer.style.top = playerButtonTop;
+            }
+        }
+
+        savePlayerState();
+    }
+
+    function removeFromQueue(index) {
+        var audio = document.getElementById("globalAudioPlayer");
+        var removingCurrentTrack = index === currentTrackIndex;
+
+        playerQueue.splice(index, 1);
+
+        if (playerQueue.length === 0) {
+            currentTrackIndex = 0;
+            audio.pause();
+            audio.removeAttribute("src");
+            clearGlobalAudioProgress();
+            savePlayerState();
+            loadCurrentTrack(false);
+            renderQueue();
+            return;
+        }
+
+        if (index < currentTrackIndex) {
+            currentTrackIndex--;
+        } else if (removingCurrentTrack) {
+            if (currentTrackIndex >= playerQueue.length) {
+                currentTrackIndex = 0;
+            }
+
+            audio.pause();
+            loadCurrentTrack(false);
+        }
+
+        savePlayerState();
+        renderQueue();
+    }
+
+    function loadCurrentTrack(autoPlay) {
+        var audio = document.getElementById("globalAudioPlayer");
+        var nowPlayingTitle = document.getElementById("nowPlayingTitle");
+
+        if (playerQueue.length === 0) {
+            audio.removeAttribute("src");
+            nowPlayingTitle.textContent = "No track selected.";
+            nowPlayingTitle.className = "now-playing-title static-title";
+            clearGlobalAudioProgress();
+            return;
+        }
+
+        if (currentTrackIndex >= playerQueue.length) {
+            currentTrackIndex = 0;
+        }
+
+        var track = playerQueue[currentTrackIndex];
+        var savedProgress = getGlobalAudioProgress();
+        var shouldRestoreProgress = savedProgress.audioPath === track.audioPath;
+        var restoreTime = parseFloat(savedProgress.currentTime) || 0;
+        var shouldResumePlayback = autoPlay || (
+            shouldRestoreProgress &&
+            savedProgress.currentTrackIndex === currentTrackIndex &&
+            savedProgress.wasPlaying
+        );
+        resumePending = shouldResumePlayback;
+
+        audio.src = track.audioPath;
+        nowPlayingTitle.textContent = track.title;
+        nowPlayingTitle.className = "now-playing-title";
+
+        function restoreTrackState() {
+            if (
+                shouldRestoreProgress &&
+                restoreTime > 0 &&
+                (!audio.duration || restoreTime < audio.duration - 0.5)
+            ) {
+                audio.currentTime = restoreTime;
+            }
+
+            if (shouldResumePlayback) {
+                attemptResumePlayback();
+            }
+        }
+
+        audio.onloadedmetadata = restoreTrackState;
+        audio.oncanplay = function() {
+            attemptResumePlayback();
+        };
+        audio.onloadeddata = function() {
+            attemptResumePlayback();
+        };
+
+        if (audio.readyState >= 1) {
+            restoreTrackState();
+        }
+
+        savePlayerState();
+        renderQueue();
+    }
+
+    function playTrack(index) {
+        currentTrackIndex = index;
+        loadCurrentTrack(true);
+    }
+
+    function playNextTrack() {
+        if (playerQueue.length === 0) {
+            return;
+        }
+
+        if (currentTrackIndex < playerQueue.length - 1) {
+            currentTrackIndex++;
+            loadCurrentTrack(true);
+        } else if (loopMode === "queue") {
+            currentTrackIndex = 0;
+            loadCurrentTrack(true);
+        }
+    }
+
+    function playPreviousTrack() {
+        if (playerQueue.length === 0) {
+            return;
+        }
+
+        if (currentTrackIndex > 0) {
+            currentTrackIndex--;
+            loadCurrentTrack(true);
+        } else if (loopMode === "queue") {
+            currentTrackIndex = playerQueue.length - 1;
+            loadCurrentTrack(true);
+        }
+    }
+
+    function setLoopMode(mode) {
+        loopMode = mode;
+        savePlayerState();
+        updateLoopModeText();
+    }
+
+    function updateLoopModeText() {
+        document.getElementById("loopModeText").innerHTML = "Mode: " + getModeLabel(loopMode);
+    }
+
+    function clearQueue() {
+        var audio = document.getElementById("globalAudioPlayer");
+        var nowPlayingTitle = document.getElementById("nowPlayingTitle");
+
+        playerQueue = [];
+        currentTrackIndex = 0;
+        audio.pause();
+        audio.removeAttribute("src");
+        clearGlobalAudioProgress();
+        nowPlayingTitle.textContent = "No track selected.";
+        nowPlayingTitle.className = "now-playing-title static-title";
+
+        savePlayerState();
+        loadCurrentTrack(false);
+        renderQueue();
+    }
+
+    function startTitleHoverScroll(titleBox) {
+        var titleSpan = titleBox.querySelector(".queue-title");
+
+        if (!titleSpan) {
+            return;
+        }
+
+        titleBox.setAttribute("data-hovering", "true");
+        titleSpan.classList.remove("hover-scrolling");
+
+        setTimeout(function() {
+            if (titleBox.getAttribute("data-hovering") === "true") {
+                titleSpan.classList.add("hover-scrolling");
+            }
+        }, 20);
+    }
+
+    function stopTitleHoverScroll(titleBox) {
+        var titleSpan = titleBox.querySelector(".queue-title");
+
+        titleBox.setAttribute("data-hovering", "false");
+
+        if (!titleSpan) {
+            return;
+        }
+
+        titleSpan.classList.remove("hover-scrolling");
+    }
+
+    function renderQueue() {
+        var queueList = document.getElementById("queueList");
+        queueList.innerHTML = "";
+
+        for (var i = 0; i < playerQueue.length; i++) {
+            var item = document.createElement("li");
+            item.className = "queue-item";
+
+            var numberSpan = document.createElement("span");
+            numberSpan.className = "queue-number";
+
+            if (i === currentTrackIndex) {
+                numberSpan.className = "queue-number current-number";
+            }
+
+            numberSpan.textContent = (i + 1);
+
+            var contentDiv = document.createElement("div");
+            contentDiv.className = "queue-content";
+
+            if (i === currentTrackIndex) {
+                contentDiv.className = "queue-content current-content";
+            }
+
+            var titleBox = document.createElement("div");
+            titleBox.className = "queue-title-box";
+            titleBox.setAttribute("onclick", "playTrack(" + i + ")");
+            titleBox.setAttribute("onmouseenter", "startTitleHoverScroll(this)");
+            titleBox.setAttribute("onmouseleave", "stopTitleHoverScroll(this)");
+
+            var titleSpan = document.createElement("span");
+            titleSpan.className = "queue-title";
+            titleSpan.textContent = playerQueue[i].title;
+            titleSpan.setAttribute("data-title", playerQueue[i].title);
+
+            var removeButton = document.createElement("button");
+            removeButton.className = "remove-track-button";
+            removeButton.innerHTML = "×";
+            removeButton.setAttribute("onclick", "removeFromQueue(" + i + "); event.stopPropagation();");
+
+            titleBox.appendChild(titleSpan);
+            contentDiv.appendChild(titleBox);
+            contentDiv.appendChild(removeButton);
+
+            item.appendChild(numberSpan);
+            item.appendChild(contentDiv);
+
+            queueList.appendChild(item);
+        }
+    }
+
+    function setupAudioEndBehavior() {
+        var audio = document.getElementById("globalAudioPlayer");
+
+        audio.onended = function() {
+            saveGlobalAudioProgress();
+
+            if (loopMode === "single") {
+                audio.currentTime = 0;
+                audio.play();
+            } else {
+                playNextTrack();
+            }
+        };
+    }
+
+    function setupGlobalAudioMemory() {
+        var audio = document.getElementById("globalAudioPlayer");
+        var events = ["timeupdate", "seeked", "pause", "play"];
+
+        for (var i = 0; i < events.length; i++) {
+            audio.addEventListener(events[i], function() {
+                if (pageIsUnloading) {
+                    return;
+                }
+
+                saveGlobalAudioProgress();
+            });
+        }
+
+        audio.addEventListener("play", function() {
+            resumePending = false;
+        });
+    }
+
+    window.addEventListener("load", function() {
+        restorePlayerDisplay();
+        setupAudioEndBehavior();
+        setupGlobalAudioMemory();
+        updateLoopModeText();
+        renderQueue();
+        loadCurrentTrack(false);
+
+        document.getElementById("playerHeader").addEventListener("mousedown", function(event) {
+            startDrag(event, "panel");
+        });
+
+        document.getElementById("playerToggleButton").addEventListener("mousedown", function(event) {
+            startDrag(event, "button");
+        });
+
+        document.getElementById("playerToggleButton").addEventListener("click", function(event) {
+            if (!didDrag) {
+                toggleFloatingPlayer();
+            }
+        });
+
+    });
+
+    window.addEventListener("beforeunload", function() {
+        var audio = document.getElementById("globalAudioPlayer");
+
+        pageIsUnloading = true;
+        unloadWasPlaying = !!(
+            audio &&
+            !audio.paused &&
+            !audio.ended
+        );
+
+        saveGlobalAudioProgress(unloadWasPlaying);
+    });
+
+    window.addEventListener("pagehide", function() {
+        var audio = document.getElementById("globalAudioPlayer");
+
+        pageIsUnloading = true;
+        unloadWasPlaying = !!(
+            audio &&
+            !audio.paused &&
+            !audio.ended
+        );
+
+        saveGlobalAudioProgress(unloadWasPlaying);
+    });
+</script>

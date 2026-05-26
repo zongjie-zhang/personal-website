@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chopin Works</title>
+
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 95vw;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #eeeeee;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Chopin Works</h1>
+
+    <p>
+        This page lists works included in the Chopin database.
+    </p>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Key</th>
+            <th>Instrument</th>
+            <th>Composition Year</th>
+            <th>Publication Year</th>
+            <th>Duration</th>
+            <th>Dedicatee</th>
+            <th>Place</th>
+        </tr>
+
+        {% for work in works %}
+            <tr>
+                <td>{{ work.work_id }}</td>
+                <td>{{ work.title }}</td>
+                <td>{{ work.genre }}</td>
+                <td>{{ work.musical_key }}</td>
+                <td>{{ work.instrument }}</td>
+                <td>{{ work.composition_year }}</td>
+                <td>{{ work.publication_year }}</td>
+                <td>{{ work.duration }}</td>
+                <td>{{ work.dedicatee }}</td>
+                <td>
+                    {% if work.city and work.country %}
+                        {{ work.city }}, {{ work.country }}
+                    {% elif work.place_name %}
+                        {{ work.place_name }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

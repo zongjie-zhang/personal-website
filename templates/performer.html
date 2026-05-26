@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chopin</title>
+
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .performer-card {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            width: 900px;
+            max-width: 95vw;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+        }
+
+        .performer-image {
+            width: 160px;
+            height: 200px;
+            object-fit: cover;
+            border: 1px solid #999;
+            background-color: #f3f3f3;
+        }
+
+        .performer-info {
+            max-width: 650px;
+        }
+
+        .performer-info h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .performer-info h2 a {
+            color: #5b356d;
+            text-decoration: underline;
+        }
+
+        .performer-info h2 a:hover {
+            color: #2f173a;
+        }
+
+        .performer-meta {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .performer-info p {
+            line-height: 1.55;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Chopin Performers</h1>
+
+    <p>
+        This page introduces several important pianists whose performances have shaped
+        modern listening to Chopin's music.
+    </p>
+
+    <hr>
+
+    <div class="performer-card" id="arthur-rubinstein">
+        <img
+            class="performer-image"
+            src="{{ url_for('static', filename='image/performer/rubinstein.jpg') }}"
+            alt="Arthur Rubinstein">
+
+        <div class="performer-info">
+            <h2>
+                <a href="https://en.wikipedia.org/wiki/Arthur_Rubinstein" target="_blank">
+                    Arthur Rubinstein
+                </a>
+            </h2>
+
+            <div class="performer-meta">
+                Polish-American pianist | 1887–1982
+            </div>
+
+            <p>
+                Arthur Rubinstein was one of the most celebrated Chopin interpreters of the
+                twentieth century. His playing is often admired for its warmth, natural phrasing,
+                elegance, and singing tone. Rubinstein's Chopin recordings, especially the
+                nocturnes, mazurkas, polonaises, and concertos, helped define a balanced and
+                lyrical approach to Chopin performance.
+            </p>
+        </div>
+    </div>
+
+    <div class="performer-card" id="maurizio-pollini">
+        <img
+            class="performer-image"
+            src="{{ url_for('static', filename='image/performer/pollini.jpg') }}"
+            alt="Maurizio Pollini">
+
+        <div class="performer-info">
+            <h2>
+                <a href="https://en.wikipedia.org/wiki/Maurizio_Pollini" target="_blank">
+                    Maurizio Pollini
+                </a>
+            </h2>
+
+            <div class="performer-meta">
+                Italian pianist | 1942–2024
+            </div>
+
+            <p>
+                Maurizio Pollini was known for his clarity, precision, and intellectual control.
+                His Chopin performances often emphasize structure, clean articulation, and strong
+                technical command. Pollini's recording of the Chopin études is especially famous
+                for combining virtuosity with architectural focus.
+            </p>
+        </div>
+    </div>
+
+    <div class="performer-card" id="martha-argerich">
+        <img
+            class="performer-image"
+            src="{{ url_for('static', filename='image/performer/argerich.jpg') }}"
+            alt="Martha Argerich">
+
+        <div class="performer-info">
+            <h2>
+                <a href="https://en.wikipedia.org/wiki/Martha_Argerich" target="_blank">
+                    Martha Argerich
+                </a>
+            </h2>
+
+            <div class="performer-meta">
+                Argentine pianist | Born 1941
+            </div>
+
+            <p>
+                Martha Argerich is famous for her fiery temperament, explosive energy, and
+                extraordinary technical freedom. Her Chopin playing often feels spontaneous and
+                dramatic, with great rhythmic drive and emotional intensity. She won the
+                International Chopin Piano Competition in 1965, which helped launch her major
+                international career.
+            </p>
+        </div>
+    </div>
+
+    <div class="performer-card" id="garrick-ohlsson">
+        <img
+            class="performer-image"
+            src="{{ url_for('static', filename='image/performer/ohlsson.jpg') }}"
+            alt="Garrick Ohlsson">
+
+        <div class="performer-info">
+            <h2>
+                <a href="https://en.wikipedia.org/wiki/Garrick_Ohlsson" target="_blank">
+                    Garrick Ohlsson
+                </a>
+            </h2>
+
+            <div class="performer-meta">
+                American pianist | Born 1948
+            </div>
+
+            <p>
+                Garrick Ohlsson became internationally known after winning the International
+                Chopin Piano Competition in 1970. His Chopin interpretations are often praised
+                for their broad sound, seriousness, and attention to large-scale musical shape.
+                Ohlsson has recorded a wide range of Chopin's works and is especially respected
+                for his deep engagement with the composer.
+            </p>
+        </div>
+    </div>
+
+    <div class="performer-card" id="krystian-zimerman">
+        <img
+            class="performer-image"
+            src="{{ url_for('static', filename='image/performer/zimerman.jpg') }}"
+            alt="Krystian Zimerman">
+
+        <div class="performer-info">
+            <h2>
+                <a href="https://en.wikipedia.org/wiki/Krystian_Zimerman" target="_blank">
+                    Krystian Zimerman
+                </a>
+            </h2>
+
+            <div class="performer-meta">
+                Polish pianist | Born 1956
+            </div>
+
+            <p>
+                Krystian Zimerman is admired for his refinement, precision, and unusually careful
+                sound control. His Chopin performances often combine poetic sensitivity with a
+                strong sense of form. After winning the International Chopin Piano Competition in
+                1975, he became one of the most respected pianists associated with Chopin's music.
+            </p>
+        </div>
+    </div>
+
+    <div class="performer-card" id="yundi-li">
+        <img
+            class="performer-image"
+            src="{{ url_for('static', filename='image/performer/li.jpg') }}"
+            alt="Yundi Li">
+
+        <div class="performer-info">
+            <h2>
+                <a href="https://en.wikipedia.org/wiki/Yundi_Li" target="_blank">
+                    Yundi Li
+                </a>
+            </h2>
+
+            <div class="performer-meta">
+                Chinese pianist | Born 1982
+            </div>
+
+            <p>
+                Yundi Li gained international attention after winning the International Chopin
+                Piano Competition in 2000. His Chopin playing is often associated with lyrical
+                tone, elegance, and a romantic sense of atmosphere. His early recordings helped
+                introduce a new generation of listeners to Chopin's music.
+            </p>
+        </div>
+    </div>
+
+    <div class="performer-card" id="rafal-blechacz">
+        <img
+            class="performer-image"
+            src="{{ url_for('static', filename='image/performer/blechacz.jpg') }}"
+            alt="Rafał Blechacz">
+
+        <div class="performer-info">
+            <h2>
+                <a href="https://en.wikipedia.org/wiki/Rafa%C5%82_Blechacz" target="_blank">
+                    Rafał Blechacz
+                </a>
+            </h2>
+
+            <div class="performer-meta">
+                Polish pianist | Born 1985
+            </div>
+
+            <p>
+                Rafał Blechacz won the International Chopin Piano Competition in 2005 and was
+                widely recognized for the completeness of his musicianship. His Chopin playing is
+                often described as clear, balanced, and deeply connected to Polish style. He is
+                especially admired for combining technical polish with musical sincerity.
+            </p>
+        </div>
+    </div>
+
+    <div class="performer-card" id="bruce-liu">
+        <img
+            class="performer-image"
+            src="{{ url_for('static', filename='image/performer/liu.jpg') }}"
+            alt="Bruce Liu">
+
+        <div class="performer-info">
+            <h2>
+                <a href="https://en.wikipedia.org/wiki/Bruce_Liu" target="_blank">
+                    Bruce Liu
+                </a>
+            </h2>
+
+            <div class="performer-meta">
+                Canadian pianist | Born 1997
+            </div>
+
+            <p>
+                Bruce Liu rose to international prominence after winning the International Chopin
+                Piano Competition in 2021. His playing is often noted for its clarity, brightness,
+                elegance, and imaginative character. As a younger Chopin interpreter, he represents
+                a recent generation of pianists bringing fresh energy to the Chopin tradition.
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

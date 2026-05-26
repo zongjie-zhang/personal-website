@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recording Detail</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #222;
+        }
+
+        .page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 30px 28px 58px 28px;
+            box-sizing: border-box;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #5b356d;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-family: Arial, sans-serif;
+            font-size: 40px;
+            line-height: 1.14;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 14px;
+            color: #222;
+        }
+
+        .recording-hero {
+            display: grid;
+            grid-template-columns: 230px minmax(0, 1fr);
+            gap: 28px;
+            align-items: start;
+            margin-bottom: 34px;
+        }
+
+        .cover-column {
+            position: relative;
+            width: 230px;
+        }
+
+        .album-cover {
+            display: block;
+            width: 230px;
+            height: 230px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .recording-info {
+            min-width: 0;
+            padding-top: 2px;
+        }
+
+        .meta {
+            color: #555;
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .audio-section {
+            max-width: 760px;
+            margin-top: 24px;
+            margin-bottom: 34px;
+        }
+
+        .audio-row {
+            display: block;
+            width: 100%;
+            margin-bottom: 14px;
+        }
+
+        audio {
+            width: 100%;
+        }
+
+        .performer-text {
+            font-size: 17px;
+            line-height: 1.4;
+            color: #333;
+            margin-top: 2px;
+        }
+
+        .performer-text a {
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .performer-text a:hover {
+            text-decoration: underline;
+        }
+
+        .audio-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button,
+        .button-link {
+            display: inline-block;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-size: 15px;
+            cursor: pointer;
+            background-color: white;
+            color: #5b356d;
+            border: 1px solid #5b356d;
+            text-decoration: none;
+            text-transform: none;
+            letter-spacing: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        button:hover,
+        .button-link:hover {
+            background-color: #f4edf8;
+        }
+
+        .favorite-button {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid #999;
+            background-color: white;
+            color: #777;
+            cursor: pointer;
+            padding: 0;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .favorite-button:hover {
+            border-color: #b71c1c;
+            color: #b71c1c;
+            background-color: #fff1f1;
+        }
+
+        .favorite-button.favorited {
+            border-color: #b71c1c;
+            color: #b71c1c;
+        }
+
+        .favorite-button svg {
+            width: 25px;
+            height: 25px;
+            display: block;
+            overflow: visible;
+            shape-rendering: geometricPrecision;
+        }
+
+        .favorite-button .favorite-heart {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.85;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .favorite-button.favorited .favorite-heart {
+            fill: currentColor;
+            stroke-width: 1.65;
+        }
+
+        .cover-favorite-button {
+            position: absolute;
+            right: -12px;
+            top: -12px;
+            background-color: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+        }
+
+        .description-section {
+            max-width: 920px;
+            margin-top: 8px;
+            margin-bottom: 40px;
+            line-height: 1.68;
+            font-size: 17px;
+        }
+
+        .description-section p {
+            margin-top: 0;
+            margin-bottom: 18px;
+        }
+
+        .description-type {
+            color: #5b356d;
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .score-section {
+            max-width: 100%;
+            margin-top: 36px;
+            text-align: left;
+        }
+
+        .score-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .score-title {
+            color: #5b356d;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+
+        .hide-score-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .score-box {
+            border: 1px solid #bbb;
+            width: 100%;
+            height: 92vh;
+            margin-top: 10px;
+            background-color: white;
+        }
+
+        .score-box iframe {
+            width: 100%;
+            height: 92vh;
+            border: none;
+            display: block;
+        }
+
+        #downloadScoreLink {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        #downloadScoreLink a {
+            color: #0000EE;
+            text-decoration: underline;
+            font-weight: normal;
+        }
+
+        .not-found {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 18px;
+            padding: 26px;
+        }
+
+        @media (max-width: 750px) {
+            .page {
+                padding: 24px 20px 46px 20px;
+            }
+
+            .recording-hero {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .cover-column {
+                width: min(230px, 100%);
+            }
+
+            .album-cover {
+                width: min(230px, 100%);
+                height: auto;
+                aspect-ratio: 1 / 1;
+            }
+
+            .cover-favorite-button {
+                right: -8px;
+                top: -8px;
+            }
+
+            .performer-text {
+                min-width: 0;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .score-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+        <a class="back-link" href="{{ return_to_search_url }}">← Return to Search</a>
+
+        {% if not recording %}
+            <div class="not-found">
+                <h1>Recording not found</h1>
+                <p>This recording could not be found in the database.</p>
+            </div>
+        {% else %}
+
+            <section class="recording-hero">
+                <div class="cover-column">
+                    {% if cover_path %}
+                        <img
+                            class="album-cover"
+                            src="{{ cover_path }}"
+                            alt="Album cover for {{ recording.work_title }}">
+                    {% endif %}
+
+                    <button
+                        type="button"
+                        class="favorite-button cover-favorite-button {% if recording.recording_id in favorite_recording_ids %}favorited{% endif %}"
+                        data-recording-id="{{ recording.recording_id }}"
+                        onclick="toggleFavorite(this)"
+                        title="Favorite">
+                    </button>
+                </div>
+
+                <div class="recording-info">
+                    <h1>{{ recording.work_title }}</h1>
+
+                    <div class="meta">
+                        {% if recording.genre %}
+                            {{ recording.genre }}
+                        {% endif %}
+
+                        {% if recording.musical_key %}
+                            in {{ recording.musical_key }}
+                        {% endif %}
+
+                        {% if recording.composition_year %}
+                            | Composed: {{ recording.composition_year }}
+                        {% endif %}
+
+                        {% if recording.city or recording.country %}
+                            |
+                            {% if recording.city %}
+                                {{ recording.city }}
+                            {% endif %}
+
+                            {% if recording.city and recording.country %}
+                                ,
+                            {% endif %}
+
+                            {% if recording.country %}
+                                {{ recording.country }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <div class="performer-text">
+                        Performer:
+                        <span id="performerNameArea">
+                            {{ recording.performer_name }}
+                        </span>
+                    </div>
+
+                    <section class="audio-section">
+                        <div class="audio-row">
+                            <audio
+                                controls
+                                class="remembered-audio"
+                                data-audio-memory-key="recording-{{ recording.recording_id }}">
+                                <source src="{{ url_for('static', filename=recording.link) }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <div class="audio-actions">
+                            <button
+                                type="button"
+                                data-title="{{ recording.work_title }}"
+                                data-audio="{{ url_for('static', filename=recording.link) }}"
+                                onclick="addButtonTrackToPlayer(this)">
+                                Add to Queue
+                            </button>
+
+                            <a
+                                class="button-link"
+                                href="{{ url_for('static', filename=recording.link) }}"
+                                target="_blank">
+                                Open Audio
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            {% if descriptions %}
+                <section class="description-section">
+                    {% for description in descriptions %}
+
+                        {% if description.description_type and description.description_type != "General" %}
+                            <div class="description-type">
+                                {% if description.description_type == "work commentary" %}
+                                    Commentary
+                                {% else %}
+                                    {{ description.description_type }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        <p>{{ description.content }}</p>
+
+                    {% endfor %}
+                </section>
+            {% endif %}
+
+            <section class="score-section">
+                <div class="score-header">
+                    <div class="score-title">Score</div>
+
+                    <label class="hide-score-control">
+                        <input type="checkbox" id="hideScoreCheckbox" onclick="toggleScoreBox()">
+                        Hide score
+                    </label>
+                </div>
+
+                <div id="scoreBox" class="score-box">
+                    <iframe src="{{ score_path }}"></iframe>
+                </div>
+
+                <p id="downloadScoreLink">
+                    <a href="{{ score_path }}" target="_blank">Open score in new tab</a>
+                    |
+                    <a href="{{ score_path }}" download>Download score</a>
+                </p>
+            </section>
+
+        {% endif %}
+    </main>
+
+    <script>
+        var performersUrl = {{ url_for('performers')|tojson }};
+        var toggleFavoriteUrl = {{ url_for('toggle_favorite')|tojson }};
+        function addTrackToPlayer(title, audioPath) {
+            if (window.parent && window.parent.addToQueue) {
+                window.parent.addToQueue(title, audioPath);
+            } else {
+                alert("Player is not loaded. Please open this page through /app.");
+            }
+        }
+
+        function addButtonTrackToPlayer(button) {
+            var title = button.getAttribute("data-title");
+            var audioPath = button.getAttribute("data-audio");
+
+            addTrackToPlayer(title, audioPath);
+        }
+
+        function updateFavoriteButton(button, favorited) {
+            if (favorited) {
+                button.classList.add("favorited");
+            } else {
+                button.classList.remove("favorited");
+            }
+
+            button.innerHTML =
+                "<svg viewBox='0 0 32 32' aria-hidden='true'>" +
+                    "<path class='favorite-heart' d='M16 25.8C9.4 20.7 5 16.9 5 12C5 8.7 7.7 6.4 11 6.4C13 6.4 14.9 7.3 16 8.8C17.1 7.3 19 6.4 21 6.4C24.3 6.4 27 8.7 27 12C27 16.9 22.6 20.7 16 25.8Z'></path>" +
+                "</svg>";
+        }
+
+        function updateFavoriteButtons(recordingId, favorited) {
+            var buttons = document.querySelectorAll(
+                ".favorite-button[data-recording-id='" + recordingId + "']"
+            );
+
+            for (var i = 0; i < buttons.length; i++) {
+                updateFavoriteButton(buttons[i], favorited);
+            }
+        }
+
+        function toggleFavorite(button) {
+            var recordingId = button.getAttribute("data-recording-id");
+
+            fetch(toggleFavoriteUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    recording_id: recordingId
+                })
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (!data.success) {
+                        alert(data.message);
+                        return;
+                    }
+
+                    updateFavoriteButtons(recordingId, data.favorited);
+                })
+                .catch(function() {
+                    alert("Favorite could not be updated. Please check the server.");
+                });
+        }
+
+        function toggleScoreBox() {
+            var checkbox = document.getElementById("hideScoreCheckbox");
+            var scoreBox = document.getElementById("scoreBox");
+            var downloadScoreLink = document.getElementById("downloadScoreLink");
+
+            if (checkbox.checked) {
+                scoreBox.style.display = "none";
+                downloadScoreLink.style.display = "none";
+            } else {
+                scoreBox.style.display = "block";
+                downloadScoreLink.style.display = "block";
+            }
+        }
+
+        function getPerformerSlug(name) {
+            var lowerName = name.toLowerCase();
+
+            if (lowerName.indexOf("rubinstein") !== -1) {
+                return "arthur-rubinstein";
+            }
+
+            if (lowerName.indexOf("pollini") !== -1) {
+                return "maurizio-pollini";
+            }
+
+            if (lowerName.indexOf("argerich") !== -1) {
+                return "martha-argerich";
+            }
+
+            if (lowerName.indexOf("ohlsson") !== -1) {
+                return "garrick-ohlsson";
+            }
+
+            if (lowerName.indexOf("zimerman") !== -1) {
+                return "krystian-zimerman";
+            }
+
+            if (lowerName.indexOf("yundi") !== -1) {
+                return "yundi-li";
+            }
+
+            if (lowerName.indexOf("blechacz") !== -1) {
+                return "rafal-blechacz";
+            }
+
+            if (lowerName.indexOf("bruce") !== -1 && lowerName.indexOf("liu") !== -1) {
+                return "bruce-liu";
+            }
+
+            return "";
+        }
+
+        function linkPerformerName() {
+            var performerArea = document.getElementById("performerNameArea");
+
+            if (!performerArea) {
+                return;
+            }
+
+            var performerName = performerArea.textContent.trim();
+            var slug = getPerformerSlug(performerName);
+
+            if (slug !== "") {
+                performerArea.innerHTML =
+                    "<a href='" + performersUrl + "#" + slug + "'>" + performerName + "</a>";
+            }
+        }
+
+        function getAudioMemory(key) {
+            try {
+                return JSON.parse(localStorage.getItem("audioMemory:" + key)) || {};
+            } catch (error) {
+                return {};
+            }
+        }
+
+        function saveAudioMemory(audio, key) {
+            if (!audio || isNaN(audio.currentTime)) {
+                return;
+            }
+
+            localStorage.setItem(
+                "audioMemory:" + key,
+                JSON.stringify({
+                    currentTime: audio.currentTime,
+                    wasPlaying: !audio.paused && !audio.ended
+                })
+            );
+        }
+
+        function setupRememberedAudio(audio) {
+            var key = audio.getAttribute("data-audio-memory-key");
+
+            if (!key) {
+                return;
+            }
+
+            var memory = getAudioMemory(key);
+            var restoreTime = parseFloat(memory.currentTime) || 0;
+
+            function restoreAudioMemory() {
+                if (
+                    restoreTime > 0 &&
+                    (!audio.duration || restoreTime < audio.duration - 0.5)
+                ) {
+                    audio.currentTime = restoreTime;
+                }
+
+                if (memory.wasPlaying) {
+                    audio.play().catch(function() {});
+                }
+            }
+
+            if (audio.readyState >= 1) {
+                restoreAudioMemory();
+            } else {
+                audio.addEventListener("loadedmetadata", restoreAudioMemory, { once: true });
+            }
+
+            audio.addEventListener("timeupdate", function() {
+                saveAudioMemory(audio, key);
+            });
+
+            audio.addEventListener("seeked", function() {
+                saveAudioMemory(audio, key);
+            });
+
+            audio.addEventListener("pause", function() {
+                saveAudioMemory(audio, key);
+            });
+
+            audio.addEventListener("play", function() {
+                saveAudioMemory(audio, key);
+            });
+
+            audio.addEventListener("ended", function() {
+                localStorage.setItem(
+                    "audioMemory:" + key,
+                    JSON.stringify({
+                        currentTime: 0,
+                        wasPlaying: false
+                    })
+                );
+            });
+        }
+
+        function setupRememberedAudios() {
+            var audios = document.querySelectorAll(".remembered-audio");
+
+            for (var i = 0; i < audios.length; i++) {
+                setupRememberedAudio(audios[i]);
+            }
+        }
+
+        window.addEventListener("load", function() {
+            linkPerformerName();
+            setupRememberedAudios();
+
+            var buttons = document.querySelectorAll(".favorite-button");
+
+            for (var i = 0; i < buttons.length; i++) {
+                updateFavoriteButton(buttons[i], buttons[i].classList.contains("favorited"));
+            }
+        });
+
+        window.addEventListener("beforeunload", function() {
+            var audios = document.querySelectorAll(".remembered-audio");
+
+            for (var i = 0; i < audios.length; i++) {
+                saveAudioMemory(
+                    audios[i],
+                    audios[i].getAttribute("data-audio-memory-key")
+                );
+            }
+        });
+    </script>
+
+</body>
+</html>

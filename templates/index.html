@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zongjie Zhang</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f2ec;
+            color: #161616;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            min-height: 100vh;
+        }
+
+        .hero {
+            padding: 34px 30px 64px 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .hero-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 76px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 16px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .topnav {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #4f4a42;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+            gap: 34px;
+            align-items: end;
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #7a7065;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0 0 20px 0;
+            font-family: Georgia, serif;
+            font-size: 64px;
+            font-weight: normal;
+            line-height: 1.04;
+            max-width: 760px;
+        }
+
+        .hero-copy {
+            max-width: 650px;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #3f3a34;
+            margin: 0;
+        }
+
+        .hero-panel {
+            align-self: stretch;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 14px;
+            padding: 24px 0 4px 0;
+        }
+
+        .hero-note {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #5f584f;
+            max-width: 340px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 128px;
+            height: 42px;
+            padding: 0 18px;
+            border-radius: 999px;
+            border: 1px solid #171717;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .action-link.primary {
+            background-color: #171717;
+            color: white;
+        }
+
+        .action-link.secondary {
+            background-color: transparent;
+            color: #171717;
+        }
+
+        .section {
+            padding: 38px 30px 56px 30px;
+        }
+
+        .section-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 20px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .section-title {
+            font-family: Georgia, serif;
+            font-size: 34px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .section-description {
+            max-width: 500px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #5f584f;
+            margin: 0;
+        }
+
+        .entry-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .entry-card {
+            background-color: rgba(255, 255, 255, 0.62);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            padding: 24px 22px;
+            min-height: 224px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+
+        .entry-label {
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #807567;
+            margin-bottom: 16px;
+        }
+
+        .entry-card h3 {
+            margin: 0 0 12px 0;
+            font-family: Georgia, serif;
+            font-size: 30px;
+            font-weight: normal;
+            line-height: 1.18;
+        }
+
+        .entry-card p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #4a443d;
+            max-width: 540px;
+        }
+
+        .entry-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .entry-link {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 0.02em;
+        }
+
+        .entry-meta {
+            font-size: 13px;
+            color: #7d7367;
+        }
+
+        .site-footer {
+            padding: 0 30px 34px 30px;
+        }
+
+        .site-footer-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding-top: 18px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            font-size: 13px;
+            color: #6e665c;
+        }
+
+        @media (max-width: 900px) {
+            .hero-grid,
+            .entry-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 48px;
+            }
+
+            .topbar {
+                margin-bottom: 50px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 24px 20px 52px 20px;
+            }
+
+            .section,
+            .site-footer {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+
+            .hero-copy,
+            .entry-card p {
+                font-size: 15px;
+            }
+
+            .entry-card {
+                min-height: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <section class="hero">
+            <div class="hero-inner">
+                <div class="topbar">
+                    <div class="brand">Zongjie Zhang</div>
+
+                    <nav class="topnav" aria-label="Main">
+                        <a href="{{ url_for('projects') }}">Projects</a>
+                        <a href="{{ url_for('games') }}">Games</a>
+                        <a href="{{ chopin_site_root }}">Chopin</a>
+                    </nav>
+                </div>
+
+                <div class="hero-grid">
+                    <div>
+                        <div class="eyebrow">Personal Website</div>
+                        <h1>Projects, games, and everything I want to keep building.</h1>
+                        <p class="hero-copy">
+                            This is the home base for my work. Right now it starts with a Chopin
+                            database project and a space for future games, and it is designed to
+                            grow into a full personal site over time.
+                        </p>
+                    </div>
+
+                    <div class="hero-panel">
+                        <div class="hero-note">
+                            I want the site to feel simple and direct: open a section, enter a
+                            project, and keep moving without friction.
+                        </div>
+
+                        <div class="hero-actions">
+                            <a class="action-link primary" href="{{ url_for('projects') }}">View Projects</a>
+                            <a class="action-link secondary" href="{{ url_for('games') }}">View Games</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-inner">
+                <div class="section-header">
+                    <h2 class="section-title">Projects</h2>
+                    <p class="section-description">
+                        Long-form builds, database work, interfaces, and research-led experiments.
+                    </p>
+                </div>
+
+                <div class="entry-grid">
+                    <a class="entry-card" href="{{ chopin_site_root }}">
+                        <div>
+                            <div class="entry-label">Project 01</div>
+                            <h3>Chopin Database</h3>
+                            <p>
+                                A music database and listening interface centered on Chopin’s works,
+                                recordings, scores, performers, and personal world.
+                            </p>
+                        </div>
+
+                        <div class="entry-footer">
+                            <div class="entry-link">Open Project</div>
+                            <div class="entry-meta">Flask, MySQL, interface design</div>
+                        </div>
+                    </a>
+
+                    <a class="entry-card" href="{{ url_for('projects') }}">
+                        <div>
+                            <div class="entry-label">Project Area</div>
+                            <h3>More Projects Soon</h3>
+                            <p>
+                                This area is ready for future builds, course work, experiments, and
+                                anything that deserves its own page.
+                            </p>
+                        </div>
+
+                        <div class="entry-footer">
+                            <div class="entry-link">See Project List</div>
+                            <div class="entry-meta">Room to expand</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-inner">
+                <div class="section-header">
+                    <h2 class="section-title">Games</h2>
+                    <p class="section-description">
+                        A separate space for interactive ideas, prototypes, and future game builds.
+                    </p>
+                </div>
+
+                <div class="entry-grid">
+                    <a class="entry-card" href="{{ url_for('games') }}">
+                        <div>
+                            <div class="entry-label">Game Area</div>
+                            <h3>First Game Coming Soon</h3>
+                            <p>
+                                I am keeping this section open from the start, so future games can
+                                live here with the same clean structure as the project pages.
+                            </p>
+                        </div>
+
+                        <div class="entry-footer">
+                            <div class="entry-link">Open Games</div>
+                            <div class="entry-meta">Prototype space</div>
+                        </div>
+                    </a>
+
+                    <div class="entry-card">
+                        <div>
+                            <div class="entry-label">Reserved</div>
+                            <h3>More Interactive Work Later</h3>
+                            <p>
+                                This part of the site is intentionally simple for now, but the layout
+                                is ready for multiple games once you start building them.
+                            </p>
+                        </div>
+
+                        <div class="entry-footer">
+                            <div class="entry-link">In Progress</div>
+                            <div class="entry-meta">Future launch slot</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="site-footer-inner">
+                Zongjie Zhang personal website. More sections can be added here as the site grows.
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

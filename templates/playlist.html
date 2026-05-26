@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Playlist</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #222;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 46px 28px;
+        }
+
+        h1 {
+            font-family: Arial, sans-serif;
+            font-size: 42px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 14px;
+        }
+
+        h3 {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .intro {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #444;
+            max-width: 850px;
+            margin-top: 0;
+            margin-bottom: 34px;
+        }
+
+        .login-box {
+            max-width: 720px;
+            border: 1px solid #ddd;
+            padding: 22px;
+            background-color: white;
+        }
+
+        .login-box a {
+            color: #5b356d;
+            font-weight: bold;
+        }
+
+        .saved-section {
+            margin-bottom: 34px;
+            padding-bottom: 0;
+        }
+
+        .saved-section h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .saved-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .saved-card {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            background-color: white;
+        }
+
+        .saved-main-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            cursor: pointer;
+        }
+
+        .saved-title {
+            min-width: 220px;
+            flex: 1;
+        }
+
+        .saved-meta {
+            color: #666;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .saved-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .toggle-tracks-button {
+            width: 112px;
+            text-align: center;
+        }
+
+        .saved-track-list {
+            display: none;
+            margin-top: 10px;
+            padding-left: 18px;
+            color: #333;
+        }
+
+        .saved-track-list.open {
+            display: block;
+        }
+
+        .saved-track-list ol {
+            margin-top: 8px;
+            margin-bottom: 4px;
+            padding-left: 22px;
+        }
+
+        .saved-track-list li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .playlist-track-link {
+            border: none;
+            background: none;
+            padding: 0;
+            color: #222;
+            font-size: 15px;
+            line-height: 1.45;
+            text-align: left;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+        }
+
+        .playlist-track-link:hover {
+            color: #5b356d;
+            text-decoration: underline;
+            background: none;
+        }
+
+        .builder-card {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .builder-card h2 {
+            font-size: 20px;
+            font-weight: normal;
+            margin-bottom: 16px;
+        }
+
+        .playlist-name-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            height: 38px;
+            border: 1px solid #aaa;
+            border-radius: 999px;
+            padding: 0 16px;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #5b356d;
+        }
+
+        #playlistNameInput {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .builder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .builder-column-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        #recordingSearchInput {
+            width: 100%;
+            height: 38px;
+            margin-bottom: 10px;
+        }
+
+        .search-column-stack,
+        .builder-column-stack {
+            height: 376px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-frame {
+            flex: 1;
+        }
+
+        .builder-frame {
+            height: 376px;
+        }
+
+        button {
+            border: 1px solid #111;
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #111;
+            color: white;
+            text-transform: none;
+            letter-spacing: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+
+        .secondary-button {
+            background-color: white;
+            color: #5b356d;
+            border: 1px solid #5b356d;
+        }
+
+        .secondary-button:hover {
+            background-color: #f4edf8;
+        }
+
+        .danger-button {
+            background-color: white;
+            color: #9b1c1c;
+            border: 1px solid #9b1c1c;
+        }
+
+        .danger-button:hover {
+            background-color: #fff0f0;
+        }
+
+        .small-button {
+            padding: 7px 11px;
+            font-size: 12px;
+        }
+
+        .frame {
+            border: 1px solid #ddd;
+            background-color: white;
+            overflow-y: auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .recording-item,
+        .selected-track {
+            border-bottom: 1px solid #e5e5e5;
+            padding: 10px 4px;
+            margin-bottom: 0;
+            background-color: white;
+        }
+
+        .recording-item {
+            cursor: grab;
+        }
+
+        .recording-item:hover,
+        .selected-track:hover {
+            background-color: #fafafa;
+        }
+
+        .recording-title,
+        .track-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .recording-meta,
+        .track-meta {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .selected-track {
+            cursor: move;
+        }
+
+        .selected-track.dragging {
+            opacity: 0.45;
+        }
+
+        .drop-hint {
+            padding: 18px;
+            text-align: center;
+            color: #777;
+            border: 1px dashed #aaa;
+            background-color: white;
+        }
+
+        .builder-actions {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .message {
+            margin-top: 12px;
+            color: #5b356d;
+            font-weight: bold;
+        }
+
+        .empty-box {
+            padding: 10px 0;
+            color: #666;
+            background-color: white;
+        }
+
+        .custom-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(255, 255, 255, 0.55);
+            z-index: 9999;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 190px;
+        }
+
+        .custom-modal-overlay.open {
+            display: flex;
+        }
+
+        .custom-modal {
+            width: 460px;
+            max-width: calc(100% - 40px);
+            background-color: white;
+            border-radius: 2px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+            padding: 34px 34px 28px;
+            text-align: center;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .custom-modal-close {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            border: none;
+            background: transparent;
+            color: #888;
+            font-size: 28px;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        .custom-modal-close:hover {
+            background: transparent;
+            color: #333;
+        }
+
+        .custom-modal-title {
+            font-size: 18px;
+            font-weight: normal;
+            color: #333;
+            margin: 22px 0 26px;
+            line-height: 1.5;
+        }
+
+        .custom-modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .custom-modal-main-button {
+            min-width: 92px;
+            border: none;
+            background-color: #e83b36;
+            color: white;
+            border-radius: 999px;
+            padding: 10px 28px;
+            font-size: 14px;
+        }
+
+        .custom-modal-main-button:hover {
+            background-color: #d9302c;
+        }
+
+        .custom-modal-cancel-button {
+            min-width: 92px;
+            border: 1px solid #aaa;
+            background-color: white;
+            color: #333;
+            border-radius: 999px;
+            padding: 10px 28px;
+            font-size: 14px;
+        }
+
+        .custom-modal-cancel-button:hover {
+            background-color: #f5f5f5;
+        }
+
+        @media (max-width: 900px) {
+            .builder-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-column-stack,
+            .builder-column-stack {
+                height: 360px;
+            }
+
+            .builder-frame {
+                height: 360px;
+            }
+
+            .saved-main-row {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .saved-title {
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+        <h1>Playlist</h1>
+
+        <p class="intro">
+            Create, edit, and play your own Chopin playlists.
+        </p>
+
+        {% if not current_user %}
+            <div class="login-box">
+                <h2>Please log in first</h2>
+
+                <p>
+                    You can browse the site without an account, but database-backed playlists require a user account.
+                </p>
+
+                <p>
+                    <a href="{{ url_for('user') }}">Go to User page to register or log in</a>
+                </p>
+            </div>
+        {% else %}
+
+            <section class="saved-section">
+                <h2>Saved Playlists</h2>
+
+                <div id="savedPlaylistsArea" class="saved-grid"></div>
+            </section>
+
+            <section class="builder-card" id="builderCard">
+                <h2>Playlist Builder</h2>
+
+                <div class="playlist-name-row">
+                    <input
+                        type="text"
+                        id="playlistNameInput"
+                        placeholder="Playlist name, for example: My Favorite Nocturnes"
+                    >
+
+                    <button type="button" onclick="savePlaylist()">Save Playlist</button>
+
+                    <button type="button" class="secondary-button" onclick="clearBuilder()">New Playlist</button>
+                </div>
+
+                <div class="builder-grid">
+                    <div>
+                        <h2 class="builder-column-title">Search Recordings</h2>
+
+                        <div class="search-column-stack">
+                            <input
+                                type="text"
+                                id="recordingSearchInput"
+                                placeholder="Search by title, genre, performer, place, or year"
+                                oninput="renderRecordingResults()"
+                            >
+
+                            <div id="recordingResultsFrame" class="frame search-frame"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="builder-column-title">Playlist Builder</h2>
+
+                        <div class="builder-column-stack">
+                            <div
+                                id="builderFrame"
+                                class="frame builder-frame"
+                                ondragover="allowDrop(event)"
+                                ondrop="dropRecordingIntoBuilder(event)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="builder-actions">
+                    <button type="button" onclick="playBuilderPlaylist()">Play Builder</button>
+                    <button type="button" class="secondary-button" onclick="clearBuilder()">Clear Builder</button>
+                </div>
+
+                <p id="builderMessage" class="message"></p>
+            </section>
+
+        {% endif %}
+    </main>
+
+    <div id="customModalOverlay" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <button type="button" class="custom-modal-close" onclick="closeCustomModal()">×</button>
+
+            <div id="customModalTitle" class="custom-modal-title">
+                Message
+            </div>
+
+            <div id="customModalActions" class="custom-modal-actions">
+                <button
+                    type="button"
+                    id="customModalConfirmButton"
+                    class="custom-modal-main-button">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {% if current_user %}
+        <script id="recordingsData" type="application/json">
+            {{ recordings|tojson }}
+        </script>
+
+        <script id="playlistsData" type="application/json">
+            {{ playlists|tojson }}
+        </script>
+
+        <script>
+            var recordings = JSON.parse(document.getElementById("recordingsData").textContent);
+            var savedPlaylists = JSON.parse(document.getElementById("playlistsData").textContent);
+            var staticBaseUrl = {{ static_base_url|tojson }};
+            var savePlaylistUrl = {{ url_for('save_playlist')|tojson }};
+            var deletePlaylistUrl = {{ url_for('delete_playlist')|tojson }};
+
+            var builderTracks = [];
+            var editingPlaylistId = null;
+            var modalConfirmCallback = null;
+
+            function escapeHtml(text) {
+                if (!text) {
+                    return "";
+                }
+
+                return String(text)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function showCustomModal(message, options) {
+                var overlay = document.getElementById("customModalOverlay");
+                var title = document.getElementById("customModalTitle");
+                var actions = document.getElementById("customModalActions");
+
+                title.innerHTML = escapeHtml(message);
+                actions.innerHTML = "";
+
+                if (options && options.type === "confirm") {
+                    var confirmButton = document.createElement("button");
+                    confirmButton.type = "button";
+                    confirmButton.className = "custom-modal-main-button";
+                    confirmButton.innerHTML = options.confirmText || "确定";
+
+                    confirmButton.onclick = function() {
+                        closeCustomModal();
+
+                        if (modalConfirmCallback) {
+                            modalConfirmCallback();
+                        }
+                    };
+
+                    var cancelButton = document.createElement("button");
+                    cancelButton.type = "button";
+                    cancelButton.className = "custom-modal-cancel-button";
+                    cancelButton.innerHTML = options.cancelText || "取消";
+
+                    cancelButton.onclick = function() {
+                        closeCustomModal();
+                    };
+
+                    actions.appendChild(confirmButton);
+                    actions.appendChild(cancelButton);
+
+                    modalConfirmCallback = options.onConfirm || null;
+                } else {
+                    var okButton = document.createElement("button");
+                    okButton.type = "button";
+                    okButton.className = "custom-modal-main-button";
+                    okButton.innerHTML = "确定";
+
+                    okButton.onclick = function() {
+                        closeCustomModal();
+                    };
+
+                    actions.appendChild(okButton);
+                    modalConfirmCallback = null;
+                }
+
+                overlay.classList.add("open");
+            }
+
+            function closeCustomModal() {
+                var overlay = document.getElementById("customModalOverlay");
+
+                overlay.classList.remove("open");
+                modalConfirmCallback = null;
+            }
+
+            function getRecordingAudioPath(recording) {
+                return staticBaseUrl + recording.link;
+            }
+
+            function getRecordingDisplayTitle(recording) {
+                return recording.work_title;
+            }
+
+            function getRecordingMeta(recording) {
+                var parts = [];
+
+                if (recording.genre) {
+                    parts.push(recording.genre);
+                }
+
+                if (recording.performer_name) {
+                    parts.push("Performer: " + recording.performer_name);
+                }
+
+                if (recording.composition_year) {
+                    parts.push("Year: " + recording.composition_year);
+                }
+
+                if (recording.city || recording.country) {
+                    var place = "";
+
+                    if (recording.city) {
+                        place += recording.city;
+                    }
+
+                    if (recording.city && recording.country) {
+                        place += ", ";
+                    }
+
+                    if (recording.country) {
+                        place += recording.country;
+                    }
+
+                    parts.push(place);
+                }
+
+                return parts.join(" | ");
+            }
+
+            function recordingMatchesSearch(recording, query) {
+                var text = [
+                    recording.work_title,
+                    recording.recording_title,
+                    recording.genre,
+                    recording.performer_name,
+                    recording.composition_year,
+                    recording.place_name,
+                    recording.city,
+                    recording.country
+                ].join(" ").toLowerCase();
+
+                return text.indexOf(query.toLowerCase()) !== -1;
+            }
+
+            function renderRecordingResults() {
+                var query = document.getElementById("recordingSearchInput").value.trim();
+                var frame = document.getElementById("recordingResultsFrame");
+
+                frame.innerHTML = "";
+
+                if (query === "") {
+                    return;
+                }
+
+                var matches = recordings.filter(function(recording) {
+                    return recordingMatchesSearch(recording, query);
+                });
+
+                if (matches.length === 0) {
+                    frame.innerHTML = "<div class='empty-box'>No recordings found.</div>";
+                    return;
+                }
+
+                for (var i = 0; i < matches.length; i++) {
+                    var recording = matches[i];
+
+                    var item = document.createElement("div");
+                    item.className = "recording-item";
+                    item.setAttribute("draggable", "true");
+                    item.setAttribute("data-recording-id", recording.recording_id);
+
+                    item.ondragstart = function(savedRecordingId) {
+                        return function(event) {
+                            event.dataTransfer.setData("recordingId", savedRecordingId);
+                        };
+                    }(recording.recording_id);
+
+                    item.innerHTML =
+                        "<div class='recording-title'>" +
+                            escapeHtml(getRecordingDisplayTitle(recording)) +
+                        "</div>" +
+                        "<div class='recording-meta'>" +
+                            escapeHtml(getRecordingMeta(recording)) +
+                        "</div>" +
+                        "<button type='button' class='small-button' onclick='addRecordingToBuilder(" + recording.recording_id + ")'>" +
+                            "Add" +
+                        "</button>";
+
+                    frame.appendChild(item);
+                }
+            }
+
+            function findRecordingById(recordingId) {
+                recordingId = parseInt(recordingId);
+
+                for (var i = 0; i < recordings.length; i++) {
+                    if (parseInt(recordings[i].recording_id) === recordingId) {
+                        return recordings[i];
+                    }
+                }
+
+                return null;
+            }
+
+            function addRecordingToBuilder(recordingId) {
+                var recording = findRecordingById(recordingId);
+
+                if (!recording) {
+                    return;
+                }
+
+                builderTracks.push({
+                    recording_id: recording.recording_id,
+                    title: getRecordingDisplayTitle(recording),
+                    performer_name: recording.performer_name,
+                    link: recording.link,
+                    audioPath: getRecordingAudioPath(recording)
+                });
+
+                renderBuilder();
+            }
+
+            function allowDrop(event) {
+                event.preventDefault();
+            }
+
+            function dropRecordingIntoBuilder(event) {
+                event.preventDefault();
+
+                var recordingId = event.dataTransfer.getData("recordingId");
+
+                if (recordingId) {
+                    addRecordingToBuilder(recordingId);
+                }
+            }
+
+            function renderBuilder() {
+                var frame = document.getElementById("builderFrame");
+
+                frame.innerHTML = "";
+
+                if (builderTracks.length === 0) {
+                    frame.innerHTML =
+                        "<div class='drop-hint'>" +
+                        "Drag recordings here, or click Add from the search results." +
+                        "</div>";
+                    return;
+                }
+
+                for (var i = 0; i < builderTracks.length; i++) {
+                    var track = builderTracks[i];
+
+                    var item = document.createElement("div");
+                    item.className = "selected-track";
+                    item.setAttribute("draggable", "true");
+
+                    item.ondragstart = function(index) {
+                        return function(event) {
+                            event.dataTransfer.setData("builderIndex", index);
+                            this.classList.add("dragging");
+                        };
+                    }(i);
+
+                    item.ondragend = function() {
+                        this.classList.remove("dragging");
+                    };
+
+                    item.ondragover = function(event) {
+                        event.preventDefault();
+                    };
+
+                    item.ondrop = function(targetIndex) {
+                        return function(event) {
+                            event.preventDefault();
+
+                            var sourceIndex = event.dataTransfer.getData("builderIndex");
+
+                            if (sourceIndex === "") {
+                                return;
+                            }
+
+                            sourceIndex = parseInt(sourceIndex);
+
+                            if (sourceIndex === targetIndex) {
+                                return;
+                            }
+
+                            var movedTrack = builderTracks.splice(sourceIndex, 1)[0];
+
+                            if (sourceIndex < targetIndex) {
+                                targetIndex = targetIndex - 1;
+                            }
+
+                            builderTracks.splice(targetIndex, 0, movedTrack);
+                            renderBuilder();
+                        };
+                    }(i);
+
+                    item.innerHTML =
+                        "<div class='track-title'>" +
+                            "<button type='button' class='playlist-track-link' onclick='playBuilderTrack(" + i + ")'>" +
+                                (i + 1) + ". " + escapeHtml(track.title) +
+                            "</button>" +
+                        "</div>" +
+                        "<div class='track-meta'>" +
+                            "Performer: " + escapeHtml(track.performer_name || "") +
+                        "</div>" +
+                        "<button type='button' class='small-button danger-button' onclick='removeBuilderTrack(" + i + ")'>" +
+                            "Remove" +
+                        "</button>";
+
+                    frame.appendChild(item);
+                }
+            }
+
+            function removeBuilderTrack(index) {
+                builderTracks.splice(index, 1);
+                renderBuilder();
+            }
+
+            function clearBuilder() {
+                builderTracks = [];
+                editingPlaylistId = null;
+                document.getElementById("playlistNameInput").value = "";
+                document.getElementById("builderMessage").innerHTML = "";
+                renderBuilder();
+            }
+
+            function playTracks(tracks, startIndex) {
+                if (!tracks || tracks.length === 0) {
+                    showCustomModal("This playlist is empty.");
+                    return;
+                }
+
+                var playerTracks = tracks.map(function(track) {
+                    return {
+                        title: track.title || track.work_title,
+                        audioPath: track.audioPath || (staticBaseUrl + track.link)
+                    };
+                });
+
+                if (window.parent && window.parent.playPlaylistTracksFromIndex) {
+                    window.parent.playPlaylistTracksFromIndex(playerTracks, startIndex || 0);
+                } else {
+                    showCustomModal("Please open this page through /app so the floating player can play the playlist.");
+                }
+            }
+
+            function playBuilderPlaylist() {
+                playTracks(builderTracks);
+            }
+
+            function playBuilderTrack(index) {
+                playTracks(builderTracks, index);
+            }
+
+            function playlistNameExists(playlistName) {
+                var normalizedName = playlistName.trim().toLowerCase();
+
+                for (var i = 0; i < savedPlaylists.length; i++) {
+                    var savedName = savedPlaylists[i].playlist_name.trim().toLowerCase();
+                    var savedId = parseInt(savedPlaylists[i].playlist_id);
+
+                    if (
+                        savedName === normalizedName &&
+                        savedId !== parseInt(editingPlaylistId)
+                    ) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            function savePlaylist() {
+                var playlistName = document.getElementById("playlistNameInput").value.trim();
+                var message = document.getElementById("builderMessage");
+
+                if (playlistName === "") {
+                    message.innerHTML = "Please enter a playlist name.";
+                    showCustomModal("Please enter a playlist name.");
+                    return;
+                }
+
+                if (playlistNameExists(playlistName)) {
+                    message.innerHTML = "A playlist with this name already exists. Please choose another name.";
+                    showCustomModal("A playlist with this name already exists. Please choose another name.");
+                    return;
+                }
+
+                if (builderTracks.length === 0) {
+                    message.innerHTML = "Please add at least one recording before saving this playlist.";
+                    showCustomModal("Please add at least one recording before saving this playlist.");
+                    return;
+                }
+
+                var recordingIds = builderTracks.map(function(track) {
+                    return track.recording_id;
+                });
+
+                fetch(savePlaylistUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        playlist_id: editingPlaylistId,
+                        playlist_name: playlistName,
+                        tracks: recordingIds
+                    })
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    message.innerHTML = data.message;
+
+                    if (data.success) {
+                        showCustomModal(data.message);
+
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 700);
+                    } else {
+                        showCustomModal(data.message);
+                    }
+                })
+                .catch(function() {
+                    message.innerHTML = "Playlist could not be saved. Please check the server.";
+                    showCustomModal("Playlist could not be saved. Please check the server.");
+                });
+            }
+
+            function editSavedPlaylist(playlistId) {
+                var playlist = null;
+
+                for (var i = 0; i < savedPlaylists.length; i++) {
+                    if (parseInt(savedPlaylists[i].playlist_id) === parseInt(playlistId)) {
+                        playlist = savedPlaylists[i];
+                        break;
+                    }
+                }
+
+                if (!playlist) {
+                    return;
+                }
+
+                editingPlaylistId = playlist.playlist_id;
+                document.getElementById("playlistNameInput").value = playlist.playlist_name;
+
+                builderTracks = [];
+
+                for (var j = 0; j < playlist.tracks.length; j++) {
+                    var track = playlist.tracks[j];
+
+                    builderTracks.push({
+                        recording_id: track.recording_id,
+                        title: track.work_title,
+                        performer_name: track.performer_name,
+                        link: track.link,
+                        audioPath: staticBaseUrl + track.link
+                    });
+                }
+
+                document.getElementById("builderMessage").innerHTML =
+                    "Editing playlist: " + escapeHtml(playlist.playlist_name);
+
+                renderBuilder();
+
+                document.getElementById("builderCard").scrollIntoView({
+                    behavior: "smooth"
+                });
+            }
+
+            function deleteSavedPlaylist(playlistId) {
+                showCustomModal("确定删除这个 playlist？", {
+                    type: "confirm",
+                    confirmText: "确定",
+                    cancelText: "取消",
+                    onConfirm: function() {
+                        fetch(deletePlaylistUrl, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                playlist_id: playlistId
+                            })
+                        })
+                        .then(function(response) {
+                            return response.json();
+                        })
+                        .then(function(data) {
+                            showCustomModal(data.message);
+
+                            if (data.success) {
+                                setTimeout(function() {
+                                    window.location.reload();
+                                }, 700);
+                            }
+                        })
+                        .catch(function() {
+                            showCustomModal("Playlist could not be deleted. Please check the server.");
+                        });
+                    }
+                });
+            }
+
+            function playSavedPlaylist(playlistId) {
+                var playlist = null;
+
+                for (var i = 0; i < savedPlaylists.length; i++) {
+                    if (parseInt(savedPlaylists[i].playlist_id) === parseInt(playlistId)) {
+                        playlist = savedPlaylists[i];
+                        break;
+                    }
+                }
+
+                if (!playlist) {
+                    return;
+                }
+
+                var tracks = playlist.tracks.map(function(track) {
+                    return {
+                        title: track.work_title,
+                        link: track.link
+                    };
+                });
+
+                playTracks(tracks);
+            }
+
+            function playSavedPlaylistTrack(playlistId, startIndex) {
+                var playlist = null;
+
+                for (var i = 0; i < savedPlaylists.length; i++) {
+                    if (parseInt(savedPlaylists[i].playlist_id) === parseInt(playlistId)) {
+                        playlist = savedPlaylists[i];
+                        break;
+                    }
+                }
+
+                if (!playlist) {
+                    return;
+                }
+
+                var tracks = playlist.tracks.map(function(track) {
+                    return {
+                        title: track.work_title,
+                        link: track.link
+                    };
+                });
+
+                playTracks(tracks, startIndex);
+            }
+
+            function toggleSavedPlaylistTracks(playlistId, event) {
+                if (event && event.target && event.target.closest("button")) {
+                    return;
+                }
+
+                var trackList = document.getElementById("savedTrackList" + playlistId);
+                var button = document.getElementById("toggleSavedButton" + playlistId);
+
+                if (!trackList || !button) {
+                    return;
+                }
+
+                if (trackList.classList.contains("open")) {
+                    trackList.classList.remove("open");
+                    button.innerHTML = "Show Tracks";
+                } else {
+                    trackList.classList.add("open");
+                    button.innerHTML = "Hide Tracks";
+                }
+            }
+
+            function renderSavedPlaylists() {
+                var area = document.getElementById("savedPlaylistsArea");
+
+                area.innerHTML = "";
+
+                if (savedPlaylists.length === 0) {
+                    area.innerHTML =
+                        "<div class='empty-box'>" +
+                        "No saved playlists yet. Create one below." +
+                        "</div>";
+                    return;
+                }
+
+                for (var i = 0; i < savedPlaylists.length; i++) {
+                    var playlist = savedPlaylists[i];
+
+                    var card = document.createElement("div");
+                    card.className = "saved-card";
+
+                    var trackCount = 0;
+
+                    if (playlist.tracks) {
+                        trackCount = playlist.tracks.length;
+                    }
+
+                    var trackListHtml = "";
+
+                    if (playlist.tracks && playlist.tracks.length > 0) {
+                        trackListHtml =
+                            "<div id='savedTrackList" + playlist.playlist_id + "' class='saved-track-list'>" +
+                            "<ol>";
+
+                        for (var j = 0; j < playlist.tracks.length; j++) {
+                            trackListHtml +=
+                                "<li>" +
+                                "<button type='button' class='playlist-track-link' onclick='playSavedPlaylistTrack(" + playlist.playlist_id + ", " + j + ")'>" +
+                                escapeHtml(playlist.tracks[j].work_title) +
+                                "</button>" +
+                                "</li>";
+                        }
+
+                        trackListHtml +=
+                            "</ol>" +
+                            "</div>";
+                    } else {
+                        trackListHtml =
+                            "<div id='savedTrackList" + playlist.playlist_id + "' class='saved-track-list'>" +
+                            "<p>No tracks.</p>" +
+                            "</div>";
+                    }
+
+                    card.innerHTML =
+                        "<div class='saved-main-row' onclick='toggleSavedPlaylistTracks(" + playlist.playlist_id + ", event)'>" +
+                            "<div class='saved-title'>" +
+                                "<h3>" + escapeHtml(playlist.playlist_name) + "</h3>" +
+                            "</div>" +
+
+                            "<div class='saved-meta'>" +
+                                trackCount + " track(s)" +
+                            "</div>" +
+
+                            "<div class='saved-actions'>" +
+                                "<button type='button' onclick='playSavedPlaylist(" + playlist.playlist_id + ")'>Play</button>" +
+                                "<button type='button' class='secondary-button' onclick='editSavedPlaylist(" + playlist.playlist_id + ")'>Edit</button>" +
+                                "<button type='button' class='secondary-button toggle-tracks-button' id='toggleSavedButton" + playlist.playlist_id + "' onclick='toggleSavedPlaylistTracks(" + playlist.playlist_id + ")'>Show Tracks</button>" +
+                                "<button type='button' class='danger-button' onclick='deleteSavedPlaylist(" + playlist.playlist_id + ")'>Delete</button>" +
+                            "</div>" +
+                        "</div>" +
+                        trackListHtml;
+
+                    area.appendChild(card);
+                }
+            }
+
+            window.addEventListener("load", function() {
+                renderBuilder();
+                renderSavedPlaylists();
+            });
+        </script>
+    {% endif %}
+
+</body>
+</html>

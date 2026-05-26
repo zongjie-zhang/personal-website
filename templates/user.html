@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #222;
+        }
+
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 54px 28px;
+        }
+
+        h1 {
+            font-family: Arial, sans-serif;
+            font-size: 42px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        h2 {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        .page-title-row {
+            display: flex;
+            align-items: baseline;
+            gap: 18px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .message {
+            font-weight: bold;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .message-error {
+            color: #b71c1c;
+            display: inline-block;
+            animation: messageShake 0.38s ease;
+        }
+
+        .message-success {
+            color: #5b356d;
+        }
+
+        @keyframes messageShake {
+            0% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-8px);
+            }
+
+            40% {
+                transform: translateX(8px);
+            }
+
+            60% {
+                transform: translateX(-5px);
+            }
+
+            80% {
+                transform: translateX(5px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .auth-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 38px;
+            align-items: start;
+        }
+
+        .section-card {
+            border-top: 1px solid #ccc;
+            padding-top: 18px;
+            margin-bottom: 34px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            height: 38px;
+            padding: 0 10px;
+            border: 1px solid #aaa;
+            box-sizing: border-box;
+            font-size: 15px;
+            margin-bottom: 14px;
+            background-color: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #5b356d;
+        }
+
+        input[type="file"] {
+            padding-top: 8px;
+        }
+
+        button,
+        .button-link {
+            display: inline-block;
+            border: 1px solid #111;
+            border-radius: 999px;
+            padding: 8px 14px;
+            background-color: #111;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: Arial, sans-serif;
+        }
+
+        button:hover,
+        .button-link:hover {
+            background-color: #333;
+        }
+
+        .secondary-button {
+            background-color: white;
+            color: #5b356d;
+            border: 1px solid #5b356d;
+        }
+
+        .secondary-button:hover {
+            background-color: #f4edf8;
+        }
+
+        .logout-link {
+            background-color: white;
+            color: #9b1c1c;
+            border: 1px solid #9b1c1c;
+        }
+
+        .logout-link:hover {
+            background-color: #fff0f0;
+        }
+
+        .profile-top {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+            margin-bottom: 34px;
+            flex-wrap: wrap;
+        }
+
+        .avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid #bbb;
+            background-color: #f3f3f3;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .default-avatar-head {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #999;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .default-avatar-body {
+            position: absolute;
+            width: 95px;
+            height: 58px;
+            border-radius: 50% 50% 0 0;
+            background-color: #999;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .profile-name {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .note {
+            color: #666;
+            line-height: 1.5;
+            margin-top: 0;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 38px;
+            align-items: start;
+        }
+
+        .favorites-card {
+            margin-bottom: 25px;
+        }
+
+        .favorites-card h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        .favorites-main-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .favorites-title {
+            min-width: 220px;
+            flex: 1;
+        }
+
+        .favorites-meta {
+            color: #666;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .favorites-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .favorites-track-list {
+            display: none;
+            margin-top: 12px;
+            padding-left: 18px;
+            color: #333;
+        }
+
+        .favorites-track-list.open {
+            display: block;
+        }
+
+        .favorites-track-list ol {
+            margin-top: 8px;
+            margin-bottom: 4px;
+            padding-left: 22px;
+        }
+
+        .favorites-track-list li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .favorite-track-link {
+            border: none;
+            background: none;
+            padding: 0;
+            color: #222;
+            font-size: 15px;
+            line-height: 1.45;
+            text-align: left;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+        }
+
+        .favorite-track-link:hover {
+            color: #5b356d;
+            text-decoration: underline;
+            background: none;
+        }
+
+        .password-form {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .password-form.open {
+            display: block;
+        }
+
+        #togglePasswordButton {
+            width: 164px;
+            text-align: center;
+        }
+
+        #toggleFavoritesButton {
+            width: 112px;
+            text-align: center;
+        }
+
+        @media (max-width: 750px) {
+            .auth-grid,
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .page-title-row {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+        <div class="page-title-row">
+            <h1>User</h1>
+
+            {% if message %}
+                <p
+                    class="message {% if message == 'Password changed.' %}message-success{% else %}message-error{% endif %}"
+                    role="alert">
+                    {{ message }}
+                </p>
+            {% endif %}
+        </div>
+
+        {% if not current_user %}
+            <div class="auth-grid">
+
+                <section class="section-card">
+                    <h2>Register</h2>
+
+                    <form action="{{ url_for('register') }}" method="post" target="_top">
+                        <label for="registerUsername">Username</label>
+                        <input
+                            id="registerUsername"
+                            name="username"
+                            type="text"
+                            placeholder="Choose a username"
+                        >
+
+                        <label for="registerPassword">Password</label>
+                        <input
+                            id="registerPassword"
+                            name="password"
+                            type="password"
+                            placeholder="Choose a password"
+                        >
+
+                        <label for="registerConfirmPassword">Confirm Password</label>
+                        <input
+                            id="registerConfirmPassword"
+                            name="confirm_password"
+                            type="password"
+                            placeholder="Confirm password"
+                        >
+
+                        <button type="submit">Register</button>
+                    </form>
+                </section>
+
+                <section class="section-card">
+                    <h2>Login</h2>
+
+                    <form action="{{ url_for('login') }}" method="post" target="_top">
+                        <label for="loginUsername">Username</label>
+                        <input
+                            id="loginUsername"
+                            name="username"
+                            type="text"
+                            placeholder="Username"
+                        >
+
+                        <label for="loginPassword">Password</label>
+                        <input
+                            id="loginPassword"
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                        >
+
+                        <button type="submit">Login</button>
+                    </form>
+                </section>
+
+            </div>
+        {% else %}
+            <section class="section-card">
+                <div class="profile-top">
+                    <div class="avatar-large">
+                        {% if current_user.avatar_data %}
+                            <img src="{{ current_user.avatar_data }}" alt="User avatar">
+                        {% else %}
+                            <div class="default-avatar-head"></div>
+                            <div class="default-avatar-body"></div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <div class="profile-name">{{ current_user.username }}</div>
+                        <p class="note">You are logged in.</p>
+                        <a
+                            class="button-link logout-link"
+                            href="{{ url_for('logout', next=url_for('app_shell')) }}"
+                            target="_top">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-card favorites-card">
+                <h2>Favorites</h2>
+
+                <div class="favorites-main-row">
+                    <div class="favorites-meta">
+                        {{ favorites_playlist.tracks|length if favorites_playlist else 0 }} track(s)
+                    </div>
+
+                    <div class="favorites-actions">
+                        <button type="button" onclick="playFavorites()">Play</button>
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            id="toggleFavoritesButton"
+                            onclick="toggleFavoritesTracks()">
+                            Show Tracks
+                        </button>
+                    </div>
+                </div>
+
+                <div id="favoritesTrackList" class="favorites-track-list">
+                    {% if favorites_playlist and favorites_playlist.tracks %}
+                        <ol>
+                            {% for track in favorites_playlist.tracks %}
+                                <li>
+                                    <button
+                                        type="button"
+                                        class="favorite-track-link"
+                                        onclick="playFavoriteTrack({{ loop.index0 }})">
+                                        {{ track.work_title }}
+                                    </button>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <p>No tracks.</p>
+                    {% endif %}
+                </div>
+            </section>
+
+            <div class="settings-grid">
+                <section class="section-card">
+                    <h2>Change Profile</h2>
+
+                    <form action="{{ url_for('update_user') }}" method="post" enctype="multipart/form-data">
+                        <label for="username">Username</label>
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            value="{{ current_user.username }}"
+                        >
+
+                        <label for="avatar">Avatar</label>
+                        <input
+                            id="avatar"
+                            name="avatar"
+                            type="file"
+                            accept="image/*"
+                        >
+
+                        <button type="submit">Save Profile</button>
+                    </form>
+                </section>
+
+                <section class="section-card">
+                    <h2>Change Password</h2>
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="togglePasswordButton"
+                        onclick="togglePasswordForm()">
+                        Show Password Form
+                    </button>
+
+                    <form
+                        id="passwordForm"
+                        class="password-form{% if message in ['Old password is incorrect.', 'New password should be at least 4 characters.', 'New passwords do not match.'] %} open{% endif %}"
+                        action="{{ url_for('change_password') }}"
+                        method="post">
+                        <label for="oldPassword">Old Password</label>
+                        <input
+                            id="oldPassword"
+                            name="old_password"
+                            type="password"
+                            placeholder="Old password"
+                        >
+
+                        <label for="newPassword">New Password</label>
+                        <input
+                            id="newPassword"
+                            name="new_password"
+                            type="password"
+                            placeholder="New password"
+                        >
+
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input
+                            id="confirmPassword"
+                            name="confirm_password"
+                            type="password"
+                            placeholder="Confirm new password"
+                        >
+
+                        <button type="submit">Change Password</button>
+                    </form>
+                </section>
+            </div>
+        {% endif %}
+    </main>
+
+    <script>
+        var favoriteTracks = {{ favorites_playlist.tracks|tojson if favorites_playlist else [] }};
+        var staticBaseUrl = {{ static_base_url|tojson }};
+
+        function playFavorites() {
+            if (!favoriteTracks || favoriteTracks.length === 0) {
+                alert("Favorites is empty.");
+                return;
+            }
+
+            var tracks = [];
+
+            for (var i = 0; i < favoriteTracks.length; i++) {
+                tracks.push({
+                    title: favoriteTracks[i].work_title,
+                    audioPath: staticBaseUrl + favoriteTracks[i].link
+                });
+            }
+
+            if (window.parent && window.parent.playPlaylistTracks) {
+                window.parent.playPlaylistTracks(tracks);
+            } else {
+                alert("Player is not loaded. Please open this page through /app.");
+            }
+        }
+
+        function playFavoriteTrack(startIndex) {
+            if (!favoriteTracks || favoriteTracks.length === 0) {
+                alert("Favorites is empty.");
+                return;
+            }
+
+            var tracks = [];
+
+            for (var i = 0; i < favoriteTracks.length; i++) {
+                tracks.push({
+                    title: favoriteTracks[i].work_title,
+                    audioPath: staticBaseUrl + favoriteTracks[i].link
+                });
+            }
+
+            if (window.parent && window.parent.playPlaylistTracksFromIndex) {
+                window.parent.playPlaylistTracksFromIndex(tracks, startIndex);
+            } else {
+                alert("Player is not loaded. Please open this page through /app.");
+            }
+        }
+
+        function toggleFavoritesTracks() {
+            var trackList = document.getElementById("favoritesTrackList");
+            var button = document.getElementById("toggleFavoritesButton");
+
+            if (!trackList || !button) {
+                return;
+            }
+
+            if (trackList.classList.contains("open")) {
+                trackList.classList.remove("open");
+                button.innerHTML = "Show Tracks";
+            } else {
+                trackList.classList.add("open");
+                button.innerHTML = "Hide Tracks";
+            }
+        }
+
+        function togglePasswordForm() {
+            var passwordForm = document.getElementById("passwordForm");
+            var toggleButton = document.getElementById("togglePasswordButton");
+
+            if (!passwordForm || !toggleButton) {
+                return;
+            }
+
+            if (passwordForm.classList.contains("open")) {
+                passwordForm.classList.remove("open");
+                toggleButton.innerHTML = "Show Password Form";
+            } else {
+                passwordForm.classList.add("open");
+                toggleButton.innerHTML = "Hide Password Form";
+            }
+        }
+
+        window.addEventListener("load", function() {
+            var passwordForm = document.getElementById("passwordForm");
+            var toggleButton = document.getElementById("togglePasswordButton");
+
+            if (passwordForm && toggleButton && passwordForm.classList.contains("open")) {
+                toggleButton.innerHTML = "Hide Password Form";
+            }
+        });
+    </script>
+
+</body>
+</html>

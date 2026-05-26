@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #222;
+        }
+
+        .page {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 52px 28px;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: normal;
+            margin: 0 0 12px 0;
+        }
+
+        .intro {
+            margin: 0 0 28px 0;
+            font-size: 16px;
+            line-height: 1.55;
+            color: #555;
+        }
+
+        .denied,
+        .message {
+            margin-top: 24px;
+            font-size: 16px;
+            line-height: 1.55;
+        }
+
+        .denied {
+            color: #b71c1c;
+        }
+
+        .message {
+            color: #5b356d;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin: 24px 0 30px 0;
+        }
+
+        .summary-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 14px 16px;
+            box-sizing: border-box;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 26px;
+            line-height: 1;
+            color: #111;
+        }
+
+        .user-list {
+            border-top: 1px solid #ddd;
+        }
+
+        .user-row {
+            display: grid;
+            grid-template-columns: 56px minmax(0, 1fr) auto;
+            gap: 16px;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .admin-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            background-color: #f3f4f6;
+            position: relative;
+        }
+
+        .admin-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .default-avatar-head {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #9ca3af;
+            top: 11px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .default-avatar-body {
+            position: absolute;
+            width: 42px;
+            height: 28px;
+            border-radius: 50% 50% 0 0;
+            background-color: #9ca3af;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .user-main {
+            min-width: 0;
+        }
+
+        .username-line {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: baseline;
+            margin-bottom: 6px;
+        }
+
+        .username {
+            font-size: 21px;
+            font-weight: bold;
+            line-height: 1.25;
+        }
+
+        .user-id,
+        .user-counts {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .user-details {
+            margin-top: 11px;
+        }
+
+        .user-details summary {
+            display: inline-block;
+            cursor: pointer;
+            color: #5b356d;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .details-body {
+            margin-top: 12px;
+            max-width: 860px;
+        }
+
+        .playlist-block {
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .playlist-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 11px 13px;
+            background-color: #fafafa;
+            border-bottom: 1px solid #e9e9e9;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .track-count {
+            color: #777;
+            font-size: 13px;
+            font-weight: normal;
+            white-space: nowrap;
+        }
+
+        .track-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .track-item {
+            padding: 10px 13px;
+            border-top: 1px solid #efefef;
+        }
+
+        .track-item:first-child {
+            border-top: none;
+        }
+
+        .track-title {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 3px;
+        }
+
+        .track-meta,
+        .empty-text,
+        .no-users {
+            font-size: 13px;
+            line-height: 1.45;
+            color: #666;
+        }
+
+        .empty-text {
+            padding: 11px 13px;
+        }
+
+        .delete-form {
+            justify-self: end;
+        }
+
+        .delete-button {
+            border: 1px solid #b71c1c;
+            background-color: white;
+            color: #b71c1c;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .delete-button:hover {
+            background-color: #fff1f1;
+        }
+
+        .no-users {
+            padding: 22px 0;
+        }
+
+        @media (max-width: 760px) {
+            .page {
+                padding: 42px 20px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-row {
+                grid-template-columns: 48px minmax(0, 1fr);
+            }
+
+            .admin-avatar {
+                width: 48px;
+                height: 48px;
+            }
+
+            .delete-form {
+                grid-column: 2;
+                justify-self: start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <h1>Admin</h1>
+
+        {% if not is_admin %}
+            <p class="denied">
+                This page is only available to the admin account.
+            </p>
+        {% else %}
+            <p class="intro">
+                Manage other users, inspect their avatars, and review their playlists.
+            </p>
+
+            {% if message %}
+                <p class="message">{{ message }}</p>
+            {% endif %}
+
+            <section class="summary-grid" aria-label="Admin summary">
+                <div class="summary-item">
+                    <div class="summary-label">Other Users</div>
+                    <div class="summary-value">{{ users|length }}</div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">Playlists</div>
+                    <div class="summary-value">{{ total_playlists }}</div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">Tracks Saved</div>
+                    <div class="summary-value">{{ total_tracks }}</div>
+                </div>
+            </section>
+
+            <section class="user-list">
+                {% if users %}
+                    {% for user_item in users %}
+                        <div class="user-row">
+                            <div class="admin-avatar">
+                                {% if user_item.avatar_data %}
+                                    <img src="{{ user_item.avatar_data }}" alt="{{ user_item.username }} avatar">
+                                {% else %}
+                                    <div class="default-avatar-head"></div>
+                                    <div class="default-avatar-body"></div>
+                                {% endif %}
+                            </div>
+
+                            <div class="user-main">
+                                <div class="username-line">
+                                    <div class="username">{{ user_item.username }}</div>
+                                    <div class="user-id">user_id {{ user_item.user_id }}</div>
+                                </div>
+
+                                <div class="user-counts">
+                                    {{ user_item.playlist_count }} playlists |
+                                    {{ user_item.track_count }} saved tracks
+                                </div>
+
+                                <details class="user-details">
+                                    <summary>View playlists</summary>
+
+                                    <div class="details-body">
+                                        {% if user_item.playlists %}
+                                            {% for playlist in user_item.playlists %}
+                                                <div class="playlist-block">
+                                                    <div class="playlist-header">
+                                                        <span>{{ playlist.playlist_name }}</span>
+                                                        <span class="track-count">{{ playlist.tracks|length }} tracks</span>
+                                                    </div>
+
+                                                    {% if playlist.tracks %}
+                                                        <ul class="track-list">
+                                                            {% for track in playlist.tracks %}
+                                                                <li class="track-item">
+                                                                    <div class="track-title">
+                                                                        {{ track.work_title }}
+                                                                    </div>
+                                                                    <div class="track-meta">
+                                                                        {{ track.genre }} |
+                                                                        {{ track.performer_name }} |
+                                                                        {{ track.composition_year }}
+                                                                    </div>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% else %}
+                                                        <div class="empty-text">No tracks in this playlist.</div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="empty-text">No playlists for this account.</div>
+                                        {% endif %}
+                                    </div>
+                                </details>
+                            </div>
+
+                            <form
+                                class="delete-form"
+                                action="{{ url_for('admin_delete_user') }}"
+                                method="post"
+                                onsubmit="return confirm('Delete this user and all playlists?');">
+                                <input type="hidden" name="user_id" value="{{ user_item.user_id }}">
+                                <button class="delete-button" type="submit">Delete</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-users">No other users yet.</div>
+                {% endif %}
+            </section>
+        {% endif %}
+    </main>
+</body>
+</html>

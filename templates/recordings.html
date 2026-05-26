@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recordings</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #222;
+        }
+
+        .page {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 52px 28px;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: normal;
+            margin: 0 0 12px 0;
+        }
+
+        .intro {
+            max-width: 900px;
+            margin: 0 0 28px 0;
+            font-size: 17px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .search-area {
+            position: relative;
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 780px;
+            margin-bottom: 36px;
+        }
+
+        #searchBox {
+            flex: 1;
+            min-width: 0;
+            height: 42px;
+            padding: 0 18px;
+            border-radius: 999px;
+            border: 1px solid #aaa;
+            outline: none;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        #searchButton {
+            height: 42px;
+            padding: 0 20px;
+            cursor: pointer;
+            border-radius: 999px;
+            border: 1px solid #111;
+            background-color: #111;
+            color: white;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        #searchButton:hover {
+            background-color: #333;
+        }
+
+        #suggestionBox {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: calc(100% - 104px);
+            max-height: 280px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            z-index: 10;
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+        }
+
+        .suggestion-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1.35;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f6f2f8;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 0 0 8px 0;
+        }
+
+        .empty-state {
+            margin-top: 24px;
+            padding: 22px 0;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .recording-block {
+            border-bottom: 1px solid #ddd;
+            padding: 24px 0 26px 0;
+        }
+
+        .recording-result-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 120px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .recording-main {
+            min-width: 0;
+        }
+
+        .recording-cover-link {
+            display: block;
+            position: relative;
+            width: 120px;
+            height: 120px;
+            justify-self: end;
+            border-radius: 50%;
+            background-color: #080808;
+            box-shadow: 0 9px 22px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+            animation: vinylSpin 16s linear infinite;
+            transform-origin: center;
+        }
+
+        .recording-cover-link::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border-radius: 50%;
+            background:
+                repeating-radial-gradient(circle at center,
+                    rgba(255, 255, 255, 0.08) 0 1px,
+                    rgba(0, 0, 0, 0.06) 2px 5px);
+            box-shadow:
+                inset 0 0 0 7px rgba(0, 0, 0, 0.08),
+                inset 0 0 18px rgba(0, 0, 0, 0.22);
+            opacity: 0.46;
+            pointer-events: none;
+        }
+
+        .recording-cover-link::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 2;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.22);
+        }
+
+        .recording-cover {
+            position: absolute;
+            inset: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            opacity: 1;
+        }
+
+        @keyframes vinylSpin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .recording-cover-link {
+                animation: none;
+            }
+        }
+
+        .recording-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .recording-title-row .recording-title {
+            font-size: 25px;
+            line-height: 1.45;
+            color: #2b2b2b;
+        }
+
+        .recording-meta {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .recording-title {
+            font-weight: bold;
+        }
+
+        .performer-line {
+            font-size: 15px;
+            color: #333;
+            margin: 0 0 14px 0;
+            line-height: 1.45;
+        }
+
+        .performer-link {
+            color: #222;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .performer-link:hover {
+            text-decoration: underline;
+        }
+
+        .audio-row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        audio {
+            width: 100%;
+        }
+
+        .recording-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 0;
+        }
+
+        .add-queue-button,
+        .open-audio-link {
+            display: inline-block;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: Arial, sans-serif;
+        }
+
+        .add-queue-button {
+            border: 1px solid #111;
+            background-color: #111;
+            color: white;
+        }
+
+        .add-queue-button:hover {
+            background-color: #333;
+        }
+
+        .open-audio-link {
+            background-color: white;
+            color: #5b356d;
+            border: 1px solid #5b356d;
+        }
+
+        .open-audio-link:hover {
+            background-color: #f4edf8;
+        }
+
+        .favorite-button {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid #999;
+            background-color: white;
+            color: #777;
+            cursor: pointer;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .favorite-button:hover {
+            border-color: #b71c1c;
+            color: #b71c1c;
+            background-color: #fff1f1;
+        }
+
+        .favorite-button.favorited {
+            border-color: #b71c1c;
+            color: #b71c1c;
+        }
+
+        .favorite-button svg {
+            width: 25px;
+            height: 25px;
+            display: block;
+            overflow: visible;
+            shape-rendering: geometricPrecision;
+        }
+
+        .favorite-button .favorite-heart {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.85;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .favorite-button.favorited .favorite-heart {
+            fill: currentColor;
+            stroke-width: 1.65;
+        }
+
+        .single-work-section {
+            margin-top: 28px;
+            width: 100%;
+        }
+
+        .description-section {
+            margin-top: 18px;
+            margin-bottom: 26px;
+            line-height: 1.65;
+            font-size: 16px;
+            max-width: 900px;
+        }
+
+        .description-section p {
+            margin-top: 0;
+            margin-bottom: 18px;
+        }
+
+        .description-type {
+            color: #5b356d;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 18px;
+        }
+
+        .score-section {
+            margin-top: 46px;
+            text-align: left;
+        }
+
+        .score-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .score-title {
+            color: #5b356d;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+
+        .hide-score-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .score-box {
+            border: 1px solid #bbb;
+            width: 100%;
+            height: 117vh;
+            margin-top: 10px;
+            background-color: white;
+        }
+
+        .score-box iframe {
+            width: 100%;
+            height: 117vh;
+            border: none;
+            display: block;
+        }
+
+        #downloadScoreLink {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        #downloadScoreLink a {
+            color: #0000EE;
+            text-decoration: underline;
+            font-weight: normal;
+        }
+
+        @media (max-width: 750px) {
+            .page {
+                padding: 42px 20px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .search-area {
+                flex-direction: column;
+            }
+
+            #searchButton {
+                width: 100%;
+            }
+
+            #suggestionBox {
+                width: 100%;
+            }
+
+            .audio-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .recording-title-row {
+                align-items: flex-start;
+            }
+
+            .recording-result-row {
+                grid-template-columns: minmax(0, 1fr) 92px;
+                gap: 14px;
+            }
+
+            .recording-cover-link {
+                width: 92px;
+                height: 92px;
+            }
+
+            .recording-title-row .recording-title {
+                font-size: 22px;
+            }
+
+            .score-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+        <h1>Recordings</h1>
+
+        <p class="intro">
+            Search by title, genre, performer, place, or year. Try Ballade, Nocturne,
+            Prelude, Mazurka, Etude, or Waltz.
+        </p>
+
+        <form class="search-area" id="recordingsSearchForm">
+            <input
+                type="text"
+                id="searchBox"
+                placeholder="Search recordings..."
+            >
+
+            <button id="searchButton" type="submit">Search</button>
+
+            <div id="suggestionBox"></div>
+        </form>
+
+        <hr class="divider">
+
+        <div id="resultArea">
+            <div class="empty-state">
+                Search for a recording to listen, add it to the player, or save it to Favorites.
+            </div>
+        </div>
+    </main>
+
+    <div id="recordingData" style="display: none;">
+        {% for recording in recordings %}
+            <div
+                class="recording-data-item"
+                data-work-id="{{ recording.work_id }}"
+                data-recording-id="{{ recording.recording_id }}"
+                data-favorited="{% if recording.recording_id in favorite_recording_ids %}true{% else %}false{% endif %}"
+                data-title="{{ recording.work_title|e }}"
+                data-genre="{{ recording.genre|e }}"
+                data-performer="{{ recording.performer_name|e }}"
+                data-link="{{ recording.link|e }}"
+                data-year="{{ recording.composition_year }}"
+                data-place="{{ recording.place_name|e }}"
+                data-country="{{ recording.country|e }}"
+                data-cover="{{ recording.cover_path|e }}"
+                data-description-type="{{ recording.description_type|e }}"
+                data-description-content="{{ recording.description_content|e }}"
+                data-description-source="{{ recording.description_source|e }}">
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        var searchBox = document.getElementById("searchBox");
+        var recordingsSearchForm = document.getElementById("recordingsSearchForm");
+        var suggestionBox = document.getElementById("suggestionBox");
+        var resultArea = document.getElementById("resultArea");
+        var dataItems = document.getElementsByClassName("recording-data-item");
+        var recordingsSearchStorageKey = "recordingsSearchTerm";
+        var scoreVisibleStorageKey = "recordingsScoreVisible";
+        var staticBaseUrl = {{ static_base_url|tojson }};
+        var toggleFavoriteUrl = {{ url_for('toggle_favorite')|tojson }};
+        var performersUrl = {{ url_for('performers')|tojson }};
+        var recordingDetailBaseUrl = {{ url_for('recording_detail', recording_id=0)|tojson }};
+
+        function normalizeText(text) {
+            if (!text) {
+                return "";
+            }
+
+            text = String(text).toLowerCase().trim();
+
+            if (text.endsWith("s")) {
+                text = text.substring(0, text.length - 1);
+            }
+
+            return text;
+        }
+
+        function normalizeSearchText(text) {
+            var normalized = String(text || "").toLowerCase();
+
+            normalized = normalized.replace(/\b(op|b|no)(\d+)\b/g, "$1 $2");
+            normalized = normalized.replace(/\bopus\b/g, "op");
+            normalized = normalized.replace(/\bnumber\b/g, "no");
+            normalized = normalized.replace(/\bnum\b/g, "no");
+            normalized = normalized.replace(/\b(op|b|no)\s*(\d+)\b/g, "$1 $2");
+            normalized = normalized.replace(/[^a-z0-9]+/g, " ");
+            normalized = normalized.replace(/\s+/g, " ").trim();
+
+            return normalized;
+        }
+
+        function getSearchTokens(text) {
+            var stopWords = {
+                "in": true,
+                "the": true,
+                "a": true,
+                "an": true,
+                "and": true,
+                "for": true,
+                "of": true
+            };
+            var rawTokens = normalizeSearchText(text).split(" ");
+            var tokens = [];
+
+            for (var i = 0; i < rawTokens.length; i++) {
+                var token = rawTokens[i];
+
+                if (!token || stopWords[token]) {
+                    continue;
+                }
+
+                if (token.length > 3 && token.endsWith("s")) {
+                    token = token.substring(0, token.length - 1);
+                }
+
+                tokens.push(token);
+            }
+
+            return tokens;
+        }
+
+        function compactText(text) {
+            return normalizeSearchText(text).replace(/[^a-z0-9]/g, "");
+        }
+
+        function escapeHtml(text) {
+            if (!text) {
+                return "";
+            }
+
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function getScoreFileName(workId) {
+            return "score_" + String(workId).padStart(3, "0") + ".pdf";
+        }
+
+        function getScorePath(workId) {
+            return staticBaseUrl + "score/" + getScoreFileName(workId);
+        }
+
+        function getAudioMemory(key) {
+            try {
+                return JSON.parse(localStorage.getItem("audioMemory:" + key)) || {};
+            } catch (error) {
+                return {};
+            }
+        }
+
+        function saveAudioMemory(audio, key) {
+            if (!audio || isNaN(audio.currentTime)) {
+                return;
+            }
+
+            localStorage.setItem(
+                "audioMemory:" + key,
+                JSON.stringify({
+                    currentTime: audio.currentTime,
+                    wasPlaying: !audio.paused && !audio.ended
+                })
+            );
+        }
+
+        function setupRememberedAudio(audio, key) {
+            var memory = getAudioMemory(key);
+            var restoreTime = parseFloat(memory.currentTime) || 0;
+
+            function restoreAudioMemory() {
+                if (
+                    restoreTime > 0 &&
+                    (!audio.duration || restoreTime < audio.duration - 0.5)
+                ) {
+                    audio.currentTime = restoreTime;
+                }
+
+                if (memory.wasPlaying) {
+                    audio.play().catch(function() {});
+                }
+            }
+
+            if (audio.readyState >= 1) {
+                restoreAudioMemory();
+            } else {
+                audio.addEventListener("loadedmetadata", restoreAudioMemory, { once: true });
+            }
+
+            audio.addEventListener("timeupdate", function() {
+                saveAudioMemory(audio, key);
+            });
+
+            audio.addEventListener("seeked", function() {
+                saveAudioMemory(audio, key);
+            });
+
+            audio.addEventListener("pause", function() {
+                saveAudioMemory(audio, key);
+            });
+
+            audio.addEventListener("play", function() {
+                saveAudioMemory(audio, key);
+            });
+
+            audio.addEventListener("ended", function() {
+                localStorage.setItem(
+                    "audioMemory:" + key,
+                    JSON.stringify({
+                        currentTime: 0,
+                        wasPlaying: false
+                    })
+                );
+            });
+        }
+
+        function addTrackToPlayer(title, audioPath) {
+            if (window.parent && window.parent.addToQueue) {
+                window.parent.addToQueue(title, audioPath);
+            } else {
+                alert("Player is not loaded. Please open this page through /app.");
+            }
+        }
+
+        function updateFavoriteButton(button, favorited) {
+            if (favorited) {
+                button.classList.add("favorited");
+            } else {
+                button.classList.remove("favorited");
+            }
+
+            button.innerHTML =
+                "<svg viewBox='0 0 32 32' aria-hidden='true'>" +
+                    "<path class='favorite-heart' d='M16 25.8C9.4 20.7 5 16.9 5 12C5 8.7 7.7 6.4 11 6.4C13 6.4 14.9 7.3 16 8.8C17.1 7.3 19 6.4 21 6.4C24.3 6.4 27 8.7 27 12C27 16.9 22.6 20.7 16 25.8Z'></path>" +
+                "</svg>";
+        }
+
+        function syncFavoriteDataItems(recordingId, favorited) {
+            for (var i = 0; i < dataItems.length; i++) {
+                if (dataItems[i].getAttribute("data-recording-id") === recordingId) {
+                    dataItems[i].setAttribute("data-favorited", favorited ? "true" : "false");
+                }
+            }
+        }
+
+        function updateFavoriteButtons(recordingId, favorited) {
+            var buttons = document.querySelectorAll(
+                ".favorite-button[data-recording-id='" + recordingId + "']"
+            );
+
+            for (var i = 0; i < buttons.length; i++) {
+                updateFavoriteButton(buttons[i], favorited);
+            }
+        }
+
+        function toggleFavorite(button) {
+            var recordingId = button.getAttribute("data-recording-id");
+
+            fetch(toggleFavoriteUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    recording_id: recordingId
+                })
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (!data.success) {
+                        alert(data.message);
+                        return;
+                    }
+
+                    updateFavoriteButtons(recordingId, data.favorited);
+                    syncFavoriteDataItems(recordingId, data.favorited);
+                })
+                .catch(function() {
+                    alert("Favorite could not be updated. Please check the server.");
+                });
+        }
+
+        function getPerformerSlug(name) {
+            var lowerName = name.toLowerCase();
+
+            if (lowerName.indexOf("rubinstein") !== -1) {
+                return "arthur-rubinstein";
+            }
+
+            if (lowerName.indexOf("pollini") !== -1) {
+                return "maurizio-pollini";
+            }
+
+            if (lowerName.indexOf("argerich") !== -1) {
+                return "martha-argerich";
+            }
+
+            if (lowerName.indexOf("ohlsson") !== -1) {
+                return "garrick-ohlsson";
+            }
+
+            if (lowerName.indexOf("zimerman") !== -1) {
+                return "krystian-zimerman";
+            }
+
+            if (lowerName.indexOf("yundi") !== -1) {
+                return "yundi-li";
+            }
+
+            if (lowerName.indexOf("blechacz") !== -1) {
+                return "rafal-blechacz";
+            }
+
+            if (lowerName.indexOf("bruce") !== -1 && lowerName.indexOf("liu") !== -1) {
+                return "bruce-liu";
+            }
+
+            return "";
+        }
+
+        function makePerformerHtml(performerName) {
+            var slug = getPerformerSlug(performerName);
+
+            if (slug === "") {
+                return escapeHtml(performerName);
+            }
+
+            return "<a class='performer-link' href='" + performersUrl + "#" + slug + "'>" +
+                escapeHtml(performerName) +
+                "</a>";
+        }
+
+        function getMatches(query) {
+            var matches = [];
+            var normalizedQuery = normalizeSearchText(query);
+            var compactQuery = compactText(query);
+            var queryTokens = getSearchTokens(query);
+
+            if (normalizedQuery === "") {
+                return matches;
+            }
+
+            for (var i = 0; i < dataItems.length; i++) {
+                var title = dataItems[i].getAttribute("data-title");
+                var genre = dataItems[i].getAttribute("data-genre");
+                var performer = dataItems[i].getAttribute("data-performer");
+                var place = dataItems[i].getAttribute("data-place");
+                var country = dataItems[i].getAttribute("data-country");
+                var year = dataItems[i].getAttribute("data-year");
+
+                var normalizedTitle = normalizeSearchText(title);
+                var normalizedGenre = normalizeSearchText(genre);
+                var normalizedPerformer = normalizeSearchText(performer);
+                var normalizedPlace = normalizeSearchText(place);
+                var normalizedCountry = normalizeSearchText(country);
+                var normalizedYear = normalizeSearchText(year);
+                var normalizedRecordingTitle = normalizeSearchText(
+                    dataItems[i].getAttribute("data-recording-title") || ""
+                );
+                var combinedSearchText = [
+                    title,
+                    genre,
+                    performer,
+                    place,
+                    country,
+                    year,
+                    dataItems[i].getAttribute("data-recording-title") || ""
+                ].join(" ");
+                var combinedTokens = getSearchTokens(combinedSearchText);
+                var compactSearchText = compactText(
+                    combinedSearchText
+                );
+                var allTokensMatch = queryTokens.length > 0;
+
+                for (var j = 0; j < queryTokens.length; j++) {
+                    if (combinedTokens.indexOf(queryTokens[j]) === -1) {
+                        allTokensMatch = false;
+                        break;
+                    }
+                }
+
+                if (
+                    normalizedTitle.indexOf(normalizedQuery) !== -1 ||
+                    normalizedGenre.indexOf(normalizedQuery) !== -1 ||
+                    normalizedPerformer.indexOf(normalizedQuery) !== -1 ||
+                    normalizedPlace.indexOf(normalizedQuery) !== -1 ||
+                    normalizedCountry.indexOf(normalizedQuery) !== -1 ||
+                    normalizedYear.indexOf(normalizedQuery) !== -1 ||
+                    normalizedRecordingTitle.indexOf(normalizedQuery) !== -1 ||
+                    allTokensMatch ||
+                    (compactQuery !== "" && compactSearchText.indexOf(compactQuery) !== -1)
+                ) {
+                    matches.push(dataItems[i]);
+                }
+            }
+
+            return matches;
+        }
+
+        searchBox.oninput = function() {
+            var query = searchBox.value;
+            var matches = getMatches(query);
+
+            suggestionBox.innerHTML = "";
+
+            if (query.trim() === "" || matches.length === 0) {
+                suggestionBox.style.display = "none";
+                return;
+            }
+
+            suggestionBox.style.display = "block";
+
+            for (var i = 0; i < matches.length; i++) {
+                var title = matches[i].getAttribute("data-title");
+
+                var item = document.createElement("div");
+                item.className = "suggestion-item";
+                item.innerHTML = escapeHtml(title);
+
+                item.onclick = function() {
+                    searchBox.value = this.textContent;
+                    suggestionBox.style.display = "none";
+                };
+
+                suggestionBox.appendChild(item);
+            }
+        };
+
+        recordingsSearchForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            searchRecordings();
+        });
+
+        document.addEventListener("click", function(event) {
+            if (!recordingsSearchForm.contains(event.target)) {
+                suggestionBox.style.display = "none";
+            }
+        });
+
+        function searchRecordings() {
+            var query = searchBox.value;
+            var matches = getMatches(query);
+
+            suggestionBox.style.display = "none";
+            resultArea.innerHTML = "";
+            localStorage.setItem(recordingsSearchStorageKey, query);
+
+            if (query.trim() === "") {
+                resultArea.innerHTML =
+                    "<div class='empty-state'>Please type something to search.</div>";
+                return;
+            }
+
+            if (matches.length === 0) {
+                resultArea.innerHTML =
+                    "<div class='empty-state'>No recordings found.</div>";
+                return;
+            }
+
+            for (var i = 0; i < matches.length; i++) {
+                var title = matches[i].getAttribute("data-title");
+                var performer = matches[i].getAttribute("data-performer");
+                var recordingId = matches[i].getAttribute("data-recording-id");
+                var favorited = matches[i].getAttribute("data-favorited") === "true";
+                var link = matches[i].getAttribute("data-link");
+                var year = matches[i].getAttribute("data-year");
+                var place = matches[i].getAttribute("data-place");
+                var country = matches[i].getAttribute("data-country");
+                var coverPath = matches[i].getAttribute("data-cover");
+
+                var audioPath = staticBaseUrl + link;
+
+                var block = document.createElement("div");
+                block.className = "recording-block";
+
+                var resultRow = document.createElement("div");
+                resultRow.className = "recording-result-row";
+
+                var mainColumn = document.createElement("div");
+                mainColumn.className = "recording-main";
+
+                var titleRow = document.createElement("div");
+                titleRow.className = "recording-title-row";
+
+                var titleText = document.createElement("div");
+                titleText.className = "recording-title";
+                titleText.innerHTML = escapeHtml(title);
+
+                var meta = document.createElement("p");
+                meta.className = "recording-meta";
+                meta.innerHTML =
+                    escapeHtml(matches[i].getAttribute("data-genre")) +
+                    " | " +
+                    escapeHtml(place) +
+                    ", " + escapeHtml(country) +
+                    ", " + escapeHtml(year);
+
+                var performerLine = document.createElement("p");
+                performerLine.className = "performer-line";
+                performerLine.innerHTML =
+                    "Performer: " + makePerformerHtml(performer);
+
+                var audioRow = document.createElement("div");
+                audioRow.className = "audio-row";
+
+                var audio = document.createElement("audio");
+                audio.controls = true;
+                audio.className = "remembered-audio";
+                audio.setAttribute("data-recording-id", recordingId);
+
+                var source = document.createElement("source");
+                source.src = audioPath;
+                source.type = "audio/mpeg";
+
+                audio.appendChild(source);
+                setupRememberedAudio(audio, "recording-" + recordingId);
+
+                audioRow.appendChild(audio);
+
+                var actions = document.createElement("div");
+                actions.className = "recording-actions";
+
+                var button = document.createElement("button");
+                button.className = "add-queue-button";
+                button.innerHTML = "Add to Queue";
+                button.onclick = function(savedTitle, savedAudioPath) {
+                    return function() {
+                        addTrackToPlayer(savedTitle, savedAudioPath);
+                    };
+                }(title, audioPath);
+
+                var openAudioLink = document.createElement("a");
+                openAudioLink.className = "open-audio-link";
+                openAudioLink.href = audioPath;
+                openAudioLink.target = "_blank";
+                openAudioLink.innerHTML = "Open Audio";
+
+                var favoriteButton = document.createElement("button");
+                favoriteButton.type = "button";
+                favoriteButton.className = "favorite-button";
+                favoriteButton.setAttribute("data-recording-id", recordingId);
+                favoriteButton.title = "Favorite";
+                updateFavoriteButton(favoriteButton, favorited);
+                favoriteButton.onclick = function(savedButton) {
+                    return function() {
+                        toggleFavorite(savedButton);
+                    };
+                }(favoriteButton);
+
+                titleRow.appendChild(titleText);
+                titleRow.appendChild(favoriteButton);
+
+                actions.appendChild(button);
+                actions.appendChild(openAudioLink);
+
+                mainColumn.appendChild(titleRow);
+                mainColumn.appendChild(meta);
+                mainColumn.appendChild(performerLine);
+                mainColumn.appendChild(audioRow);
+                mainColumn.appendChild(actions);
+
+                resultRow.appendChild(mainColumn);
+
+                if (coverPath) {
+                    var coverLink = document.createElement("a");
+                    coverLink.className = "recording-cover-link";
+                    coverLink.href = recordingDetailBaseUrl.replace(/0$/, String(recordingId));
+
+                    var coverImage = document.createElement("img");
+                    coverImage.className = "recording-cover";
+                    coverImage.src = coverPath;
+                    coverImage.alt = "Album cover for " + title;
+
+                    coverLink.appendChild(coverImage);
+                    resultRow.appendChild(coverLink);
+                }
+
+                block.appendChild(resultRow);
+
+                resultArea.appendChild(block);
+            }
+
+            if (matches.length === 1) {
+                addSingleWorkSections(matches[0]);
+            }
+        }
+
+        function addSingleWorkSections(workItem) {
+            var workId = workItem.getAttribute("data-work-id");
+            var scorePath = getScorePath(workId);
+            var savedScoreVisible = localStorage.getItem(scoreVisibleStorageKey);
+            var scoreVisible = savedScoreVisible === null || savedScoreVisible === "true";
+
+            var descriptionType = workItem.getAttribute("data-description-type");
+            var descriptionContent = workItem.getAttribute("data-description-content");
+
+            var descriptionHtml = "";
+
+            if (
+                descriptionContent &&
+                descriptionContent !== "None" &&
+                descriptionContent !== "null"
+            ) {
+                descriptionHtml =
+                    "<section class='description-section'>";
+
+                if (
+                    descriptionType &&
+                    descriptionType !== "None" &&
+                    descriptionType !== "null"
+                ) {
+                    descriptionHtml +=
+                        "<div class='description-type'>" +
+                        escapeHtml(descriptionType) +
+                        "</div>";
+                }
+
+                descriptionHtml +=
+                    "<p>" + escapeHtml(descriptionContent) + "</p>" +
+                    "</section>";
+            }
+
+            var section = document.createElement("div");
+            section.className = "single-work-section";
+
+            section.innerHTML =
+                descriptionHtml +
+
+                "<section class='score-section'>" +
+
+                    "<div class='score-header'>" +
+                        "<div class='score-title'>score</div>" +
+
+                        "<label class='hide-score-control'>" +
+                            "<input type='checkbox' id='hideScoreCheckbox' " + (!scoreVisible ? "checked " : "") + "onclick='toggleScoreBox()'>" +
+                            "hide score" +
+                        "</label>" +
+                    "</div>" +
+
+                    "<div id='scoreBox' class='score-box' data-score-path='" + scorePath + "' style='display: " + (scoreVisible ? "block" : "none") + ";'>" +
+                    "</div>" +
+
+                    "<p id='downloadScoreLink' style='display: " + (scoreVisible ? "block" : "none") + ";'>" +
+                        "<a href='" + scorePath + "' target='_blank'>Open score in new tab</a>" +
+                        " | " +
+                        "<a href='" + scorePath + "' download>Download score</a>" +
+                    "</p>" +
+
+                "</section>";
+
+            resultArea.appendChild(section);
+
+            if (scoreVisible) {
+                loadScoreIframe();
+            }
+        }
+
+        function loadScoreIframe() {
+            var scoreBox = document.getElementById("scoreBox");
+
+            if (!scoreBox || scoreBox.querySelector("iframe")) {
+                return;
+            }
+
+            var iframe = document.createElement("iframe");
+            iframe.src = scoreBox.getAttribute("data-score-path");
+            scoreBox.appendChild(iframe);
+        }
+
+        function toggleScoreBox() {
+            var checkbox = document.getElementById("hideScoreCheckbox");
+            var scoreBox = document.getElementById("scoreBox");
+            var downloadScoreLink = document.getElementById("downloadScoreLink");
+
+            if (!checkbox.checked) {
+                scoreBox.style.display = "block";
+                downloadScoreLink.style.display = "block";
+                localStorage.setItem(scoreVisibleStorageKey, "true");
+                loadScoreIframe();
+            } else {
+                scoreBox.style.display = "none";
+                downloadScoreLink.style.display = "none";
+                localStorage.setItem(scoreVisibleStorageKey, "false");
+            }
+        }
+
+        window.addEventListener("load", function() {
+            var savedSearchTerm = localStorage.getItem(recordingsSearchStorageKey);
+
+            if (savedSearchTerm) {
+                searchBox.value = savedSearchTerm;
+                searchRecordings();
+            }
+        });
+
+        window.addEventListener("beforeunload", function() {
+            var audios = document.querySelectorAll(".remembered-audio");
+
+            for (var i = 0; i < audios.length; i++) {
+                saveAudioMemory(
+                    audios[i],
+                    "recording-" + audios[i].getAttribute("data-recording-id")
+                );
+            }
+        });
+    </script>
+
+</body>
+</html>

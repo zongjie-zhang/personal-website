@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About Chopin</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f3ecd9;
+            color: #222;
+        }
+
+        .page {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .background-image {
+            position: absolute;
+            top: 60px;
+            right: 90px;
+            width: 40%;
+            max-width: 500px;
+            opacity: 0.13;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 75px 36px 90px 36px;
+        }
+
+        h1 {
+            font-family: Georgia, serif;
+            font-size: 54px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 28px;
+        }
+
+        h2 {
+            font-family: Georgia, serif;
+            font-size: 29px;
+            font-weight: normal;
+            margin-top: 42px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-top: 0;
+            margin-bottom: 18px;
+            max-width: 730px;
+        }
+
+        .quote {
+            font-family: Georgia, serif;
+            font-size: 24px;
+            line-height: 1.6;
+            margin: 32px 0;
+            max-width: 760px;
+            color: #4b4032;
+        }
+
+        @media (max-width: 900px) {
+            .background-image {
+                width: 52%;
+                right: 50px;
+                opacity: 0.11;
+            }
+
+            h1 {
+                font-size: 44px;
+            }
+
+            .content {
+                padding: 60px 24px 70px 24px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .background-image {
+                width: 75%;
+                right: 10px;
+                top: 100px;
+                opacity: 0.09;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .quote {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <img class="background-image" src="{{ url_for('static', filename='image/Chopin_2.jpg') }}" alt="Chopin portrait">
+
+        <main class="content">
+            <h1>About Frédéric Chopin</h1>
+
+            <p>
+                Frédéric Chopin was one of the most important composers and pianists of the
+                nineteenth century. He was born in 1810 near Warsaw, in present-day Poland,
+                and became especially known for music written for the piano. His works are
+                admired for their lyricism, elegance, expressive depth, and highly personal
+                musical language.
+            </p>
+
+            <p>
+                Chopin showed unusual musical ability from an early age. In Warsaw, he studied
+                piano, composition, and music theory, while also absorbing Polish musical and
+                cultural traditions. This early background remained important throughout his
+                life, especially in works such as mazurkas and polonaises, which carry a strong
+                sense of national style and memory.
+            </p>
+
+            <div class="quote">
+                Chopin transformed the piano into a voice of poetry, intimacy, brilliance,
+                and emotional depth.
+            </div>
+
+            <h2>Life in Paris</h2>
+
+            <p>
+                In the early 1830s, Chopin left Poland and settled in Paris, one of the leading
+                artistic centers of Europe. There he entered a rich cultural world of musicians,
+                writers, painters, and patrons. Instead of becoming known mainly through large
+                public concerts, he was especially admired in salons, where his refined and
+                subtle playing style was most effective.
+            </p>
+
+            <p>
+                Paris was also the setting for much of his mature creative life. During these
+                years he composed many of the works for which he is best remembered, including
+                nocturnes, études, ballades, scherzos, preludes, and polonaises. His music
+                combines technical brilliance with delicacy and expressive control.
+            </p>
+
+            <h2>Musical Style</h2>
+
+            <p>
+                Chopin’s music is closely bound to the piano. He expanded the expressive range
+                of the instrument through singing melodies, flexible rhythm, chromatic harmony,
+                and finely detailed textures. His writing can sound spontaneous and natural,
+                yet it is often carefully structured and highly refined.
+            </p>
+
+            <p>
+                He also gave great artistic importance to smaller musical forms. Pieces such as
+                preludes, nocturnes, mazurkas, and waltzes became deeply expressive in his
+                hands. At the same time, larger forms like the ballades and sonatas show his
+                ability to build broader dramatic and emotional designs.
+            </p>
+
+            <h2>Legacy</h2>
+
+            <p>
+                Chopin died in Paris in 1849, but his influence has remained central to piano
+                music ever since. His works continue to be performed, studied, and loved by
+                musicians and audiences around the world. For many listeners, Chopin represents
+                a unique union of elegance, longing, virtuosity, and emotional honesty.
+            </p>
+        </main>
+    </div>
+</body>
+</html>
