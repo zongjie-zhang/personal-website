@@ -218,6 +218,16 @@
             font-weight: bold;
         }
 
+        .recording-title-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .recording-title-link:hover {
+            color: #5b356d;
+            text-decoration: underline;
+        }
+
         .performer-line {
             font-size: 15px;
             color: #333;
@@ -535,6 +545,19 @@
         var toggleFavoriteUrl = {{ url_for('toggle_favorite')|tojson }};
         var performersUrl = {{ url_for('performers')|tojson }};
         var recordingDetailBaseUrl = {{ url_for('recording_detail', recording_id=0)|tojson }};
+
+        function getRecordingDetailUrl(recordingId) {
+            var detailUrl = recordingDetailBaseUrl.replace(/0$/, String(recordingId));
+            var query = searchBox.value.trim();
+
+            if (query) {
+                detailUrl += "?return_page=recordings&return_q=" + encodeURIComponent(query);
+            } else {
+                detailUrl += "?return_page=recordings";
+            }
+
+            return detailUrl;
+        }
 
         function normalizeText(text) {
             if (!text) {
@@ -962,8 +985,9 @@
                 var titleRow = document.createElement("div");
                 titleRow.className = "recording-title-row";
 
-                var titleText = document.createElement("div");
-                titleText.className = "recording-title";
+                var titleText = document.createElement("a");
+                titleText.className = "recording-title recording-title-link";
+                titleText.href = getRecordingDetailUrl(recordingId);
                 titleText.innerHTML = escapeHtml(title);
 
                 var meta = document.createElement("p");
@@ -1044,7 +1068,7 @@
                 if (coverPath) {
                     var coverLink = document.createElement("a");
                     coverLink.className = "recording-cover-link";
-                    coverLink.href = recordingDetailBaseUrl.replace(/0$/, String(recordingId));
+                    coverLink.href = getRecordingDetailUrl(recordingId);
 
                     var coverImage = document.createElement("img");
                     coverImage.className = "recording-cover";

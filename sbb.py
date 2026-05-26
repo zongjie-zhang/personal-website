@@ -1949,7 +1949,12 @@ def recordings():
 @app.route("/recording/<int:recording_id>")
 def recording_detail(recording_id):
     return_q = request.args.get("return_q", "").strip()
-    return_to_search_url = url_for("search", q=return_q) if return_q else url_for("search")
+    return_page = request.args.get("return_page", "").strip()
+
+    if return_page == "recordings":
+        return_to_search_url = url_for("recordings")
+    else:
+        return_to_search_url = url_for("search", q=return_q) if return_q else url_for("search")
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
