@@ -238,7 +238,15 @@
         var mainFrame = document.getElementById("mainFrame");
         var appRoot = {{ app_root|tojson }};
         var defaultFramePath = {{ url_for('home')|tojson }};
-        var mainFrameStorageKey = "mainFramePath:" + (appRoot || "root");
+        var tabIdKey = "chopinTabId";
+
+        if (!window.name) {
+            window.name = "chopin-tab-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+        }
+
+        sessionStorage.setItem(tabIdKey, window.name);
+
+        var mainFrameStorageKey = "mainFramePath:" + window.name;
         var savedMainFramePath = sessionStorage.getItem(mainFrameStorageKey);
         var userPagePath = {{ url_for('user')|tojson }};
 

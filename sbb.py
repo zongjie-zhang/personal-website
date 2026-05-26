@@ -7,12 +7,14 @@ import difflib
 import unicodedata
 import urllib.request
 import urllib.error
+from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key-change-later")
 app.config["MAX_CONTENT_LENGTH"] = 4 * 1024 * 1024
+app.permanent_session_lifetime = timedelta(days=365)
 
 ADMIN_USER_IDS = {1}
 
@@ -816,6 +818,7 @@ def register():
             VALUES (%s, %s);
         """, (username, password_hash))
 
+        session.permanent = True
         session["user_id"] = cursor.lastrowid
         get_favorites_playlist_id(cursor, session["user_id"])
 
@@ -880,6 +883,7 @@ def login():
             message="Incorrect password."
         )
 
+    session.permanent = True
     session["user_id"] = user["user_id"]
 
     return redirect(url_for("app_shell"))
