@@ -175,7 +175,13 @@ def build_score_url(work_id):
     if work_id is None:
         return ""
 
-    return url_for("score_file", work_id=work_id, v=SCORE_URL_VERSION)
+    score_source_url = build_score_source_url(work_id)
+
+    if not score_source_url:
+        return ""
+
+    separator = "&" if "?" in score_source_url else "?"
+    return score_source_url + separator + "v=" + SCORE_URL_VERSION
 
 
 def build_score_source_url(work_id):
