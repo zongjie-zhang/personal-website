@@ -74,6 +74,7 @@ SCORE_BASE_URL = normalize_external_base_url(
 AUDIO_BASE_URL = normalize_external_base_url(
     get_env_value("AUDIO_BASE_URL", default=ASSET_BASE_URL)
 )
+SCORE_URL_VERSION = get_env_value("SCORE_URL_VERSION", default="2")
 
 
 app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -172,7 +173,7 @@ def build_score_url(work_id):
     if work_id is None:
         return ""
 
-    return url_for("score_file", work_id=work_id)
+    return url_for("score_file", work_id=work_id, v=SCORE_URL_VERSION)
 
 
 def build_score_source_url(work_id):
