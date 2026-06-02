@@ -26,7 +26,11 @@ except ImportError:
 BASE_DIR = os.path.dirname(__file__)
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
-SINGAPORE_GALLERY_DIR = os.path.join(STATIC_DIR, "image", "gallery")
+SINGAPORE_STATIC_GALLERY_DIR = os.path.join(STATIC_DIR, "image", "gallery")
+SINGAPORE_GALLERY_DIR = os.environ.get(
+    "SINGAPORE_GALLERY_DIR",
+    SINGAPORE_STATIC_GALLERY_DIR
+)
 SINGAPORE_GALLERY_BROWSER_IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "webp", "gif", "avif"}
 SINGAPORE_GALLERY_CONVERTIBLE_IMAGE_EXTENSIONS = {
     "jpg", "jpeg", "png", "webp", "heic", "heif", "tif", "tiff", "bmp", "avif"
@@ -168,12 +172,18 @@ def save_gallery_upload(file, extension):
 
 
 def get_singapore_gallery_images():
-    if not os.path.isdir(SINGAPORE_GALLERY_DIR):
-        return []
-
     images = []
+    filenames = []
 
-    for filename in sorted(os.listdir(SINGAPORE_GALLERY_DIR)):
+    for directory in (SINGAPORE_GALLERY_DIR, SINGAPORE_STATIC_GALLERY_DIR):
+        if not os.path.isdir(directory):
+            continue
+
+        for filename in sorted(os.listdir(directory)):
+            if filename not in filenames:
+                filenames.append(filename)
+
+    for filename in filenames:
         if not is_allowed_gallery_file(filename):
             continue
 
@@ -207,7 +217,12 @@ def singapore_tour_media(filename):
     ):
         abort(404)
 
-    return send_from_directory(SINGAPORE_GALLERY_DIR, safe_name, max_age=SINGAPORE_STATIC_MAX_AGE)
+    gallery_path = os.path.join(SINGAPORE_GALLERY_DIR, safe_name)
+
+    if os.path.exists(gallery_path):
+        return send_from_directory(SINGAPORE_GALLERY_DIR, safe_name, max_age=SINGAPORE_STATIC_MAX_AGE)
+
+    return send_from_directory(SINGAPORE_STATIC_GALLERY_DIR, safe_name, max_age=SINGAPORE_STATIC_MAX_AGE)
 
 
 def singapore_tour():
