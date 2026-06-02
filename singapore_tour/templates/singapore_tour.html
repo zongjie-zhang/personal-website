@@ -35,17 +35,38 @@
         }
 
         .hero {
+            position: relative;
             min-height: 92vh;
             padding: 34px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            background:
-                linear-gradient(90deg, rgba(10, 23, 24, 0.74), rgba(10, 23, 24, 0.24) 54%, rgba(10, 23, 24, 0.05)),
-                url("{{ url_for('singapore_tour_static', filename='image/singapore-tour-hero.jpg') }}");
-            background-size: cover;
-            background-position: center;
+            overflow: hidden;
+            background: #16211f;
             color: white;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(90deg, rgba(10, 23, 24, 0.72), rgba(10, 23, 24, 0.22) 50%, rgba(10, 23, 24, 0.03));
+            pointer-events: none;
+        }
+
+        .hero-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .hero > *:not(.hero-image) {
+            position: relative;
+            z-index: 2;
         }
 
         .topbar {
@@ -537,6 +558,7 @@
 
 <body>
     <header class="hero">
+        <img class="hero-image" src="{{ url_for('singapore_tour_static', filename='image/singapore-tour-hero.jpg') }}" alt="" fetchpriority="high">
         <nav class="topbar">
             <a class="back-link" href="{{ url_for('projects') }}">Projects</a>
             <span>June 2 - June 9, 2026</span>
