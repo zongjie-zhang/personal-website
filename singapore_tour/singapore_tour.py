@@ -7,6 +7,12 @@ from werkzeug.security import check_password_hash
 
 try:
     from PIL import Image, ImageOps, UnidentifiedImageError
+
+    try:
+        from pillow_heif import register_heif_opener
+        register_heif_opener()
+    except ImportError:
+        pass
 except ImportError:
     Image = None
     ImageOps = None
@@ -16,7 +22,16 @@ BASE_DIR = os.path.dirname(__file__)
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 SINGAPORE_GALLERY_DIR = os.path.join(STATIC_DIR, "image", "gallery")
-SINGAPORE_GALLERY_IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "webp", "gif"}
+SINGAPORE_GALLERY_BROWSER_IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "webp", "gif", "avif"}
+SINGAPORE_GALLERY_CONVERTIBLE_IMAGE_EXTENSIONS = {
+    "jpg", "jpeg", "png", "webp", "heic", "heif", "tif", "tiff", "bmp", "avif"
+}
+SINGAPORE_GALLERY_RAW_EXTENSIONS = {"dng"}
+SINGAPORE_GALLERY_IMAGE_EXTENSIONS = (
+    SINGAPORE_GALLERY_BROWSER_IMAGE_EXTENSIONS |
+    SINGAPORE_GALLERY_CONVERTIBLE_IMAGE_EXTENSIONS |
+    SINGAPORE_GALLERY_RAW_EXTENSIONS
+)
 SINGAPORE_GALLERY_VIDEO_EXTENSIONS = {"mp4", "mov", "m4v", "webm"}
 SINGAPORE_GALLERY_ALLOWED_EXTENSIONS = (
     SINGAPORE_GALLERY_IMAGE_EXTENSIONS | SINGAPORE_GALLERY_VIDEO_EXTENSIONS
@@ -49,11 +64,19 @@ def get_singapore_gallery_media_type(filename):
     if extension in SINGAPORE_GALLERY_VIDEO_EXTENSIONS:
         return "video"
 
+    if extension not in SINGAPORE_GALLERY_BROWSER_IMAGE_EXTENSIONS:
+        return "file"
+
     return "image"
 
 
 def save_gallery_upload(file, extension):
     if extension in SINGAPORE_GALLERY_VIDEO_EXTENSIONS:
+        saved_name = f"{uuid.uuid4().hex}.{extension}"
+        file.save(os.path.join(SINGAPORE_GALLERY_DIR, saved_name))
+        return saved_name
+
+    if extension in SINGAPORE_GALLERY_RAW_EXTENSIONS:
         saved_name = f"{uuid.uuid4().hex}.{extension}"
         file.save(os.path.join(SINGAPORE_GALLERY_DIR, saved_name))
         return saved_name
@@ -113,6 +136,7 @@ def get_singapore_gallery_images():
             "filename": filename,
             "type": get_singapore_gallery_media_type(filename),
             "title": filename.rsplit(".", 1)[0].replace("-", " ").replace("_", " "),
+            "extension": filename.rsplit(".", 1)[1].lower(),
             "alt": "Singapore Tour gallery media",
             "src": url_for("singapore_tour_media", filename=filename)
         })
@@ -191,7 +215,7 @@ def singapore_tour_upload():
         uploaded_count += 1
 
     if uploaded_count == 0:
-        session["singapore_gallery_upload_message"] = "没有成功上传，请选择图片或 MP4、MOV、M4V、WEBM 视频。"
+        session["singapore_gallery_upload_message"] = "没有成功上传，请选择图片、DNG/HEIC，或 MP4、MOV、M4V、WEBM 视频。"
     else:
         session["singapore_gallery_upload_message"] = f"已上传 {uploaded_count} 个文件。"
 

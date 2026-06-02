@@ -388,6 +388,28 @@
             background: #050505;
         }
 
+        .gallery-file-preview {
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #f4f1ea;
+            color: var(--ink);
+            text-align: center;
+            padding: 28px;
+        }
+
+        .gallery-file-preview a {
+            display: inline-block;
+            margin-top: 14px;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+            color: var(--ink);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
         .gallery-button {
             position: absolute;
             top: 50%;
@@ -657,7 +679,7 @@
                 <div class="gallery-tools">
                     {% if gallery_logged_in %}
                         <form class="gallery-form" id="galleryUploadForm" action="{{ url_for('singapore_tour_upload') }}" method="post" enctype="multipart/form-data">
-                            <input class="gallery-file" id="galleryFileInput" type="file" name="photos" accept="image/*,video/*" multiple>
+                            <input class="gallery-file" id="galleryFileInput" type="file" name="photos" accept="image/*,video/*,.heic,.heif,.dng,.tif,.tiff,.bmp,.avif,.mov,.m4v,.webm" multiple>
                         </form>
 
                         <form id="galleryLogoutForm" action="{{ url_for('singapore_tour_logout') }}" method="post">
@@ -670,7 +692,7 @@
                             <button class="gallery-action" type="submit">Login</button>
                         </form>
 
-                        <div class="gallery-message">登录后可以从手机相册上传照片或视频。</div>
+                        <div class="gallery-message">登录后可以从手机相册上传照片、HEIC/DNG 或视频。</div>
 
                         {% if login_message %}
                             <p class="gallery-message alert gallery-panel-message">{{ login_message }}</p>
@@ -687,6 +709,7 @@
                 <div class="gallery-frame">
                     <img class="gallery-image" id="galleryImage" src="" alt="">
                     <video class="gallery-video" id="galleryVideo" controls playsinline preload="metadata"></video>
+                    <div class="gallery-file-preview" id="galleryFilePreview"></div>
                     <button class="gallery-button prev" type="button" id="galleryPrev" aria-label="Previous image">‹</button>
                     <button class="gallery-button next" type="button" id="galleryNext" aria-label="Next image">›</button>
                     {% if gallery_logged_in %}
@@ -716,6 +739,7 @@
 
         const galleryImage = document.getElementById("galleryImage");
         const galleryVideo = document.getElementById("galleryVideo");
+        const galleryFilePreview = document.getElementById("galleryFilePreview");
         const galleryCount = document.getElementById("galleryCount");
         const galleryToggle = document.getElementById("galleryToggle");
         const galleryPanel = document.getElementById("galleryPanel");
@@ -795,23 +819,35 @@
         }
 
         function showGalleryImage(index) {
-            if (galleryItems.length === 0 || !galleryImage || !galleryVideo) {
+            if (galleryItems.length === 0 || !galleryImage || !galleryVideo || !galleryFilePreview) {
                 return;
             }
 
             galleryIndex = (index + galleryItems.length) % galleryItems.length;
             const item = galleryItems[galleryIndex];
 
+            galleryImage.style.display = "none";
+            galleryImage.removeAttribute("src");
+            galleryVideo.pause();
+            galleryVideo.removeAttribute("src");
+            galleryVideo.style.display = "none";
+            galleryFilePreview.style.display = "none";
+            galleryFilePreview.innerHTML = "";
+
             if (item.type === "video") {
-                galleryImage.style.display = "none";
-                galleryImage.removeAttribute("src");
                 galleryVideo.style.display = "block";
                 galleryVideo.src = item.src;
                 galleryVideo.load();
+            } else if (item.type === "file") {
+                galleryFilePreview.style.display = "flex";
+                galleryFilePreview.innerHTML = `
+                    <div>
+                        <strong>${item.extension.toUpperCase()} 原始文件</strong>
+                        <p>这个格式已经保存，但浏览器不能直接预览。</p>
+                        <a href="${item.src}" download>Download</a>
+                    </div>
+                `;
             } else {
-                galleryVideo.pause();
-                galleryVideo.removeAttribute("src");
-                galleryVideo.style.display = "none";
                 galleryImage.style.display = "block";
                 galleryImage.src = item.src;
                 galleryImage.alt = item.alt;
