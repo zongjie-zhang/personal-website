@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, session, send_from_directory, abort
 import os
 import uuid
+import json
 from jinja2 import ChoiceLoader, FileSystemLoader
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
@@ -46,6 +47,7 @@ SINGAPORE_GALLERY_ALLOWED_EXTENSIONS = (
     SINGAPORE_GALLERY_IMAGE_EXTENSIONS | SINGAPORE_GALLERY_VIDEO_EXTENSIONS
 )
 SINGAPORE_GALLERY_PREVIEW_SUFFIX = ".preview.jpg"
+SINGAPORE_GALLERY_ORDER_FILE = "gallery_order.json"
 SINGAPORE_STATIC_MAX_AGE = 60 * 60 * 24 * 7
 SINGAPORE_GALLERY_IMAGE_MAX_DIMENSION = 2200
 SINGAPORE_GALLERY_IMAGE_QUALITY = 82
@@ -171,8 +173,31 @@ def save_gallery_upload(file, extension):
         return saved_name
 
 
-def get_singapore_gallery_images():
-    images = []
+def get_gallery_order_path():
+    return os.path.join(SINGAPORE_GALLERY_DIR, SINGAPORE_GALLERY_ORDER_FILE)
+
+
+def load_gallery_order():
+    try:
+        with open(get_gallery_order_path(), "r", encoding="utf-8") as order_file:
+            order = json.load(order_file)
+    except (OSError, json.JSONDecodeError):
+        return []
+
+    if not isinstance(order, list):
+        return []
+
+    return [secure_filename(os.path.basename(filename)) for filename in order if filename]
+
+
+def save_gallery_order(filenames):
+    os.makedirs(SINGAPORE_GALLERY_DIR, exist_ok=True)
+
+    with open(get_gallery_order_path(), "w", encoding="utf-8") as order_file:
+        json.dump(filenames, order_file, ensure_ascii=True, indent=2)
+
+
+def get_gallery_filenames():
     filenames = []
 
     for directory in (SINGAPORE_GALLERY_DIR, SINGAPORE_STATIC_GALLERY_DIR):
@@ -180,13 +205,28 @@ def get_singapore_gallery_images():
             continue
 
         for filename in sorted(os.listdir(directory)):
+            if filename == SINGAPORE_GALLERY_ORDER_FILE:
+                continue
+
             if filename not in filenames:
                 filenames.append(filename)
 
-    for filename in filenames:
-        if not is_allowed_gallery_file(filename):
-            continue
+    valid_filenames = [
+        filename
+        for filename in filenames
+        if is_allowed_gallery_file(filename)
+    ]
+    order = load_gallery_order()
+    ordered = [filename for filename in order if filename in valid_filenames]
+    unordered = [filename for filename in valid_filenames if filename not in ordered]
 
+    return ordered + unordered
+
+
+def get_singapore_gallery_images():
+    images = []
+
+    for filename in get_gallery_filenames():
         extension = filename.rsplit(".", 1)[1].lower()
         media_type = get_singapore_gallery_media_type(filename)
         src = url_for("singapore_tour_media", filename=filename)
@@ -279,7 +319,13 @@ def singapore_tour_upload():
 
         filename = secure_filename(file.filename)
         extension = filename.rsplit(".", 1)[1].lower()
-        save_gallery_upload(file, extension)
+        saved_name = save_gallery_upload(file, extension)
+
+        if saved_name:
+            order = load_gallery_order()
+            order.append(saved_name)
+            save_gallery_order(order)
+
         uploaded_count += 1
 
     if uploaded_count == 0:
@@ -301,19 +347,56 @@ def singapore_tour_delete_photo():
         session["singapore_gallery_upload_message"] = "没有找到要删除的文件。"
         return redirect(url_for("singapore_tour") + "#gallery")
 
-    photo_path = os.path.abspath(os.path.join(SINGAPORE_GALLERY_DIR, filename))
     gallery_dir = os.path.abspath(SINGAPORE_GALLERY_DIR)
+    static_gallery_dir = os.path.abspath(SINGAPORE_STATIC_GALLERY_DIR)
+    photo_path = os.path.abspath(os.path.join(SINGAPORE_GALLERY_DIR, filename))
 
-    if not photo_path.startswith(gallery_dir + os.sep):
+    if not os.path.exists(photo_path):
+        photo_path = os.path.abspath(os.path.join(SINGAPORE_STATIC_GALLERY_DIR, filename))
+
+    if not (
+        photo_path.startswith(gallery_dir + os.sep) or
+        photo_path.startswith(static_gallery_dir + os.sep)
+    ):
         session["singapore_gallery_upload_message"] = "没有找到要删除的文件。"
         return redirect(url_for("singapore_tour") + "#gallery")
 
     if os.path.exists(photo_path):
         os.remove(photo_path)
+        order = [item for item in load_gallery_order() if item != filename]
+        save_gallery_order(order)
         session["singapore_gallery_upload_message"] = "已删除这个文件。"
     else:
         session["singapore_gallery_upload_message"] = "这个文件已经不存在。"
 
+    return redirect(url_for("singapore_tour") + "#gallery")
+
+
+def singapore_tour_reorder_photo():
+    if not is_singapore_gallery_logged_in():
+        session["singapore_gallery_login_message"] = "请先登录再调整顺序。"
+        return redirect(url_for("singapore_tour") + "#gallery")
+
+    filename = secure_filename(os.path.basename(request.form.get("filename", "")))
+    direction = request.form.get("direction", "")
+    filenames = get_gallery_filenames()
+
+    if filename not in filenames:
+        session["singapore_gallery_upload_message"] = "没有找到要调整的文件。"
+        return redirect(url_for("singapore_tour") + "#gallery")
+
+    index = filenames.index(filename)
+
+    if direction == "earlier" and index > 0:
+        filenames[index - 1], filenames[index] = filenames[index], filenames[index - 1]
+        session["singapore_gallery_upload_message"] = "已向前移动。"
+    elif direction == "later" and index < len(filenames) - 1:
+        filenames[index + 1], filenames[index] = filenames[index], filenames[index + 1]
+        session["singapore_gallery_upload_message"] = "已向后移动。"
+    else:
+        session["singapore_gallery_upload_message"] = "已经在这个位置了。"
+
+    save_gallery_order(filenames)
     return redirect(url_for("singapore_tour") + "#gallery")
 
 
@@ -655,6 +738,12 @@ def register_singapore_tour(app):
         "/project/singapore-tour/delete",
         "singapore_tour_delete_photo",
         singapore_tour_delete_photo,
+        methods=["POST"]
+    )
+    app.add_url_rule(
+        "/project/singapore-tour/reorder",
+        "singapore_tour_reorder_photo",
+        singapore_tour_reorder_photo,
         methods=["POST"]
     )
     app.add_url_rule(
