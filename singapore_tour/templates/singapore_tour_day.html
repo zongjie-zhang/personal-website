@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ day.title }} | Singapore Tour</title>
+
+    <style>
+        :root {
+            --ink: #151515;
+            --muted: #626262;
+            --line: #d8d1c4;
+            --paper: #fbfaf6;
+            --mist: #e8f1ef;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+            color: var(--ink);
+            background: var(--paper);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            min-height: 100vh;
+            padding: 34px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .topbar a {
+            border-bottom: 1px solid currentColor;
+            padding-bottom: 4px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 16px;
+            flex-wrap: wrap;
+            text-align: right;
+        }
+
+        .day-switch {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .day-switch a,
+        .day-switch span {
+            border-bottom: 1px solid currentColor;
+            padding-bottom: 4px;
+        }
+
+        .day-switch span {
+            color: rgba(98, 98, 98, 0.42);
+        }
+
+        .content {
+            width: min(1120px, 100%);
+            margin: 86px auto 0;
+        }
+
+        .date {
+            margin: 0 0 18px;
+            color: var(--muted);
+            font-size: 14px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            width: min(840px, 100%);
+            margin: 0;
+            font-size: clamp(44px, 6vw, 82px);
+            line-height: 0.98;
+            letter-spacing: 0;
+        }
+
+        .summary {
+            width: min(760px, 100%);
+            margin: 28px 0 0;
+            color: var(--muted);
+            font-size: 20px;
+            line-height: 1.62;
+        }
+
+        .meta-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-top: 38px;
+            padding-top: 22px;
+            border-top: 1px solid var(--line);
+            width: min(760px, 100%);
+        }
+
+        .meta-label {
+            margin: 0 0 8px;
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            margin: 0;
+            font-size: 19px;
+            line-height: 1.38;
+        }
+
+        .map-section {
+            margin-top: 62px;
+        }
+
+        .map-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 18px;
+            margin-bottom: 16px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 30px;
+            letter-spacing: 0;
+        }
+
+        .open-map {
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-bottom: 1px solid currentColor;
+            padding-bottom: 4px;
+            white-space: nowrap;
+        }
+
+        .map-frame {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            background: var(--mist);
+            overflow: hidden;
+        }
+
+        .map-frame iframe {
+            position: absolute;
+            inset: -2px;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            border: 0 !important;
+            outline: 0;
+            box-shadow: none;
+            display: block;
+        }
+
+        .map-frame.locked iframe {
+            pointer-events: none;
+        }
+
+        .map-lock {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            background: rgba(251, 250, 246, 0.02);
+            cursor: pointer;
+        }
+
+        .map-lock span {
+            padding: 9px 12px;
+            border: 0;
+            background: rgba(251, 250, 246, 0.9);
+            color: var(--ink);
+            font: inherit;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .map-frame:not(.locked) .map-lock {
+            inset: 14px auto auto 50%;
+            transform: translateX(-50%);
+            background: transparent;
+        }
+
+        .map-note {
+            margin: 12px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .plan-section {
+            margin-top: 62px;
+        }
+
+        .plan-list {
+            margin-top: 22px;
+            border-top: 1px solid var(--line);
+        }
+
+        .plan-item {
+            display: grid;
+            grid-template-columns: 120px minmax(0, 1fr);
+            gap: 28px;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .plan-time {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .plan-title {
+            margin: 0;
+            font-size: 24px;
+            line-height: 1.2;
+        }
+
+        .plan-detail {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.62;
+        }
+
+        .ticket-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .ticket-price {
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        .ticket-link {
+            color: var(--ink);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-bottom: 1px solid currentColor;
+            padding-bottom: 3px;
+        }
+
+        @media (max-width: 720px) {
+            .page {
+                padding: 24px;
+            }
+
+            .content {
+                margin-top: 56px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topbar-right,
+            .day-switch {
+                text-align: left;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+
+            .meta-row {
+                grid-template-columns: 1fr;
+            }
+
+            .map-head {
+                align-items: start;
+                flex-direction: column;
+            }
+
+            .plan-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <nav class="topbar">
+            <a href="{{ url_for('singapore_tour') }}">Back to route</a>
+            <div class="topbar-right">
+                <span>Singapore Tour</span>
+                <div class="day-switch" aria-label="Day navigation">
+                    {% if previous_day %}
+                        <a href="{{ url_for('singapore_tour_day', day=previous_day.key) }}">Previous</a>
+                    {% else %}
+                        <span>Previous</span>
+                    {% endif %}
+
+                    {% if next_day %}
+                        <a href="{{ url_for('singapore_tour_day', day=next_day.key) }}">Next</a>
+                    {% else %}
+                        <span>Next</span>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <section class="content">
+            <p class="date">June {{ day.date }}</p>
+            <h1>{{ day.title }}</h1>
+            <p class="summary">{{ day.summary }}</p>
+
+            <div class="meta-row">
+                <div>
+                    <p class="meta-label">Weather plan</p>
+                    <p class="meta-value">{{ day.weather }}</p>
+                </div>
+                <div>
+                    <p class="meta-label">Map area</p>
+                    <p class="meta-value">{{ day.base }}</p>
+                </div>
+            </div>
+
+            <section class="map-section">
+                <div class="map-head">
+                    <h2>{{ day.map_title }}</h2>
+                    <a class="open-map" href="{{ day.map_link }}" target="_blank" rel="noopener">Open full map</a>
+                </div>
+
+                <div class="map-frame locked" id="mapFrame">
+                    <iframe
+                        src="{{ day.map_src|safe }}"
+                        title="{{ day.map_title }}"
+                        loading="lazy"
+                    ></iframe>
+                    <button class="map-lock" type="button" id="mapToggle" aria-label="Toggle map interaction">
+                        <span id="mapToggleText">Click to move map</span>
+                    </button>
+                </div>
+
+                <p class="map-note">
+                    点一下地图后可以拖动和缩放；点地图上方的小按钮或地图外面后，页面滚动会再次优先。
+                </p>
+            </section>
+
+            <section class="plan-section">
+                <h2>Plan</h2>
+
+                <div class="plan-list">
+                    {% for item in day.plans %}
+                        <article class="plan-item">
+                            <p class="plan-time">{{ item.time }}</p>
+                            <div>
+                                <h3 class="plan-title">{{ item.title }}</h3>
+                                <p class="plan-detail">{{ item.detail }}</p>
+
+                                {% if item.url %}
+                                    <div class="ticket-row">
+                                        <span class="ticket-price">{{ item.price }}</span>
+                                        <a class="ticket-link" href="{{ item.url }}" target="_blank" rel="noopener">{{ item.ticket }}</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const mapFrame = document.getElementById("mapFrame");
+        const mapToggle = document.getElementById("mapToggle");
+        const mapToggleText = document.getElementById("mapToggleText");
+
+        function setMapLocked(locked) {
+            mapFrame.classList.toggle("locked", locked);
+            mapToggleText.textContent = locked ? "Click to move map" : "Click to scroll page";
+        }
+
+        if (mapFrame && mapToggle) {
+            mapToggle.addEventListener("click", (event) => {
+                event.stopPropagation();
+                setMapLocked(!mapFrame.classList.contains("locked"));
+            });
+
+            mapFrame.addEventListener("click", (event) => {
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", () => {
+                setMapLocked(true);
+            });
+        }
+    </script>
+</body>
+</html>

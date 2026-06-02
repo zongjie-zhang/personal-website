@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singapore Tour</title>
+
+    <style>
+        :root {
+            --ink: #151515;
+            --muted: #626262;
+            --line: #d8d1c4;
+            --paper: #fbfaf6;
+            --mist: #e8f1ef;
+            --green: #1f6f5b;
+            --blue: #215f86;
+            --coral: #be594b;
+            --gold: #b9842f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+            color: var(--ink);
+            background: var(--paper);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .hero {
+            min-height: 92vh;
+            padding: 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background:
+                linear-gradient(90deg, rgba(10, 23, 24, 0.74), rgba(10, 23, 24, 0.24) 54%, rgba(10, 23, 24, 0.05)),
+                url("{{ url_for('singapore_tour_static', filename='image/singapore-tour-hero.png') }}");
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            font-size: 14px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .back-link {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.72);
+            padding-bottom: 4px;
+        }
+
+        .hero-copy {
+            width: min(760px, 100%);
+            padding-bottom: 34px;
+        }
+
+        .eyebrow {
+            margin: 0 0 18px;
+            font-size: 14px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(56px, 8vw, 118px);
+            line-height: 0.92;
+            letter-spacing: 0;
+        }
+
+        .hero-text {
+            width: min(620px, 100%);
+            margin: 26px 0 0;
+            font-size: 19px;
+            line-height: 1.55;
+        }
+
+        .section {
+            padding: 72px 34px;
+        }
+
+        .section-inner {
+            width: min(1120px, 100%);
+            margin: 0 auto;
+        }
+
+        .intro-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+            gap: 42px;
+            align-items: start;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 38px;
+            letter-spacing: 0;
+        }
+
+        .lead {
+            margin: 18px 0 0;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.68;
+        }
+
+        .facts {
+            padding: 6px 0;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .fact {
+            display: grid;
+            grid-template-columns: 96px minmax(0, 1fr);
+            gap: 28px;
+            align-items: baseline;
+            padding: 17px 0;
+            margin-bottom: 0;
+            border-bottom: 1px solid rgba(216, 209, 196, 0.68);
+        }
+
+        .fact:last-child {
+            border-bottom: none;
+        }
+
+        .fact-label {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            line-height: 1.4;
+        }
+
+        .fact-value {
+            margin: 0;
+            color: var(--ink);
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 1.22;
+        }
+
+        .fact:first-child .fact-value {
+            font-size: 25px;
+        }
+
+        .route-band {
+            background: var(--mist);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .timeline {
+            display: grid;
+            gap: 0;
+            margin-top: 34px;
+        }
+
+        .route-intro {
+            width: min(760px, 100%);
+            margin: 16px 0 0;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.62;
+        }
+
+        .day {
+            display: grid;
+            grid-template-columns: 112px minmax(0, 1fr);
+            gap: 34px;
+            align-items: start;
+            padding: 30px 0;
+            border-top: 1px solid rgba(21, 21, 21, 0.18);
+        }
+
+        .day:first-child {
+            border-top: none;
+        }
+
+        .date {
+            color: var(--ink);
+            font-size: 28px;
+            font-weight: 650;
+            line-height: 1;
+        }
+
+        .date::before {
+            content: "June";
+            display: block;
+            margin-bottom: 9px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .day h3 {
+            margin: 0 0 10px;
+            font-size: 27px;
+            letter-spacing: 0;
+        }
+
+        .day-title-link {
+            display: inline-block;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 5px;
+        }
+
+        .day-title-link:hover {
+            text-decoration: underline;
+        }
+
+        .day p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .tag {
+            color: var(--ink);
+            font-weight: 650;
+        }
+
+        .gallery-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .gallery-count {
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .gallery-access {
+            margin-bottom: 18px;
+        }
+
+        .gallery-toggle {
+            height: 42px;
+            border: 1px solid var(--ink);
+            background: transparent;
+            color: var(--ink);
+            padding: 0 16px;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .gallery-toggle:hover {
+            background: var(--ink);
+            color: white;
+        }
+
+        .gallery-panel[hidden] {
+            display: none;
+        }
+
+        .gallery-tools {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: end;
+            margin-bottom: 22px;
+            padding: 18px 0;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .gallery-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .gallery-input {
+            height: 42px;
+            min-width: 160px;
+            border: 1px solid var(--line);
+            background: white;
+            padding: 0 12px;
+            color: var(--ink);
+            font: inherit;
+        }
+
+        .gallery-file {
+            max-width: 100%;
+            color: var(--muted);
+            font: inherit;
+        }
+
+        .gallery-action {
+            height: 42px;
+            border: 1px solid var(--ink);
+            background: var(--ink);
+            color: white;
+            padding: 0 16px;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .gallery-action.secondary {
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .gallery-message {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .gallery-message.alert {
+            color: var(--ink);
+            font-weight: 650;
+            animation: message-shake 0.52s ease both;
+        }
+
+        .gallery-panel-message {
+            grid-column: 1 / -1;
+            margin: 0;
+        }
+
+        @keyframes message-shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            18% {
+                transform: translateX(-8px);
+            }
+
+            36% {
+                transform: translateX(7px);
+            }
+
+            54% {
+                transform: translateX(-5px);
+            }
+
+            72% {
+                transform: translateX(4px);
+            }
+        }
+
+        .gallery-frame {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            border: 1px solid var(--line);
+            background: #050505;
+            overflow: hidden;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            background: #050505;
+        }
+
+        .gallery-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+            background: #050505;
+        }
+
+        .gallery-button {
+            position: absolute;
+            top: 50%;
+            width: 48px;
+            height: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            background: rgba(0, 0, 0, 0.34);
+            color: white;
+            font-size: 30px;
+            line-height: 1;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .gallery-button:hover {
+            background: rgba(0, 0, 0, 0.54);
+        }
+
+        .gallery-button.prev {
+            left: 18px;
+        }
+
+        .gallery-button.next {
+            right: 18px;
+        }
+
+        .gallery-delete-form {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            z-index: 2;
+        }
+
+        .gallery-delete-button {
+            height: 38px;
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            background: rgba(0, 0, 0, 0.44);
+            color: white;
+            padding: 0 13px;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .gallery-delete-button:hover {
+            background: rgba(0, 0, 0, 0.68);
+        }
+
+        .gallery-empty {
+            min-height: 360px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #9d9284;
+            background:
+                linear-gradient(135deg, rgba(31, 111, 91, 0.08), rgba(33, 95, 134, 0.08)),
+                white;
+            color: var(--muted);
+            text-align: center;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            padding: 34px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 820px) {
+            .hero {
+                min-height: 86vh;
+                padding: 24px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .section {
+                padding: 54px 24px;
+            }
+
+            .intro-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-tools {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-form {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .gallery-input,
+            .gallery-action {
+                width: 100%;
+            }
+
+            .gallery-file {
+                width: 100%;
+            }
+
+            .facts {
+                padding-left: 0;
+            }
+
+            .day {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .tag {
+                justify-self: start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="hero">
+        <nav class="topbar">
+            <a class="back-link" href="{{ url_for('projects') }}">Projects</a>
+            <span>June 2 - June 9, 2026</span>
+        </nav>
+
+        <div class="hero-copy">
+            <p class="eyebrow">Travel journal</p>
+            <h1>Singapore Tour</h1>
+            <p class="hero-text">
+                一周放松的 Singapore 旅行：前半段在 Sentosa 慢下来，后半段回到主岛，吃本地食物，看城市、花园和海湾。
+            </p>
+        </div>
+    </header>
+
+    <section class="section" id="gallery">
+        <div class="section-inner intro-grid">
+            <div>
+                <h2>About The Trip</h2>
+                <p class="lead">
+                    这里记录我们这次 Singapore 旅行的安排、想去的地方，以及之后会慢慢补上的照片。整体节奏不想排太满：6.2 到 6.4 主要在 Sentosa，6.5 到 6.9 回到主岛，留时间给街区、本地食物、博物馆、花园和不赶路的晚上。
+                </p>
+            </div>
+
+            <div class="facts">
+                <div class="fact">
+                    <p class="fact-label">日期</p>
+                    <p class="fact-value">6.2 - 6.9</p>
+                </div>
+                <div class="fact">
+                    <p class="fact-label">前半段</p>
+                    <p class="fact-value">Outpost Sentosa</p>
+                </div>
+                <div class="fact">
+                    <p class="fact-label">后半段</p>
+                    <p class="fact-value">Grand Hyatt</p>
+                </div>
+                <div class="fact">
+                    <p class="fact-label">节奏</p>
+                    <p class="fact-value">松散、本地、休闲</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section route-band">
+        <div class="section-inner">
+            <h2>Route</h2>
+            <p class="route-intro">
+                按目前预报，6.2 清晨有雷阵雨，6.3 和 6.4 晴热；后半段以高温、可能偏干为主。行程按“上午和傍晚户外，中午室内休息，遇雨就换到博物馆、商场或咖啡店”的原则来排。
+            </p>
+
+            <div class="timeline">
+                <article class="day">
+                    <div class="date">6.2</div>
+                    <div>
+                        <h3><a class="day-title-link" href="{{ url_for('singapore_tour_day', day='6-2') }}">雨后抵达 Sentosa</a></h3>
+                        <p><span class="tag">清晨雷阵雨。</span>不安排户外主项目。入住 Outpost Sentosa 后先休息；如果下午天气转好，就在酒店附近或海边短走一圈。</p>
+                    </div>
+                </article>
+
+                <article class="day">
+                    <div class="date">6.3</div>
+                    <div>
+                        <h3><a class="day-title-link" href="{{ url_for('singapore_tour_day', day='6-3') }}">Sentosa 海边和缆车</a></h3>
+                        <p><span class="tag">晴热。</span>早上吃酒店自助早餐，趁上午或傍晚去海边、缆车或岛上散步。中午最热的时候回酒店休息，避免硬晒。</p>
+                    </div>
+                </article>
+
+                <article class="day">
+                    <div class="date">6.4</div>
+                    <div>
+                        <h3><a class="day-title-link" href="{{ url_for('singapore_tour_day', day='6-4') }}">Sentosa 轻松完整日</a></h3>
+                        <p><span class="tag">晴热，室内备选。</span>继续从酒店早餐开始。中午可选水族馆、商店或酒店休息；如果体力好，再去 Universal Studios 附近走走。</p>
+                    </div>
+                </article>
+
+                <article class="day">
+                    <div class="date">6.5</div>
+                    <div>
+                        <h3><a class="day-title-link" href="{{ url_for('singapore_tour_day', day='6-5') }}">搬到主岛</a></h3>
+                        <p><span class="tag">换酒店，室内优先。</span>早上吃最后一顿 Sentosa 早餐，然后换到 Grand Hyatt。下午以 Orchard Road、商场、咖啡店为主，晚上再找一顿本地 hawker food。</p>
+                    </div>
+                </article>
+
+                <article class="day">
+                    <div class="date">6.6</div>
+                    <div>
+                        <h3><a class="day-title-link" href="{{ url_for('singapore_tour_day', day='6-6') }}">鱼尾狮和本地街区</a></h3>
+                        <p><span class="tag">晴天上午优先。</span>如果早上天气晴，先去 Merlion Park 和 Marina Bay；热起来后转去 Chinatown、Maxwell 或一个本地街区。</p>
+                    </div>
+                </article>
+
+                <article class="day">
+                    <div class="date">6.7</div>
+                    <div>
+                        <h3><a class="day-title-link" href="{{ url_for('singapore_tour_day', day='6-7') }}">Bird Paradise</a></h3>
+                        <p><span class="tag">原裕廊鸟园。</span>把 Bird Paradise 放在晴天上午，慢慢看鸟舍和表演。中午热了就坐园内交通、找遮阴或餐厅休息。</p>
+                    </div>
+                </article>
+
+                <article class="day">
+                    <div class="date">6.8</div>
+                    <div>
+                        <h3><a class="day-title-link" href="{{ url_for('singapore_tour_day', day='6-8') }}">Gardens by the Bay</a></h3>
+                        <p><span class="tag">6.8 更合适。</span>Floral Fantasy 6.1-6.7 关闭，所以 6.8 再去 Gardens by the Bay。上午或傍晚看户外，中午进冷室。</p>
+                    </div>
+                </article>
+
+                <article class="day">
+                    <div class="date">6.9</div>
+                    <div>
+                        <h3><a class="day-title-link" href="{{ url_for('singapore_tour_day', day='6-9') }}">最后一个早晨</a></h3>
+                        <p><span class="tag">离开日，不赶路。</span>在 Grand Hyatt 慢慢退房，补几张照片，需要的话买一点纪念品。天气不好也不影响，重点是从容去机场。</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-inner">
+            <div class="gallery-head">
+                <h2>Gallery</h2>
+                <div class="gallery-count" id="galleryCount">
+                    {% if gallery_images %}
+                        1 / {{ gallery_images|length }}
+                    {% else %}
+                        Empty
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="gallery-access">
+                <button class="gallery-toggle" type="button" id="galleryToggle" aria-expanded="false" aria-controls="galleryPanel">
+                    {% if gallery_logged_in %}Add media{% else %}Login to upload{% endif %}
+                </button>
+            </div>
+
+            <div class="gallery-panel" id="galleryPanel" hidden data-open-on-message="{% if login_message or upload_message %}true{% else %}false{% endif %}">
+                <div class="gallery-tools">
+                    {% if gallery_logged_in %}
+                        <form class="gallery-form" id="galleryUploadForm" action="{{ url_for('singapore_tour_upload') }}" method="post" enctype="multipart/form-data">
+                            <input class="gallery-file" id="galleryFileInput" type="file" name="photos" accept="image/*,video/*" multiple>
+                        </form>
+
+                        <form id="galleryLogoutForm" action="{{ url_for('singapore_tour_logout') }}" method="post">
+                            <button class="gallery-action secondary" type="submit">Logout</button>
+                        </form>
+                    {% else %}
+                        <form class="gallery-form" id="galleryLoginForm" action="{{ url_for('singapore_tour_login') }}" method="post">
+                            <input class="gallery-input" type="text" name="username" placeholder="Username" autocomplete="username">
+                            <input class="gallery-input" type="password" name="password" placeholder="Password" autocomplete="current-password">
+                            <button class="gallery-action" type="submit">Login</button>
+                        </form>
+
+                        <div class="gallery-message">登录后可以从手机相册上传照片或视频。</div>
+
+                        {% if login_message %}
+                            <p class="gallery-message alert gallery-panel-message">{{ login_message }}</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if upload_message %}
+                <p class="gallery-message">{{ upload_message }}</p>
+            {% endif %}
+
+            {% if gallery_images %}
+                <div class="gallery-frame">
+                    <img class="gallery-image" id="galleryImage" src="" alt="">
+                    <video class="gallery-video" id="galleryVideo" controls playsinline preload="metadata"></video>
+                    <button class="gallery-button prev" type="button" id="galleryPrev" aria-label="Previous image">‹</button>
+                    <button class="gallery-button next" type="button" id="galleryNext" aria-label="Next image">›</button>
+                    {% if gallery_logged_in %}
+                        <form class="gallery-delete-form" id="galleryDeleteForm" action="{{ url_for('singapore_tour_delete_photo') }}" method="post">
+                            <input type="hidden" name="filename" id="galleryDeleteFilename" value="">
+                            <button class="gallery-delete-button" type="submit">Delete</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="gallery-empty">
+                    相册现在是空的。登录后可以从手机相册选择照片或视频，Gallery 会慢慢变多。
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <footer class="footer">
+        <span>Singapore Tour</span>
+        <span>June 2 - June 9, 2026</span>
+    </footer>
+
+    <script>
+        const galleryItems = {{ gallery_images|tojson }};
+
+        let galleryIndex = 0;
+
+        const galleryImage = document.getElementById("galleryImage");
+        const galleryVideo = document.getElementById("galleryVideo");
+        const galleryCount = document.getElementById("galleryCount");
+        const galleryToggle = document.getElementById("galleryToggle");
+        const galleryPanel = document.getElementById("galleryPanel");
+        const galleryUploadForm = document.getElementById("galleryUploadForm");
+        const galleryFileInput = document.getElementById("galleryFileInput");
+        const galleryLoginForm = document.getElementById("galleryLoginForm");
+        const galleryLogoutForm = document.getElementById("galleryLogoutForm");
+        const galleryDeleteForm = document.getElementById("galleryDeleteForm");
+        const galleryDeleteFilename = document.getElementById("galleryDeleteFilename");
+
+        function saveGalleryScroll() {
+            sessionStorage.setItem("singaporeGalleryScrollY", String(window.scrollY));
+        }
+
+        if (galleryUploadForm) {
+            galleryUploadForm.addEventListener("submit", saveGalleryScroll);
+        }
+
+        if (galleryFileInput && galleryUploadForm) {
+            galleryFileInput.addEventListener("change", () => {
+                if (galleryFileInput.files.length > 0) {
+                    saveGalleryScroll();
+                    galleryUploadForm.submit();
+                }
+            });
+        }
+
+        if (galleryLoginForm) {
+            galleryLoginForm.addEventListener("submit", saveGalleryScroll);
+        }
+
+        if (galleryLogoutForm) {
+            galleryLogoutForm.addEventListener("submit", saveGalleryScroll);
+        }
+
+        if (galleryDeleteForm) {
+            galleryDeleteForm.addEventListener("submit", (event) => {
+                const shouldDelete = window.confirm("确定删除当前这个文件吗？");
+
+                if (!shouldDelete) {
+                    event.preventDefault();
+                    return;
+                }
+
+                saveGalleryScroll();
+            });
+        }
+
+        const savedGalleryScrollY = sessionStorage.getItem("singaporeGalleryScrollY");
+
+        if (savedGalleryScrollY) {
+            requestAnimationFrame(() => {
+                window.scrollTo(0, Number(savedGalleryScrollY));
+                sessionStorage.removeItem("singaporeGalleryScrollY");
+            });
+        }
+
+        function setGalleryPanel(open) {
+            if (!galleryToggle || !galleryPanel) {
+                return;
+            }
+
+            galleryPanel.hidden = !open;
+            galleryToggle.setAttribute("aria-expanded", String(open));
+            galleryToggle.textContent = open ? "Hide gallery tools" : galleryToggle.dataset.closedLabel;
+        }
+
+        if (galleryToggle && galleryPanel) {
+            galleryToggle.dataset.closedLabel = galleryToggle.textContent.trim();
+            galleryToggle.addEventListener("click", () => {
+                setGalleryPanel(galleryPanel.hidden);
+            });
+
+            if (galleryPanel.dataset.openOnMessage === "true") {
+                setGalleryPanel(true);
+            }
+        }
+
+        function showGalleryImage(index) {
+            if (galleryItems.length === 0 || !galleryImage || !galleryVideo) {
+                return;
+            }
+
+            galleryIndex = (index + galleryItems.length) % galleryItems.length;
+            const item = galleryItems[galleryIndex];
+
+            if (item.type === "video") {
+                galleryImage.style.display = "none";
+                galleryImage.removeAttribute("src");
+                galleryVideo.style.display = "block";
+                galleryVideo.src = item.src;
+                galleryVideo.load();
+            } else {
+                galleryVideo.pause();
+                galleryVideo.removeAttribute("src");
+                galleryVideo.style.display = "none";
+                galleryImage.style.display = "block";
+                galleryImage.src = item.src;
+                galleryImage.alt = item.alt;
+            }
+            if (galleryDeleteFilename) {
+                galleryDeleteFilename.value = item.filename;
+            }
+            galleryCount.textContent = `${galleryIndex + 1} / ${galleryItems.length}`;
+        }
+
+        const galleryPrev = document.getElementById("galleryPrev");
+        const galleryNext = document.getElementById("galleryNext");
+
+        if (galleryPrev && galleryNext) {
+            galleryPrev.addEventListener("click", () => {
+                showGalleryImage(galleryIndex - 1);
+            });
+
+            galleryNext.addEventListener("click", () => {
+                showGalleryImage(galleryIndex + 1);
+            });
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowLeft") {
+                showGalleryImage(galleryIndex - 1);
+            }
+
+            if (event.key === "ArrowRight") {
+                showGalleryImage(galleryIndex + 1);
+            }
+        });
+
+        showGalleryImage(0);
+    </script>
+</body>
+</html>

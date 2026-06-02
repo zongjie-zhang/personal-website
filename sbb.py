@@ -7,16 +7,25 @@ import difflib
 import unicodedata
 import urllib.request
 import urllib.error
+import uuid
+import sys
 from datetime import timedelta
+from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key-change-later")
-app.config["MAX_CONTENT_LENGTH"] = 4 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = 256 * 1024 * 1024
 app.permanent_session_lifetime = timedelta(days=365)
 
 ADMIN_USER_IDS = {1}
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+SINGAPORE_TOUR_MODULE_DIR = os.path.join(PROJECT_ROOT, "singapore_tour")
+if SINGAPORE_TOUR_MODULE_DIR not in sys.path:
+    sys.path.insert(0, SINGAPORE_TOUR_MODULE_DIR)
+
+from singapore_tour import register_singapore_tour
 
 
 def normalize_url_prefix(prefix):
@@ -729,6 +738,9 @@ def index():
 @app.route("/project")
 def projects():
     return render_template("projects.html")
+
+
+register_singapore_tour(app)
 
 
 @app.route("/game")

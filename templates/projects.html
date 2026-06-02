@@ -27,14 +27,27 @@
         }
 
         .top-row {
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            gap: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+            width: min(760px, 100%);
         }
 
         .project-link {
+            min-height: 140px;
+            border: 1px solid #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 28px;
+            text-align: center;
+            padding: 18px;
+            box-sizing: border-box;
+        }
+
+        .project-link:hover {
+            background-color: #111;
+            color: white;
         }
     </style>
 </head>
@@ -43,6 +56,7 @@
     <main class="page">
         <div class="top-row">
             <a class="project-link" href="{{ chopin_site_root }}">Chopin</a>
+            <a class="project-link" href="{{ url_for('singapore_tour') }}">Singapore Tour</a>
         </div>
     </main>
 </body>
