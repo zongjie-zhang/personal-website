@@ -5,6 +5,13 @@ from jinja2 import ChoiceLoader, FileSystemLoader
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
 
+try:
+    from PIL import Image, ImageOps, UnidentifiedImageError
+except ImportError:
+    Image = None
+    ImageOps = None
+    UnidentifiedImageError = OSError
+
 BASE_DIR = os.path.dirname(__file__)
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
@@ -14,6 +21,9 @@ SINGAPORE_GALLERY_VIDEO_EXTENSIONS = {"mp4", "mov", "m4v", "webm"}
 SINGAPORE_GALLERY_ALLOWED_EXTENSIONS = (
     SINGAPORE_GALLERY_IMAGE_EXTENSIONS | SINGAPORE_GALLERY_VIDEO_EXTENSIONS
 )
+SINGAPORE_STATIC_MAX_AGE = 60 * 60 * 24 * 7
+SINGAPORE_GALLERY_IMAGE_MAX_DIMENSION = 2200
+SINGAPORE_GALLERY_IMAGE_QUALITY = 82
 SINGAPORE_GALLERY_USER = "James"
 SINGAPORE_GALLERY_PASSWORD_HASH = (
     "scrypt:32768:8:1$Md4O01kcXsqEB4kG$"
@@ -42,6 +52,53 @@ def get_singapore_gallery_media_type(filename):
     return "image"
 
 
+def save_gallery_upload(file, extension):
+    if extension in SINGAPORE_GALLERY_VIDEO_EXTENSIONS:
+        saved_name = f"{uuid.uuid4().hex}.{extension}"
+        file.save(os.path.join(SINGAPORE_GALLERY_DIR, saved_name))
+        return saved_name
+
+    if Image is None or extension == "gif":
+        saved_name = f"{uuid.uuid4().hex}.{extension}"
+        file.save(os.path.join(SINGAPORE_GALLERY_DIR, saved_name))
+        return saved_name
+
+    try:
+        image = Image.open(file.stream)
+        image = ImageOps.exif_transpose(image)
+
+        if image.mode in ("RGBA", "LA") or "transparency" in image.info:
+            background = Image.new("RGB", image.size, (255, 255, 255))
+            alpha = image.split()[-1] if image.mode in ("RGBA", "LA") else None
+            background.paste(image, mask=alpha)
+            image = background
+        else:
+            image = image.convert("RGB")
+
+        image.thumbnail(
+            (
+                SINGAPORE_GALLERY_IMAGE_MAX_DIMENSION,
+                SINGAPORE_GALLERY_IMAGE_MAX_DIMENSION
+            ),
+            Image.Resampling.LANCZOS
+        )
+
+        saved_name = f"{uuid.uuid4().hex}.jpg"
+        image.save(
+            os.path.join(SINGAPORE_GALLERY_DIR, saved_name),
+            "JPEG",
+            quality=SINGAPORE_GALLERY_IMAGE_QUALITY,
+            optimize=True,
+            progressive=True
+        )
+        return saved_name
+    except (OSError, UnidentifiedImageError):
+        file.stream.seek(0)
+        saved_name = f"{uuid.uuid4().hex}.{extension}"
+        file.save(os.path.join(SINGAPORE_GALLERY_DIR, saved_name))
+        return saved_name
+
+
 def get_singapore_gallery_images():
     if not os.path.isdir(SINGAPORE_GALLERY_DIR):
         return []
@@ -64,7 +121,7 @@ def get_singapore_gallery_images():
 
 
 def singapore_tour_static(filename):
-    return send_from_directory(STATIC_DIR, filename)
+    return send_from_directory(STATIC_DIR, filename, max_age=SINGAPORE_STATIC_MAX_AGE)
 
 
 def singapore_tour_media(filename):
@@ -73,7 +130,7 @@ def singapore_tour_media(filename):
     if not safe_name or not is_allowed_gallery_file(safe_name):
         abort(404)
 
-    return send_from_directory(SINGAPORE_GALLERY_DIR, safe_name)
+    return send_from_directory(SINGAPORE_GALLERY_DIR, safe_name, max_age=SINGAPORE_STATIC_MAX_AGE)
 
 
 def singapore_tour():
@@ -130,8 +187,7 @@ def singapore_tour_upload():
 
         filename = secure_filename(file.filename)
         extension = filename.rsplit(".", 1)[1].lower()
-        saved_name = f"{uuid.uuid4().hex}.{extension}"
-        file.save(os.path.join(SINGAPORE_GALLERY_DIR, saved_name))
+        save_gallery_upload(file, extension)
         uploaded_count += 1
 
     if uploaded_count == 0:
