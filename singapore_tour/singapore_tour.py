@@ -387,7 +387,22 @@ def singapore_tour_reorder_photo():
 
     index = filenames.index(filename)
 
-    if direction == "earlier" and index > 0:
+    if direction == "target":
+        try:
+            target_index = int(request.form.get("target_position", "")) - 1
+        except ValueError:
+            session["singapore_gallery_upload_message"] = "请输入有效的位置编号。"
+            return redirect(url_for("singapore_tour") + "#gallery")
+
+        target_index = max(0, min(target_index, len(filenames) - 1))
+
+        if target_index != index:
+            filenames.pop(index)
+            filenames.insert(target_index, filename)
+            session["singapore_gallery_upload_message"] = f"已移动到第 {target_index + 1} 张。"
+        else:
+            session["singapore_gallery_upload_message"] = "已经在这个位置了。"
+    elif direction == "earlier" and index > 0:
         filenames[index - 1], filenames[index] = filenames[index], filenames[index - 1]
         session["singapore_gallery_upload_message"] = "已向前移动。"
     elif direction == "later" and index < len(filenames) - 1:

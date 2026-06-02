@@ -499,7 +499,23 @@
             z-index: 2;
             display: flex;
             gap: 8px;
+            align-items: center;
             transform: translateX(-50%);
+        }
+
+        .gallery-order-input {
+            width: 72px;
+            height: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            background: rgba(0, 0, 0, 0.44);
+            color: white;
+            padding: 0 8px;
+            font: inherit;
+            text-align: center;
+        }
+
+        .gallery-order-input::placeholder {
+            color: rgba(255, 255, 255, 0.72);
         }
 
         .gallery-order-button {
@@ -576,6 +592,24 @@
 
             .gallery-file {
                 width: 100%;
+            }
+
+            .gallery-order-form {
+                width: min(300px, calc(100% - 28px));
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .gallery-order-button {
+                height: 34px;
+                padding: 0 10px;
+                font-size: 13px;
+            }
+
+            .gallery-order-input {
+                width: 58px;
+                height: 34px;
+                font-size: 13px;
             }
 
             .facts {
@@ -781,6 +815,8 @@
                             <input type="hidden" name="filename" id="galleryOrderFilename" value="">
                             <button class="gallery-order-button" type="submit" name="direction" value="earlier">Move earlier</button>
                             <button class="gallery-order-button" type="submit" name="direction" value="later">Move later</button>
+                            <input class="gallery-order-input" id="galleryOrderTarget" type="number" name="target_position" min="1" inputmode="numeric" aria-label="Move to image number" placeholder="No.">
+                            <button class="gallery-order-button" type="submit" name="direction" value="target">Move to</button>
                         </form>
                     {% endif %}
                 </div>
@@ -816,6 +852,7 @@
         const galleryDeleteFilename = document.getElementById("galleryDeleteFilename");
         const galleryOrderForm = document.getElementById("galleryOrderForm");
         const galleryOrderFilename = document.getElementById("galleryOrderFilename");
+        const galleryOrderTarget = document.getElementById("galleryOrderTarget");
 
         function saveGalleryScroll() {
             sessionStorage.setItem("singaporeGalleryScrollY", String(window.scrollY));
@@ -948,6 +985,10 @@
             }
             if (galleryOrderFilename) {
                 galleryOrderFilename.value = item.filename;
+            }
+            if (galleryOrderTarget) {
+                galleryOrderTarget.max = String(galleryItems.length);
+                galleryOrderTarget.placeholder = `${galleryIndex + 1}`;
             }
             galleryCount.textContent = `${galleryIndex + 1} / ${galleryItems.length}`;
         }
