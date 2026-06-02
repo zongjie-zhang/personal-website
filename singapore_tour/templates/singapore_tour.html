@@ -513,18 +513,46 @@
         }
 
         .gallery-order-input {
-            width: 72px;
+            width: 58px;
             height: 36px;
-            border: 1px solid rgba(255, 255, 255, 0.78);
-            background: rgba(0, 0, 0, 0.44);
+            border: 0;
+            background: transparent;
             color: white;
-            padding: 0 8px;
+            padding: 0 6px 0 10px;
             font: inherit;
             text-align: center;
         }
 
         .gallery-order-input::placeholder {
             color: rgba(255, 255, 255, 0.72);
+        }
+
+        .gallery-move-control {
+            height: 36px;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            background: rgba(0, 0, 0, 0.44);
+        }
+
+        .gallery-move-control:focus-within {
+            background: rgba(0, 0, 0, 0.62);
+        }
+
+        .gallery-move-submit {
+            width: 38px;
+            height: 100%;
+            border: 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.52);
+            background: transparent;
+            color: white;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .gallery-move-submit:hover {
+            background: rgba(255, 255, 255, 0.13);
         }
 
         .gallery-order-button {
@@ -689,9 +717,17 @@
             }
 
             .gallery-order-input {
-                width: 66px;
+                width: 54px;
                 height: 38px;
                 font-size: 13px;
+            }
+
+            .gallery-move-control {
+                height: 38px;
+            }
+
+            .gallery-move-submit {
+                width: 38px;
             }
 
             .facts {
@@ -946,8 +982,10 @@
                             <input type="hidden" name="filename" id="galleryOrderFilename" value="">
                             <button class="gallery-order-button" type="submit" name="direction" value="earlier">Move earlier</button>
                             <button class="gallery-order-button" type="submit" name="direction" value="later">Move later</button>
-                            <input class="gallery-order-input" id="galleryOrderTarget" type="number" name="target_position" min="1" inputmode="numeric" aria-label="Move to image number" placeholder="No.">
-                            <button class="gallery-order-button" type="submit" name="direction" value="target">Move to</button>
+                            <span class="gallery-move-control">
+                                <input class="gallery-order-input" id="galleryOrderTarget" type="number" name="target_position" min="1" inputmode="numeric" aria-label="Move to image number" placeholder="No.">
+                                <button class="gallery-move-submit" type="submit" name="direction" value="target" aria-label="Move to image number">→</button>
+                            </span>
                         </form>
                     {% endif %}
                 </div>
