@@ -518,31 +518,31 @@ SINGAPORE_TOUR_DAYS = {
     },
     "6-5": {
         "date": "6.5",
-        "title": "Hyatt 出发，傍晚鱼尾狮",
-        "weather": "室内下午 / 傍晚海湾",
-        "base": "Grand Hyatt, National Museum and Merlion Park",
-        "summary": "已经住在 Grand Hyatt，白天不要赶。下午可去 National Museum of Singapore，傍晚去 Marina Bay 和 Merlion Park 看鱼尾狮、海湾和夜景。",
-        "map_title": "National Museum and Merlion Park",
-        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8280%2C1.2780%2C103.8625%2C1.3105&layer=mapnik&marker=1.2868%2C103.8545",
-        "map_link": "https://www.openstreetmap.org/?mlat=1.2868&mlon=103.8545#map=15/1.2868/103.8545",
+        "title": "Art Gallery 和鱼尾狮",
+        "weather": "已完成 / 城市文化和海湾",
+        "base": "National Gallery and Merlion Park",
+        "summary": "今天实际去了 art gallery，也去了 Marina Bay / Merlion Park 看鱼尾狮。后面的安排就不用再重复这两个点，把节奏留给花园、牛车水和待定项目。",
+        "map_title": "National Gallery and Merlion Park",
+        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8425%2C1.2772%2C103.8648%2C1.2934&layer=mapnik&marker=1.2868%2C103.8545",
+        "map_link": "https://www.openstreetmap.org/?mlat=1.2868&mlon=103.8545#map=16/1.2868/103.8545",
         "plans": [
             {
                 "time": "上午",
                 "title": "Grand Hyatt 慢慢开始",
-                "detail": "上午不硬排。可以在 Orchard 附近吃早午饭、补休息，或者只处理一些轻松的小事。"
+                "detail": "上午没有硬排，适合在酒店和 Orchard 附近慢慢开始。"
             },
             {
                 "time": "下午",
-                "title": "National Museum of Singapore",
-                "detail": "适合热天或阵雨的室内安排。开放时间一般为 10:00-19:00，成人游客票 S$20；如果体力一般，控制在 1.5-2 小时就好。",
-                "ticket": "National Museum 官方信息",
-                "price": "Adult tourist S$20",
-                "url": "https://www.nhb.gov.sg/nationalmuseum/"
+                "title": "National Gallery Singapore",
+                "detail": "实际去了 art gallery。这个安排很好：室内、城市中心、不会被天气影响，也刚好和傍晚海湾路线顺路。",
+                "ticket": "National Gallery 官方信息",
+                "price": "已去过",
+                "url": "https://www.nationalgallery.sg/"
             },
             {
                 "time": "傍晚",
                 "title": "Marina Bay / Merlion Park",
-                "detail": "傍晚从 City Hall、Raffles Place 或 Esplanade 过去都方便。先看鱼尾狮，再沿海湾短走一段；天黑后看 skyline，走累就停。",
+                "detail": "实际去了鱼尾狮。傍晚去是对的：温度没那么狠，海湾夜景也比白天舒服。",
                 "ticket": "公共区域",
                 "price": "Free",
                 "url": "https://www.visitsingapore.com/see-do-singapore/recreation-leisure/viewpoints/merlion-park/"
@@ -556,112 +556,109 @@ SINGAPORE_TOUR_DAYS = {
     },
     "6-6": {
         "date": "6.6",
-        "title": "博物馆和美术馆",
-        "weather": "室内文化日 / 热天友好",
-        "base": "National Gallery, Singapore Art Museum and Civic District",
-        "summary": "把这天留给博物馆、美术馆和咖啡。上午可去 National Gallery Singapore，下午去 Singapore Art Museum；如果前一天错过 National Museum，也可以挪到这天。",
-        "map_title": "Civic District and art museums",
-        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8390%2C1.2760%2C103.8595%2C1.3005&layer=mapnik&marker=1.2907%2C103.8515",
-        "map_link": "https://www.openstreetmap.org/?mlat=1.2907&mlon=103.8515#map=15/1.2907/103.8515",
-        "plans": [
-            {
-                "time": "上午",
-                "title": "National Gallery Singapore",
-                "detail": "从 Hyatt 出发到 Civic District。适合慢慢看建筑、展厅和城市视角；开放时间一般为 10:00-19:00，标准成人票 S$20。",
-                "ticket": "National Gallery 官方订票",
-                "price": "Adult S$20",
-                "url": "https://www.nationalgallery.sg/visit/admissions/"
-            },
-            {
-                "time": "中午",
-                "title": "Civic District 午餐或咖啡",
-                "detail": "不要急着转场。可以在 City Hall、Raffles City、CHIJMES 或 National Gallery 附近吃饭，顺便避开最热的时段。"
-            },
-            {
-                "time": "下午",
-                "title": "Singapore Art Museum",
-                "detail": "如果还想看当代艺术，下午去 SAM。开放时间一般为 10:00-19:00，成人游客票 S$10；如果累了，就只保留一个美术馆。",
-                "ticket": "SAM 官方订票",
-                "price": "Adult tourist S$10",
-                "url": "https://www.singaporeartmuseum.sg/visit"
-            },
-            {
-                "time": "傍晚",
-                "title": "一个本地街区收尾",
-                "detail": "只选一个：Kampong Glam 看街景，Tiong Bahru 更安静，Chinatown 吃东西方便。当天重点是舒服，不是打卡数量。"
-            }
-        ]
-    },
-    "6-7": {
-        "date": "6.7",
-        "title": "Bird Paradise",
-        "weather": "晴天上午户外 / 中午休息",
-        "base": "Bird Paradise, Mandai Wildlife Reserve",
-        "summary": "把裕廊鸟动物园安排成 Bird Paradise（原裕廊鸟园，现在在 Mandai）。最好上午去，天气热时坐园内交通、找室内/遮阴区域休息。",
-        "map_title": "Bird Paradise",
-        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.7820%2C1.3935%2C103.8035%2C1.4108&layer=mapnik&marker=1.4030%2C103.7907",
-        "map_link": "https://www.openstreetmap.org/?mlat=1.4030&mlon=103.7907#map=16/1.4030/103.7907",
-        "plans": [
-            {
-                "time": "上午",
-                "title": "Bird Paradise 入园",
-                "detail": "从 Grand Hyatt 出发去 Mandai，尽量上午到。Bird Paradise 是原裕廊鸟园的新园区，户外多，晴天上午最舒服。"
-            },
-            {
-                "time": "中午",
-                "title": "园内慢慢看，不赶场",
-                "detail": "看鸟舍、表演和步道，中午热的时候多用 tram / shuttle，找餐厅或遮阴处休息。官方非居民成人票 S$49，儿童 S$34。",
-                "ticket": "Bird Paradise 官方订票",
-                "price": "Adult S$49 / Child S$34",
-                "url": "https://www.mandai.com/en/tickets-and-passes/single-attractions/bird-paradise.html"
-            },
-            {
-                "time": "下午",
-                "title": "回市区休息",
-                "detail": "Bird Paradise 不要排到太晚。下午回酒店或 Orchard 附近休息，晚上再轻松吃饭。"
-            },
-            {
-                "time": "雨天备选",
-                "title": "改成室内日",
-                "detail": "如果上午大雨，就不要硬去动物园；改成 National Gallery、ArtScience Museum 或商场，Bird Paradise 可视体力挪到另一个晴天上午。"
-            }
-        ]
-    },
-    "6-8": {
-        "date": "6.8",
-        "title": "Gardens by the Bay",
-        "weather": "花园 / 6.8 更合适",
-        "base": "Gardens by the Bay and Marina Bay",
-        "summary": "把 Gardens by the Bay 放到 6.8：Floral Fantasy 6.1-6.7 关闭，6.8 再去更合适。上午或傍晚看户外，中午进冷室。",
-        "map_title": "Gardens by the Bay and Marina Bay",
+        "title": "酒店泳池和 Gardens 夜景",
+        "weather": "上午放松 / 下午花园 / 晚上灯光秀",
+        "base": "Grand Hyatt and Gardens by the Bay",
+        "summary": "明天上午就在酒店游泳放松，不赶路。下午去 Gardens by the Bay，慢慢待到晚上看 Supertree Grove 的 Garden Rhapsody 灯光秀。",
+        "map_title": "Gardens by the Bay and Supertree Grove",
         "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8493%2C1.2738%2C103.8738%2C1.2928&layer=mapnik&marker=1.2816%2C103.8636",
         "map_link": "https://www.openstreetmap.org/?mlat=1.2816&mlon=103.8636#map=15/1.2816/103.8636",
         "plans": [
             {
-                "time": "上午或傍晚",
-                "title": "Gardens by the Bay 户外区",
-                "detail": "先走 Supertree Grove 和户外花园，免费区域就够好看。太阳强就把户外挪到傍晚。"
+                "time": "上午",
+                "title": "Grand Hyatt 泳池和休息",
+                "detail": "上午不出远门。游泳、慢慢吃早午饭、回房间休息，把体力留给下午和晚上。"
             },
             {
-                "time": "中午室内",
-                "title": "Cloud Forest / Flower Dome / Floral Fantasy",
-                "detail": "热的时候进冷室最舒服。Floral Fantasy 6.1-6.7 关闭，6.8 开始再安排。官方价格按组合不同变化，建议出发前看官网。",
+                "time": "中午",
+                "title": "不要太早去花园",
+                "detail": "中午最热，不建议在户外硬走。可以在酒店或商场吃饭，下午晚一点再出发去 Gardens by the Bay。"
+            },
+            {
+                "time": "下午",
+                "title": "Gardens by the Bay",
+                "detail": "先走 Supertree Grove 和户外花园，累了就进冷气区域休息。Floral Fantasy 6.1-6.7 关闭，所以这天不要把它当重点。",
                 "ticket": "Gardens 官方订票",
                 "price": "按场馆组合为准",
                 "url": "https://www.gardensbythebay.com.sg/en/tickets-and-promotions/tickets.html"
             },
             {
-                "time": "下午雨天备选",
-                "title": "ArtScience Museum",
-                "detail": "如果下雨、太热或 haze，就把 Marina Bay 户外减少，改去 ArtScience。官方票务按展览变化。",
-                "ticket": "ArtScience 官方订票",
-                "price": "按展览为准",
-                "url": "https://www.marinabaysands.com/museum/ticket/search.html"
+                "time": "晚上",
+                "title": "Supertree Grove / Garden Rhapsody",
+                "detail": "傍晚留在 Supertree Grove 附近，等晚上看树的灯光秀。官方常见场次为 7:45pm 和 8:45pm，提前一点到场比较从容。",
+                "ticket": "Garden Rhapsody 官方信息",
+                "price": "Free",
+                "url": "https://www.gardensbythebay.com.sg/en/things-to-do/calendar-of-events/garden-rhapsody.html"
+            }
+        ]
+    },
+    "6-7": {
+        "date": "6.7",
+        "title": "待定：牛车水和本地吃饭",
+        "weather": "灵活日 / 街区和室内穿插",
+        "base": "Chinatown, Maxwell and Civic District",
+        "summary": "7 号和 8 号先保持待定，但这两天里安排一次牛车水。牛车水适合下午或傍晚去，顺便吃 Maxwell、逛街区、看庙和小店。",
+        "map_title": "Chinatown and Maxwell",
+        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8365%2C1.2750%2C103.8518%2C1.2868&layer=mapnik&marker=1.2834%2C103.8443",
+        "map_link": "https://www.openstreetmap.org/?mlat=1.2834&mlon=103.8443#map=16/1.2834/103.8443",
+        "plans": [
+            {
+                "time": "上午",
+                "title": "待定，不赶早",
+                "detail": "前一天 Gardens 会待到晚上，所以这天上午不要急。睡够、吃早午饭，再看天气和体力决定。"
             },
             {
-                "time": "傍晚",
-                "title": "Marina Bay 夜景",
-                "detail": "天气和能见度可以的话，傍晚走 Marina Bay；如果状态不好，就改成室内晚餐。"
+                "time": "下午",
+                "title": "Chinatown / 牛车水",
+                "detail": "从 Grand Hyatt 过去不远。可以看 Buddha Tooth Relic Temple 外观、逛 Pagoda Street / Smith Street，热的时候进店或咖啡馆。"
+            },
+            {
+                "time": "吃饭",
+                "title": "Maxwell Food Centre",
+                "detail": "牛车水附近吃饭方便，可以去 Maxwell。不要为了排某一家排太久，看到舒服的就吃。"
+            },
+            {
+                "time": "备选",
+                "title": "National Museum 或商场休息",
+                "detail": "如果天气不好或不想街区暴走，就把 National Museum 补上，或者回 Orchard 附近休息。"
+            }
+        ]
+    },
+    "6-8": {
+        "date": "6.8",
+        "title": "待定：Bird Paradise 或补漏",
+        "weather": "看天气和体力",
+        "base": "Bird Paradise, National Museum or relaxed city time",
+        "summary": "8 号先不锁死。状态好、天气合适就去 Bird Paradise；如果想留在市区，就补 National Museum、牛车水没去成的部分，或者单纯休息。",
+        "map_title": "Bird Paradise or city backup",
+        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.7820%2C1.3935%2C103.8035%2C1.4108&layer=mapnik&marker=1.4030%2C103.7907",
+        "map_link": "https://www.openstreetmap.org/?mlat=1.4030&mlon=103.7907#map=16/1.4030/103.7907",
+        "plans": [
+            {
+                "time": "方案 A",
+                "title": "Bird Paradise",
+                "detail": "如果天气好、也想去鸟园，就上午出发去 Mandai。户外多，尽量不要中午才到。",
+                "ticket": "Bird Paradise 官方订票",
+                "price": "Adult S$49 / Child S$34",
+                "url": "https://www.mandai.com/en/tickets-and-passes/single-attractions/bird-paradise.html"
+            },
+            {
+                "time": "方案 B",
+                "title": "National Museum of Singapore",
+                "detail": "如果不想跑远，就补 National Museum。室内、位置方便，适合热天或雨天。",
+                "ticket": "National Museum 官方信息",
+                "price": "Adult tourist S$20",
+                "url": "https://www.nhb.gov.sg/nationalmuseum/"
+            },
+            {
+                "time": "方案 C",
+                "title": "牛车水补漏",
+                "detail": "如果 6.7 没去牛车水，就把 Chinatown 放到这天。只走一个街区，不要为了补计划把自己弄累。"
+            },
+            {
+                "time": "晚上",
+                "title": "轻松晚餐",
+                "detail": "8 号晚上不要安排太满，给 6.9 离开日留余地。"
             }
         ]
     },
