@@ -480,10 +480,10 @@ SINGAPORE_TOUR_DAYS = {
     },
     "6-4": {
         "date": "6.4",
-        "title": "Sentosa 轻松完整日",
+        "title": "Sentosa 收尾，晚上到 Hyatt",
         "weather": "晴热 / 室内备选",
-        "base": "S.E.A. Aquarium and Resorts World Sentosa",
-        "summary": "继续从酒店早餐开始。中午可选水族馆、商店或酒店休息；如果体力好，再去 Universal Studios 附近走走。",
+        "base": "Sentosa and Grand Hyatt",
+        "summary": "白天还是 Sentosa 慢慢收尾，中午可选水族馆、商店或酒店休息；晚上已经搬到 Grand Hyatt，后面几天从主岛出发。",
         "map_title": "Resorts World Sentosa",
         "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8145%2C1.2480%2C103.8345%2C1.2635&layer=mapnik&marker=1.2586%2C103.8206",
         "map_link": "https://www.openstreetmap.org/?mlat=1.2586&mlon=103.8206#map=16/1.2586/103.8206",
@@ -511,67 +511,84 @@ SINGAPORE_TOUR_DAYS = {
             },
             {
                 "time": "傍晚",
-                "title": "回酒店或海边收尾",
-                "detail": "如果中午进了室内项目，傍晚只安排轻松散步或回酒店休息。"
+                "title": "Sentosa 收尾，晚上去 Grand Hyatt",
+                "detail": "如果中午进了室内项目，傍晚只安排轻松散步或回酒店收拾。晚上搬到 Grand Hyatt 后就不要再加行程。"
             }
         ]
     },
     "6-5": {
         "date": "6.5",
-        "title": "搬到主岛",
-        "weather": "换酒店 / 室内优先",
-        "base": "Grand Hyatt and Orchard Road",
-        "summary": "早上吃最后一顿 Sentosa 早餐，然后换到 Grand Hyatt。下午以 Orchard Road、商场、咖啡店为主，晚上再找一顿本地 hawker food。",
-        "map_title": "Grand Hyatt Singapore and Orchard Road",
-        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8235%2C1.2970%2C103.8422%2C1.3145&layer=mapnik&marker=1.3066%2C103.8326",
-        "map_link": "https://www.openstreetmap.org/?mlat=1.3066&mlon=103.8326#map=16/1.3066/103.8326",
+        "title": "Hyatt 出发，傍晚鱼尾狮",
+        "weather": "室内下午 / 傍晚海湾",
+        "base": "Grand Hyatt, National Museum and Merlion Park",
+        "summary": "已经住在 Grand Hyatt，白天不要赶。下午可去 National Museum of Singapore，傍晚去 Marina Bay 和 Merlion Park 看鱼尾狮、海湾和夜景。",
+        "map_title": "National Museum and Merlion Park",
+        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8280%2C1.2780%2C103.8625%2C1.3105&layer=mapnik&marker=1.2868%2C103.8545",
+        "map_link": "https://www.openstreetmap.org/?mlat=1.2868&mlon=103.8545#map=15/1.2868/103.8545",
         "plans": [
             {
                 "time": "上午",
-                "title": "Sentosa 退房，转去 Grand Hyatt",
-                "detail": "吃完最后一顿 Sentosa 早餐再走。不要赶早，换酒店当天最容易累，先把行李和入住处理好。"
+                "title": "Grand Hyatt 慢慢开始",
+                "detail": "上午不硬排。可以在 Orchard 附近吃早午饭、补休息，或者只处理一些轻松的小事。"
             },
             {
                 "time": "下午",
-                "title": "Orchard Road 室内路线",
-                "detail": "从 Grand Hyatt 出发，轻松逛 ION Orchard、Takashimaya 或附近咖啡店。热或下雨都不影响。"
+                "title": "National Museum of Singapore",
+                "detail": "适合热天或阵雨的室内安排。开放时间一般为 10:00-19:00，成人游客票 S$20；如果体力一般，控制在 1.5-2 小时就好。",
+                "ticket": "National Museum 官方信息",
+                "price": "Adult tourist S$20",
+                "url": "https://www.nhb.gov.sg/nationalmuseum/"
             },
             {
                 "time": "傍晚",
-                "title": "Newton Food Centre 或酒店附近晚餐",
-                "detail": "如果体力还可以，去 Newton Food Centre；如果累，就在酒店附近解决。当天不需要门票。"
+                "title": "Marina Bay / Merlion Park",
+                "detail": "傍晚从 City Hall、Raffles Place 或 Esplanade 过去都方便。先看鱼尾狮，再沿海湾短走一段；天黑后看 skyline，走累就停。",
+                "ticket": "公共区域",
+                "price": "Free",
+                "url": "https://www.visitsingapore.com/see-do-singapore/recreation-leisure/viewpoints/merlion-park/"
+            },
+            {
+                "time": "晚餐",
+                "title": "海湾附近简单吃",
+                "detail": "不想绕路就选 Makansutra Gluttons Bay、Suntec 或 Marina Square；想吃 hawker 氛围再去 Lau Pa Sat。"
             }
         ]
     },
     "6-6": {
         "date": "6.6",
-        "title": "鱼尾狮和本地街区",
-        "weather": "晴天上午优先 / 下午可躲雨",
-        "base": "Merlion Park, Chinatown and central neighbourhoods",
-        "summary": "如果早上天气晴，先去 Merlion Park 和 Marina Bay，看完就离开最晒的水边。午后再选 Chinatown、Kampong Glam 或 Tiong Bahru，不硬跑太多地方。",
-        "map_title": "Merlion Park and central neighbourhoods",
-        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8425%2C1.2772%2C103.8648%2C1.2934&layer=mapnik&marker=1.2868%2C103.8545",
-        "map_link": "https://www.openstreetmap.org/?mlat=1.2868&mlon=103.8545#map=16/1.2868/103.8545",
+        "title": "博物馆和美术馆",
+        "weather": "室内文化日 / 热天友好",
+        "base": "National Gallery, Singapore Art Museum and Civic District",
+        "summary": "把这天留给博物馆、美术馆和咖啡。上午可去 National Gallery Singapore，下午去 Singapore Art Museum；如果前一天错过 National Museum，也可以挪到这天。",
+        "map_title": "Civic District and art museums",
+        "map_src": "https://www.openstreetmap.org/export/embed.html?bbox=103.8390%2C1.2760%2C103.8595%2C1.3005&layer=mapnik&marker=1.2907%2C103.8515",
+        "map_link": "https://www.openstreetmap.org/?mlat=1.2907&mlon=103.8515#map=15/1.2907/103.8515",
         "plans": [
             {
-                "time": "晴天早上",
-                "title": "Merlion Park / Marina Bay",
-                "detail": "如果天气晴，尽量上午去鱼尾狮，光线舒服、人也相对少。拍完沿 Marina Bay 短走一段就好，不要在水边硬晒太久。"
+                "time": "上午",
+                "title": "National Gallery Singapore",
+                "detail": "从 Hyatt 出发到 Civic District。适合慢慢看建筑、展厅和城市视角；开放时间一般为 10:00-19:00，标准成人票 S$20。",
+                "ticket": "National Gallery 官方订票",
+                "price": "Adult S$20",
+                "url": "https://www.nationalgallery.sg/visit/admissions/"
             },
             {
                 "time": "中午",
-                "title": "Chinatown / Maxwell Food Centre",
-                "detail": "热起来后转去 Chinatown 或 Maxwell，吃 chicken rice、kopi 或 kaya toast。尽量把户外走路压短。"
+                "title": "Civic District 午餐或咖啡",
+                "detail": "不要急着转场。可以在 City Hall、Raffles City、CHIJMES 或 National Gallery 附近吃饭，顺便避开最热的时段。"
             },
             {
                 "time": "下午",
-                "title": "Kampong Glam 或 Tiong Bahru",
-                "detail": "只选一个街区慢慢走。Kampong Glam 适合街景和咖啡；Tiong Bahru 更安静，适合轻松收尾。"
+                "title": "Singapore Art Museum",
+                "detail": "如果还想看当代艺术，下午去 SAM。开放时间一般为 10:00-19:00，成人游客票 S$10；如果累了，就只保留一个美术馆。",
+                "ticket": "SAM 官方订票",
+                "price": "Adult tourist S$10",
+                "url": "https://www.singaporeartmuseum.sg/visit"
             },
             {
-                "time": "雨天/高温备选",
-                "title": "National Gallery 或 Asian Civilisations Museum",
-                "detail": "如果早上不晴或下午太热，就把鱼尾狮留给另一个晴天上午，改去室内博物馆。门票和展览按当天官网为准。"
+                "time": "傍晚",
+                "title": "一个本地街区收尾",
+                "detail": "只选一个：Kampong Glam 看街景，Tiong Bahru 更安静，Chinatown 吃东西方便。当天重点是舒服，不是打卡数量。"
             }
         ]
     },
