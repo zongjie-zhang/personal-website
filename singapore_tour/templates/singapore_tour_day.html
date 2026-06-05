@@ -210,8 +210,7 @@
             margin: 0 0 12px;
         }
 
-        .map-quick button,
-        .map-result-button {
+        .map-quick button {
             border: 1px solid var(--line);
             border-radius: 0;
             background: transparent;
@@ -224,31 +223,6 @@
             padding: 7px 10px;
             color: var(--muted);
             font-size: 13px;
-        }
-
-        .map-results {
-            display: grid;
-            gap: 7px;
-            width: min(760px, 100%);
-            margin: 0 0 14px;
-        }
-
-        .map-result-button {
-            display: grid;
-            gap: 3px;
-            padding: 10px 12px;
-            text-align: left;
-        }
-
-        .map-result-name {
-            font-size: 14px;
-            line-height: 1.35;
-        }
-
-        .map-result-type {
-            color: var(--muted);
-            font-size: 12px;
-            line-height: 1.35;
         }
 
         .map-frame {
@@ -480,7 +454,6 @@
                     <button type="button" data-map-query="Gardens by the Bay Singapore">Gardens</button>
                     <button type="button" data-map-query="Bird Paradise Singapore">Bird Paradise</button>
                 </div>
-                <div class="map-results" id="mapResults" hidden></div>
 
                 <div class="map-frame locked" id="mapFrame">
                     <iframe
@@ -534,7 +507,6 @@
         const mapSearchInput = document.getElementById("mapSearchInput");
         const mapSearchButton = document.getElementById("mapSearchButton");
         const mapSearchStatus = document.getElementById("mapSearchStatus");
-        const mapResults = document.getElementById("mapResults");
         const mapQuickButtons = document.querySelectorAll("[data-map-query]");
 
         function setMapLocked(locked) {
@@ -633,42 +605,18 @@
             openMapLink.href = mapViewUrl(lat, lon);
             mapSearchInput.value = shortPlaceName(result).split(",")[0];
             mapSearchStatus.textContent = shortPlaceName(result);
-            mapResults.hidden = true;
-            mapResults.innerHTML = "";
             setMapLocked(true);
-        }
-
-        function renderMapResults(results) {
-            mapResults.innerHTML = "";
-            mapResults.hidden = !results.length;
-
-            results.forEach((result) => {
-                const button = document.createElement("button");
-                button.type = "button";
-                button.className = "map-result-button";
-                const name = document.createElement("span");
-                const type = document.createElement("span");
-                name.className = "map-result-name";
-                type.className = "map-result-type";
-                name.textContent = shortPlaceName(result);
-                type.textContent = placeType(result) || "Search result";
-                button.append(name, type);
-                button.addEventListener("click", () => applyMapResult(result));
-                mapResults.appendChild(button);
-            });
         }
 
         async function searchMapPlace(rawQuery) {
             if (!rawQuery) {
                 mapSearchStatus.textContent = "输入一个地点，比如 Merlion Park、鱼尾狮或 Singapore Art Museum。";
-                mapResults.hidden = true;
                 return;
             }
 
             const query = normalizeMapQuery(rawQuery);
             mapSearchButton.disabled = true;
             mapSearchStatus.textContent = "Searching...";
-            mapResults.hidden = true;
 
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=sg&q=${encodeURIComponent(query)}`, {
@@ -686,10 +634,6 @@
                 }
 
                 applyMapResult(results[0]);
-                if (results.length > 1) {
-                    mapSearchStatus.textContent = `已定位到最可能结果，也可以从下面 ${results.length} 个候选里换一个。`;
-                    renderMapResults(results);
-                }
             } catch (error) {
                 mapSearchStatus.textContent = "搜索暂时失败，等网络好一点再试。";
             } finally {
