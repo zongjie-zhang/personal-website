@@ -552,7 +552,7 @@
                     mapIframe.src = mapEmbedUrl(lat, lon);
                     openMapLink.href = mapViewUrl(lat, lon);
                     mapSearchStatus.textContent = result.display_name.split(",").slice(0, 3).join(", ");
-                    setMapLocked(false);
+                    setMapLocked(true);
                 } catch (error) {
                     mapSearchStatus.textContent = "搜索暂时失败，等网络好一点再试。";
                 } finally {
