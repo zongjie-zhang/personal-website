@@ -100,7 +100,7 @@ STOP_DETAILS = {
             "price": "¥4110 / 3晚",
             "per_person": "约 ¥2055 / person",
             "note": "银座/东京市区住宿基底，适合抵达后先把节奏放稳。",
-            "images": ["image/hotels/tokyo-grand-bach.png"]
+            "images": ["image/hotels/tokyo-grand-bach-official.jpg"]
         },
         "days": [
             {"date": "7.20", "title": "Arrive in Tokyo / 抵达东京", "segments": [
@@ -140,7 +140,7 @@ STOP_DETAILS = {
             "price": "¥4104 / 2晚",
             "per_person": "约 ¥2052 / person",
             "note": "札幌市区温泉旅馆感，适合北海道第一站放松。",
-            "images": ["image/hotels/sapporo-yuen.png"]
+            "images": ["image/hotels/sapporo-yuen-official.jpg"]
         },
         "days": [
             {"date": "7.23", "title": "Arrive in Sapporo / 抵达札幌", "segments": [
@@ -174,7 +174,7 @@ STOP_DETAILS = {
             "price": "¥2801 / 2晚",
             "per_person": "约 ¥1400.5 / person",
             "note": "洞爷湖住宿改为 Toya Center Village，预算更轻，仍以湖区慢节奏为主。",
-            "images": ["image/hotels/lake-toya-kohantei.png"]
+            "images": ["image/hotels/lake-toya-center-village-official.jpg"]
         },
         "days": [
             {"date": "7.25", "title": "Sapporo to Lake Toya / 札幌到洞爷湖", "segments": [
@@ -208,7 +208,7 @@ STOP_DETAILS = {
             "price": "¥3747 / 2晚",
             "per_person": "约 ¥1873.5 / person",
             "note": "富良野住宿基地，适合薰衣草、美瑛和北海道田园风景。",
-            "images": ["image/hotels/furano-nozo.png"]
+            "images": ["image/hotels/furano-nozo-official.jpg"]
         },
         "days": [
             {"date": "7.27", "title": "Arrive in Furano / 抵达富良野", "segments": [
@@ -242,7 +242,7 @@ STOP_DETAILS = {
             "price": "¥1314 / 3晚",
             "per_person": "约 ¥657 / person",
             "note": "大阪住三晚，用作大阪、奈良、神户三地的关西基地。",
-            "images": ["image/hotels/osaka-sugata.png"]
+            "images": ["image/hotels/osaka-sugata-official.jpg"]
         },
         "days": [
             {"date": "7.29", "title": "Arrive in Osaka / 抵达大阪", "segments": [
@@ -316,7 +316,7 @@ STOP_DETAILS = {
             "price": "¥415 / 1晚",
             "per_person": "约 ¥207.5 / person",
             "note": "回国前机场夜，重点是接驳方便和睡眠稳定。",
-            "images": ["image/hotels/narita-tobu.png"]
+            "images": ["image/hotels/narita-tobu-official.jpg"]
         },
         "days": [
             {"date": "8.3", "title": "Kyoto to Narita / 京都到成田", "segments": [
