@@ -171,7 +171,7 @@
             display: grid;
             grid-template-columns: 94px minmax(0, 1fr);
             gap: 18px;
-            padding: 22px;
+            padding: 24px;
         }
 
         .date-pill {
@@ -200,6 +200,30 @@
             margin: 0;
             color: var(--muted);
             line-height: 1.58;
+        }
+
+        .day-segments {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .day-segment {
+            display: grid;
+            grid-template-columns: 78px minmax(0, 1fr);
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid rgba(216, 209, 196, 0.68);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.56);
+        }
+
+        .segment-label {
+            color: var(--rose);
+            font-size: 12px;
+            font-weight: 760;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         .hotel-card {
@@ -359,6 +383,11 @@
                 grid-template-columns: 1fr;
             }
 
+            .day-segment {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+
             .date-pill {
                 width: fit-content;
                 min-width: 88px;
@@ -408,7 +437,20 @@
                                 <div class="date-pill">{{ day.date }}</div>
                                 <div>
                                     <h3>{{ day.title }}</h3>
-                                    <p>{{ day.plan }}</p>
+                                    {% if day.segments %}
+                                        <div class="day-segments">
+                                            {% for segment in day.segments %}
+                                                <div class="day-segment">
+                                                    <span class="segment-label">
+                                                        {% if segment.label == 'Morning' %}上午{% elif segment.label == 'Afternoon' %}下午{% elif segment.label == 'Evening' %}晚上{% else %}{{ segment.label }}{% endif %}
+                                                    </span>
+                                                    <p>{{ segment.text }}</p>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p>{{ day.plan }}</p>
+                                    {% endif %}
                                 </div>
                             </article>
                         {% endfor %}
