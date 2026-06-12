@@ -230,9 +230,13 @@
             overflow: hidden;
         }
 
+        .side-stack {
+            display: grid;
+            gap: 18px;
+            align-content: start;
+        }
+
         .map-card {
-            grid-column: 2;
-            margin-top: 18px;
             overflow: hidden;
         }
 
@@ -360,10 +364,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .map-card {
-                grid-column: auto;
-            }
-
             h2 {
                 font-size: 31px;
             }
@@ -457,39 +457,41 @@
                     </div>
                 </div>
 
-                <aside class="hotel-card card">
-                    {% for image in detail.hotel.images %}
-                        <img class="hotel-image" src="{{ url_for('japan_tour_static', filename=image) }}" alt="{{ detail.hotel.name }}">
-                    {% endfor %}
-                    <div class="hotel-body">
-                        <p class="eyebrow">Hotel / 酒店</p>
-                        <h3>{{ detail.hotel.name }}</h3>
-                        <p>{{ detail.hotel.note }}</p>
-                        <div class="price-row">
-                            <div class="price-box">
-                                <p class="price-label">Total</p>
-                                <p class="price-value">{{ detail.hotel.price }}</p>
-                            </div>
-                            <div class="price-box">
-                                <p class="price-label">Per Person</p>
-                                <p class="price-value">{{ detail.hotel.per_person }}</p>
+                <div class="side-stack">
+                    <aside class="hotel-card card">
+                        {% for image in detail.hotel.images %}
+                            <img class="hotel-image" src="{{ url_for('japan_tour_static', filename=image) }}" alt="{{ detail.hotel.name }}">
+                        {% endfor %}
+                        <div class="hotel-body">
+                            <p class="eyebrow">Hotel / 酒店</p>
+                            <h3>{{ detail.hotel.name }}</h3>
+                            <p>{{ detail.hotel.note }}</p>
+                            <div class="price-row">
+                                <div class="price-box">
+                                    <p class="price-label">Total</p>
+                                    <p class="price-value">{{ detail.hotel.price }}</p>
+                                </div>
+                                <div class="price-box">
+                                    <p class="price-label">Per Person</p>
+                                    <p class="price-value">{{ detail.hotel.per_person }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </aside>
+                    </aside>
 
-                <aside class="map-card card">
-                    <iframe
-                        class="map-frame"
-                        title="{{ stop.city }} map"
-                        src="{{ detail.map }}"
-                        loading="lazy"
-                    ></iframe>
-                    <div class="map-body">
-                        <span>Stay area map / 住宿与游玩区域地图</span>
-                        <a href="{{ detail.map_link }}" target="_blank" rel="noreferrer">Open map</a>
-                    </div>
-                </aside>
+                    <aside class="map-card card">
+                        <iframe
+                            class="map-frame"
+                            title="{{ stop.city }} map"
+                            src="{{ detail.map }}"
+                            loading="lazy"
+                        ></iframe>
+                        <div class="map-body">
+                            <span>Stay area map / 住宿与游玩区域地图</span>
+                            <a href="{{ detail.map_link }}" target="_blank" rel="noreferrer">Open map</a>
+                        </div>
+                    </aside>
+                </div>
             </div>
         </section>
 
