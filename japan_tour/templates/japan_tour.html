@@ -293,16 +293,6 @@
             font-weight: 650;
         }
 
-        .stop-action {
-            display: inline-block;
-            margin-top: 10px;
-            color: var(--rose);
-            font-size: 13px;
-            font-weight: 680;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-
         .rail-card {
             display: grid;
             grid-template-columns: minmax(0, 0.86fr) minmax(260px, 1fr);
@@ -659,7 +649,6 @@
                             <p class="stop-note">
                                 <strong>{{ stop.note_zh }}</strong>
                                 {{ stop.note }}
-                                <span class="stop-action">View details / 查看每日安排</span>
                             </p>
                         </a>
                     {% endfor %}
