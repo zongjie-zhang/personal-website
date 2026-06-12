@@ -198,6 +198,18 @@
             border-radius: 8px;
             background: var(--card);
             box-shadow: var(--shadow);
+            transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+        }
+
+        .stop:hover {
+            border-color: rgba(184, 101, 117, 0.42);
+            box-shadow: 0 24px 58px rgba(67, 61, 72, 0.16);
+            transform: translateY(-2px);
+        }
+
+        .stop:focus-visible {
+            outline: 3px solid rgba(184, 101, 117, 0.32);
+            outline-offset: 3px;
         }
 
         .stop::before {
@@ -279,6 +291,16 @@
             margin-bottom: 4px;
             color: var(--ink);
             font-weight: 650;
+        }
+
+        .stop-action {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--rose);
+            font-size: 13px;
+            font-weight: 680;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
         }
 
         .rail-card {
@@ -625,7 +647,7 @@
                 </p>
                 <div class="timeline" aria-label="Japan trip timeline">
                     {% for stop in stops %}
-                        <article class="stop">
+                        <a class="stop" href="{{ url_for('japan_tour_stop', stop=stop.slug) }}" aria-label="Open {{ stop.city }} details">
                             <div class="stop-number">
                                 <span class="stop-index">Stop {{ loop.index }}</span>
                                 <span class="stop-nights">{{ stop.nights }} · {{ stop.nights_zh }}</span>
@@ -637,8 +659,9 @@
                             <p class="stop-note">
                                 <strong>{{ stop.note_zh }}</strong>
                                 {{ stop.note }}
+                                <span class="stop-action">View details / 查看每日安排</span>
                             </p>
-                        </article>
+                        </a>
                     {% endfor %}
                 </div>
             </div>
