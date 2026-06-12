@@ -20,12 +20,17 @@ app.config["MAX_CONTENT_LENGTH"] = 256 * 1024 * 1024
 app.permanent_session_lifetime = timedelta(days=365)
 
 ADMIN_USER_IDS = {1}
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 SINGAPORE_TOUR_MODULE_DIR = os.path.join(PROJECT_ROOT, "singapore_tour")
 if SINGAPORE_TOUR_MODULE_DIR not in sys.path:
     sys.path.insert(0, SINGAPORE_TOUR_MODULE_DIR)
 
+JAPAN_TOUR_MODULE_DIR = os.path.join(PROJECT_ROOT, "japan_tour")
+if JAPAN_TOUR_MODULE_DIR not in sys.path:
+    sys.path.insert(0, JAPAN_TOUR_MODULE_DIR)
+
 from singapore_tour import register_singapore_tour
+from japan_tour import register_japan_tour
 
 
 def normalize_url_prefix(prefix):
@@ -741,6 +746,7 @@ def projects():
 
 
 register_singapore_tour(app)
+register_japan_tour(app)
 
 
 @app.route("/game")

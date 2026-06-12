@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan Trip 2026</title>
+
+    <style>
+        :root {
+            --ink: #20202a;
+            --muted: #676775;
+            --line: #ddd5cc;
+            --paper: #fbfaf6;
+            --mist: #edf4f6;
+            --sakura: #f7dce5;
+            --lavender: #e8e2f4;
+            --blue: #355f82;
+            --rose: #b86575;
+            --gold: #b58a46;
+            --card: rgba(255, 255, 255, 0.78);
+            --shadow: 0 18px 48px rgba(67, 61, 72, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 12% 0%, rgba(247, 220, 229, 0.9), transparent 32%),
+                radial-gradient(circle at 82% 7%, rgba(232, 226, 244, 0.78), transparent 30%),
+                linear-gradient(180deg, #fbfaf6 0%, #f4f7f7 46%, #fbfaf6 100%);
+            -webkit-text-size-adjust: 100%;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 88vh;
+            padding: 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            background: #24344a;
+            color: white;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(25, 31, 45, 0.76), rgba(25, 31, 45, 0.36) 48%, rgba(25, 31, 45, 0.06)),
+                linear-gradient(0deg, rgba(20, 23, 30, 0.42), transparent 46%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 30%;
+            z-index: 1;
+            background: linear-gradient(0deg, rgba(25, 31, 45, 0.52), transparent);
+            pointer-events: none;
+        }
+
+        .hero-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .hero > *:not(.hero-image) {
+            position: relative;
+            z-index: 2;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            font-size: 14px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .back-link {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.72);
+            padding-bottom: 4px;
+        }
+
+        .hero-copy {
+            width: min(760px, 100%);
+            padding-bottom: 34px;
+        }
+
+        .eyebrow {
+            margin: 0 0 18px;
+            font-size: 14px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(54px, 8vw, 116px);
+            line-height: 0.92;
+            letter-spacing: 0;
+        }
+
+        .hero-text {
+            width: min(620px, 100%);
+            margin: 26px 0 0;
+            font-size: 19px;
+            line-height: 1.55;
+        }
+
+        .zh-line {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.92em;
+            line-height: 1.55;
+        }
+
+        .hero-route {
+            width: min(680px, 100%);
+            margin: 16px 0 0;
+            color: rgba(255, 255, 255, 0.84);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .section {
+            padding: 72px 34px;
+        }
+
+        .section-inner {
+            width: min(1120px, 100%);
+            margin: 0 auto;
+        }
+
+        .section-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(220px, 0.45fr);
+            gap: 32px;
+            align-items: end;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 38px;
+            letter-spacing: 0;
+        }
+
+        .lead {
+            margin: 16px 0 0;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.68;
+        }
+
+        .route-band {
+            background: rgba(237, 244, 246, 0.78);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 34px;
+        }
+
+        .stop {
+            position: relative;
+            display: grid;
+            grid-template-columns: 120px minmax(150px, 0.32fr) minmax(0, 1fr);
+            gap: 24px;
+            align-items: center;
+            min-height: 0;
+            padding: 22px 24px;
+            border: 1px solid rgba(216, 209, 196, 0.86);
+            border-radius: 8px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+
+        .stop::before {
+            content: "";
+            position: absolute;
+            left: 83px;
+            top: -17px;
+            bottom: -17px;
+            width: 1px;
+            background: rgba(184, 101, 117, 0.24);
+        }
+
+        .stop:first-child::before {
+            top: 50%;
+        }
+
+        .stop:last-child::before {
+            bottom: 50%;
+        }
+
+        .stop-number {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            width: 118px;
+            min-height: 86px;
+            border: 1px solid rgba(184, 101, 117, 0.22);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.86);
+            color: var(--rose);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .stop-index {
+            font-weight: 720;
+        }
+
+        .stop-nights {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-align: center;
+        }
+
+        .stop h3 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            letter-spacing: 0;
+        }
+
+        .stop-city-zh {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 16px;
+            font-weight: 520;
+        }
+
+        .stop-dates {
+            margin: 0;
+            color: var(--blue);
+            font-weight: 650;
+        }
+
+        .stop-note {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .stop-note strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--ink);
+            font-weight: 650;
+        }
+
+        .rail-card {
+            display: grid;
+            grid-template-columns: minmax(0, 0.86fr) minmax(260px, 1fr);
+            gap: 34px;
+            padding: 34px;
+            border: 1px solid rgba(216, 209, 196, 0.92);
+            border-radius: 8px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.64)),
+                linear-gradient(120deg, rgba(232, 226, 244, 0.7), rgba(237, 244, 246, 0.8));
+            box-shadow: var(--shadow);
+        }
+
+        .rail-price {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 10px 13px;
+            border: 1px solid rgba(32, 32, 42, 0.16);
+            border-radius: 999px;
+            color: var(--blue);
+            background: rgba(255, 255, 255, 0.62);
+            font-weight: 650;
+        }
+
+        .rail-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .rail-list li {
+            position: relative;
+            padding: 15px 0 15px 28px;
+            border-bottom: 1px solid rgba(32, 32, 42, 0.12);
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .rail-list li::before {
+            content: "";
+            position: absolute;
+            top: 22px;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            border: 2px solid var(--rose);
+            border-radius: 50%;
+            background: white;
+        }
+
+        .rail-list li:last-child {
+            border-bottom: none;
+        }
+
+        .budget-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 34px;
+        }
+
+        .budget-card,
+        .total-card {
+            min-height: 154px;
+            padding: 24px;
+            border: 1px solid rgba(216, 209, 196, 0.88);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.74);
+            box-shadow: var(--shadow);
+        }
+
+        .budget-card p,
+        .total-card p {
+            margin: 0;
+        }
+
+        .budget-label {
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .budget-value {
+            margin-top: 14px;
+            color: var(--ink);
+            font-size: 34px;
+            font-weight: 720;
+            line-height: 1;
+        }
+
+        .budget-detail {
+            margin-top: 14px;
+            color: var(--muted);
+            line-height: 1.52;
+        }
+
+        .hotel-wrap {
+            margin-top: 34px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.72);
+            box-shadow: var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 18px;
+            border-bottom: 1px solid rgba(216, 209, 196, 0.74);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            color: var(--muted);
+            background: rgba(248, 243, 239, 0.86);
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: var(--ink);
+            line-height: 1.45;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .hotel-note {
+            color: var(--muted);
+        }
+
+        .totals {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .total-card {
+            min-height: 126px;
+        }
+
+        .footer {
+            padding: 36px 34px 48px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        @media (max-width: 860px) {
+            .hero {
+                min-height: 78vh;
+                padding: 24px;
+            }
+
+            .section {
+                padding: 52px 22px;
+            }
+
+            .section-head,
+            .rail-card,
+            .totals {
+                grid-template-columns: 1fr;
+            }
+
+            .budget-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            h2 {
+                font-size: 31px;
+            }
+
+            .stop {
+                grid-template-columns: 96px minmax(0, 1fr);
+                gap: 18px;
+                align-items: start;
+            }
+
+            .stop::before {
+                left: 69px;
+            }
+
+            .stop-number {
+                width: 94px;
+                min-height: 78px;
+            }
+
+            .stop-copy {
+                grid-column: 2;
+            }
+
+            .stop-note {
+                grid-column: 2;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .topbar {
+                font-size: 12px;
+                align-items: flex-start;
+            }
+
+            h1 {
+                font-size: 56px;
+            }
+
+            .hero-text {
+                font-size: 17px;
+            }
+
+            .stop {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 20px;
+            }
+
+            .stop::before {
+                display: none;
+            }
+
+            .stop-number {
+                width: 100%;
+                min-height: 0;
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 12px 14px;
+            }
+
+            .stop-copy,
+            .stop-note {
+                grid-column: auto;
+            }
+
+            .budget-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hotel-wrap {
+                border: none;
+                background: transparent;
+                box-shadow: none;
+            }
+
+            table,
+            tbody,
+            tr,
+            td {
+                display: block;
+                width: 100%;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tr {
+                margin-bottom: 12px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.78);
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+
+            td {
+                display: grid;
+                grid-template-columns: 82px minmax(0, 1fr);
+                gap: 12px;
+                padding: 14px 16px;
+            }
+
+            td::before {
+                content: attr(data-label);
+                color: var(--muted);
+                font-size: 12px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .footer {
+                padding: 28px 22px 38px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="hero">
+        <img
+            class="hero-image"
+            src="{{ url_for('japan_tour_static', filename='image/kiyomizu-pagoda-hero.png') }}"
+            alt="Kiyomizu-dera pagoda in Kyoto"
+        >
+        <nav class="topbar" aria-label="Page navigation">
+            <a class="back-link" href="{{ url_for('projects') }}">Projects</a>
+            <span>7.20-8.4</span>
+        </nav>
+
+        <div class="hero-copy">
+            <p class="eyebrow">Tokyo · Hokkaido · Kansai / 东京 · 北海道 · 关西</p>
+            <h1>Japan Trip 2026</h1>
+            <p class="hero-text">
+                A summer route from Tokyo to Hokkaido, then Kansai.
+                <span class="zh-line">从东京到北海道，再回到关西的夏季旅行路线。</span>
+            </p>
+            <p class="hero-route">Tokyo · Sapporo · Lake Toya · Furano · Osaka · Kyoto · Narita</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="section">
+            <div class="section-inner section-head">
+                <div>
+                    <h2>Route Notes / 路线手账</h2>
+                    <p class="lead">
+                        Sixteen days built around soft summer pacing: Tokyo first, a rail-pass Hokkaido middle, then Osaka and Kyoto before the Narita airport night.
+                        <span class="zh-line">16天行程，先东京，再用北海道铁路周游券走札幌、洞爷湖、富良野，最后回到大阪和京都。</span>
+                    </p>
+                </div>
+                <p class="lead">
+                    Flights: ¥2723 for Hangzhou-Tokyo round trip, plus ¥986 for Tokyo-Sapporo and Sapporo-Osaka.
+                    <span class="zh-line">机票：杭州往返东京 ¥2723，日本国内段 ¥986。</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="section route-band">
+            <div class="section-inner">
+                <h2>Itinerary Timeline / 行程时间线</h2>
+                <p class="lead">
+                    Each row is a stay base, with dates, nights, and the planning note.
+                    <span class="zh-line">按住宿城市排列，每一站都显示日期、晚数和关键安排。</span>
+                </p>
+                <div class="timeline" aria-label="Japan trip timeline">
+                    {% for stop in stops %}
+                        <article class="stop">
+                            <div class="stop-number">
+                                <span class="stop-index">Stop {{ loop.index }}</span>
+                                <span class="stop-nights">{{ stop.nights }} · {{ stop.nights_zh }}</span>
+                            </div>
+                            <div class="stop-copy">
+                                <h3>{{ stop.city }} <span class="stop-city-zh">{{ stop.city_zh }}</span></h3>
+                                <p class="stop-dates">{{ stop.dates }}</p>
+                            </div>
+                            <p class="stop-note">
+                                <strong>{{ stop.note_zh }}</strong>
+                                {{ stop.note }}
+                            </p>
+                        </article>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-inner">
+                <article class="rail-card">
+                    <div>
+                        <p class="eyebrow">Hokkaido Transit / 北海道交通</p>
+                        <h2>Hokkaido Rail Pass Plan / 北海道铁路周游券</h2>
+                        <p class="lead">
+                            Start using the 5-day Hokkaido Rail Pass on 7.25.
+                            <span class="zh-line">7.25 从札幌去洞爷湖当天开始启用 5 日券。</span>
+                        </p>
+                        <span class="rail-price">5-day pass · ¥930</span>
+                    </div>
+                    <ul class="rail-list">
+                        <li>Sapporo -> Toya Station / 札幌 -> 洞爷站</li>
+                        <li>Toya / Sapporo / Asahikawa / Furano area / 洞爷、札幌、旭川、富良野区域</li>
+                        <li>Furano -> New Chitose Airport / 富良野 -> 新千岁机场</li>
+                        <li>Bus from Toya Station to Lake Toya Onsen is not included. / 洞爷站到洞爷湖温泉巴士另付。</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section class="section route-band">
+            <div class="section-inner">
+                <div class="section-head">
+                    <div>
+                        <h2>Hotel Budget / 酒店预算</h2>
+                        <p class="lead">
+                            Total hotels: ¥20054. Per person: about ¥10027, averaging about ¥668 / person / night.
+                            <span class="zh-line">酒店合计 ¥20054，人均约 ¥10027，平均约 ¥668 / 人 / 晚。</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="hotel-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>City</th>
+                                <th>Hotel</th>
+                                <th>Nights</th>
+                                <th>Price</th>
+                                <th>Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for hotel in hotels %}
+                                <tr>
+                                    <td data-label="City">{{ hotel.city }}</td>
+                                    <td data-label="Hotel">{{ hotel.hotel }}</td>
+                                    <td data-label="Nights">{{ hotel.nights }}</td>
+                                    <td data-label="Price">{{ hotel.price }}</td>
+                                    <td data-label="Note" class="hotel-note">{{ hotel.note }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-inner">
+                <h2>Budget Overview / 预算总览</h2>
+                <p class="lead">
+                    A compact single-person planning view, with the hotel total split by two people.
+                    <span class="zh-line">按单人视角整理预算，酒店按两人平摊计算。</span>
+                </p>
+                <div class="budget-grid">
+                    {% for card in budget_cards %}
+                        <article class="budget-card">
+                            <p class="budget-label">{{ card.label }} / {{ card.label_zh }}</p>
+                            <p class="budget-value">{{ card.value }}</p>
+                            <p class="budget-detail">
+                                {{ card.detail }}
+                                <span class="zh-line">{{ card.detail_zh }}</span>
+                            </p>
+                        </article>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        Japan Trip 2026 · Tokyo to Hokkaido to Kansai / 东京到北海道，再到关西
+    </footer>
+</body>
+</html>
