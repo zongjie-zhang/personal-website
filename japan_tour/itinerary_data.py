@@ -116,6 +116,7 @@ STOP_DETAILS = {
     },
     "sapporo": {
         "hero_image": "image/stops/sapporo.png",
+        "hero_position": "center 72%",
         "map": "https://www.openstreetmap.org/export/embed.html?bbox=141.275%2C43.025%2C141.445%2C43.105&layer=mapnik&marker=43.0618%2C141.3545",
         "map_link": "https://www.openstreetmap.org/?mlat=43.0618&mlon=141.3545#map=12/43.0618/141.3545",
         "hotel": {

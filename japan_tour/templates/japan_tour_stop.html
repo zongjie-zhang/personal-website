@@ -379,6 +379,7 @@
             class="hero-image"
             src="{{ url_for('japan_tour_static', filename=detail.hero_image) }}"
             alt="{{ stop.city }} travel view"
+            style="object-position: {{ detail.hero_position|default('center') }};"
         >
         <nav class="topbar" aria-label="Page navigation">
             <a class="back-link" href="{{ url_for('japan_tour') }}">Japan Trip</a>
