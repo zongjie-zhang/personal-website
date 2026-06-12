@@ -20,7 +20,7 @@ app.config["MAX_CONTENT_LENGTH"] = 256 * 1024 * 1024
 app.permanent_session_lifetime = timedelta(days=365)
 
 ADMIN_USER_IDS = {1}
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SINGAPORE_TOUR_MODULE_DIR = os.path.join(PROJECT_ROOT, "singapore_tour")
 if SINGAPORE_TOUR_MODULE_DIR not in sys.path:
     sys.path.insert(0, SINGAPORE_TOUR_MODULE_DIR)
