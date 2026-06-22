@@ -745,6 +745,11 @@ def projects():
     return render_template("projects.html")
 
 
+@app.route("/project/my-footprint")
+def my_footprint():
+    return ""
+
+
 register_singapore_tour(app)
 register_japan_tour(app)
 
