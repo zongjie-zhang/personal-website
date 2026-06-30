@@ -9,6 +9,7 @@ import urllib.request
 import urllib.error
 import uuid
 import sys
+import importlib.util
 from datetime import timedelta
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -29,8 +30,35 @@ JAPAN_TOUR_MODULE_DIR = os.path.join(PROJECT_ROOT, "japan_tour")
 if JAPAN_TOUR_MODULE_DIR not in sys.path:
     sys.path.insert(0, JAPAN_TOUR_MODULE_DIR)
 
-from singapore_tour import register_singapore_tour
-from japan_tour import register_japan_tour
+MY_FOOTPRINT_MODULE_DIR = os.path.join(PROJECT_ROOT, "my_footprint")
+if MY_FOOTPRINT_MODULE_DIR not in sys.path:
+    sys.path.insert(0, MY_FOOTPRINT_MODULE_DIR)
+
+from my_footprint import register_my_footprint
+
+try:
+    from singapore_tour import register_singapore_tour
+except ModuleNotFoundError:
+    register_singapore_tour = None
+
+try:
+    from japan_tour import register_japan_tour
+except ModuleNotFoundError:
+    register_japan_tour = None
+
+
+def load_local_module(module_name, file_path):
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+my_footprint_v0_module = load_local_module(
+    "my_footprint_v0_module",
+    os.path.join(PROJECT_ROOT, "my_footprint_v0", "my_footprint.py"),
+)
+register_my_footprint_v0 = my_footprint_v0_module.register_my_footprint_v0
 
 
 def normalize_url_prefix(prefix):
@@ -745,13 +773,12 @@ def projects():
     return render_template("projects.html")
 
 
-@app.route("/project/my-footprint")
-def my_footprint():
-    return ""
-
-
-register_singapore_tour(app)
-register_japan_tour(app)
+register_my_footprint_v0(app)
+register_my_footprint(app)
+if register_singapore_tour is not None:
+    register_singapore_tour(app)
+if register_japan_tour is not None:
+    register_japan_tour(app)
 
 
 @app.route("/game")
